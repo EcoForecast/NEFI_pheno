@@ -14,16 +14,24 @@ dta <-  map_data("world",c("usa","hawaii","alaska"),xlim=c(-180,-65), ylim=c(19,
 
 gg1 <- ggplot() + geom_polygon(data = dta, aes(x=long, y=lat, group=group),fill=NA,colour="black") + coord_fixed(1.3)
 gg1 <- gg1 + geom_point(data=neon_sites, aes(x = siteLongitude, y = siteLatitude))
-gg1
 
-productName = "Phenology images" 
-availableSites = 
+productName <-  "Tick-borne pathogen status" 
+neon_sites$containsProduct <- NA
 for (i in 1:(dim(neon_sites)[1])){
   availableProducts = neon_sites[i,]$dataProducts[[1]]$dataProductTitle
-  containsProduct = FALSE
+  containsProductBool <-  FALSE
+  if(length(availableProducts>0)){
   for (j in 1:length(availableProducts)){
     if (availableProducts[j]== productName){
-      containsProduct = TRUE
+      containsProductBool <-  TRUE
     }
   }
+  }
+  neon_sites[i,]$containsProduct <- containsProductBool
+
 }
+availableSites <- subset(neon_sites,containsProduct)
+
+gg1 <- gg1 + geom_point(data=availableSites, aes(x = siteLongitude, y = siteLatitude),colour="green")
+gg1
+
