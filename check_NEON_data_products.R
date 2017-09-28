@@ -14,9 +14,9 @@ dta <-  map_data("world",c("usa","hawaii","alaska"),xlim=c(-180,-65), ylim=c(19,
 
 plot.new()
 gg1 <- ggplot() + geom_polygon(data = dta, aes(x=long, y=lat, group=group),fill=NA,colour="black") + coord_fixed(1.3)
-#gg1 <- gg1 + geom_point(data=neon_sites, aes(x = siteLongitude, y = siteLatitude))
+#gg1 <- gg1 + geom_point(data=neon_sites, aes(x = siteLongitude, y = siteLatitude)) #Can uncomment for all sites with data
 
-productName <-  "Phenology images" 
+productName <-  "Precipitation" ####Change for the desired product
 neon_sites$containsProduct <- NA
 neon_sites$productLength <- NA
 for (i in 1:(dim(neon_sites)[1])){
@@ -32,7 +32,6 @@ for (i in 1:(dim(neon_sites)[1])){
   }
   }
   if(length(availableDates)>0){
-    print((length(availableDates[[1]])))
     neon_sites$productLength[i] <- length(availableDates[[1]])
   }
   else{
@@ -43,24 +42,14 @@ for (i in 1:(dim(neon_sites)[1])){
 }
 availableSites <- subset(neon_sites,containsProduct)
 
-gg1 <- gg1 + geom_point(data=subset(availableSites,(availableSites$productLength<=5 & availableSites$productLength>0)), aes(x = siteLongitude, y = siteLatitude),colour="cadetblue",show.legend = TRUE)
+clrs <- c("cadetblue","darkmagenta","darkolivegreen1","firebrick","hotpink","darkorchid","darkorange","darkseagreen")
 
-gg1 <-gg1 + geom_point(data=subset(availableSites,(availableSites$productLength<=10 & availableSites$productLength>5)), aes(x = siteLongitude, y = siteLatitude),colour="darkmagenta")
-
-gg1 <-gg1 + geom_point(data=subset(availableSites,(availableSites$productLength<=15 & availableSites$productLength>10)), aes(x = siteLongitude, y = siteLatitude),colour="darkolivegreen1")
-
-gg1 <-gg1 + geom_point(data=subset(availableSites,(availableSites$productLength<=20 & availableSites$productLength>15)), aes(x = siteLongitude, y = siteLatitude),colour="firebrick")
-
-gg1 <-gg1 + geom_point(data=subset(availableSites,(availableSites$productLength<=25 & availableSites$productLength>20)), aes(x = siteLongitude, y = siteLatitude),colour="hotpink")
-
-gg1 <-gg1 + geom_point(data=subset(availableSites,(availableSites$productLength<=30 & availableSites$productLength>25)), aes(x = siteLongitude, y = siteLatitude),colour="darkorchid")
-
-gg1 <-gg1 + geom_point(data=subset(availableSites,(availableSites$productLength<=35 & availableSites$productLength>30)), aes(x = siteLongitude, y = siteLatitude),colour="darkorange")
-
-gg1 <-gg1 + geom_point(data=subset(availableSites,(availableSites$productLength<=40 & availableSites$productLength>35)), aes(x = siteLongitude, y = siteLatitude),colour="darkseagreen")
+for(i in 1:8){
+  gg1 <- gg1 + geom_point(data=subset(availableSites,(availableSites$productLength<=(i*5) & availableSites$productLength>(i*5-5))), aes(x = siteLongitude, y = siteLatitude),colour=clrs[i])
+}
 
 gg1 <-gg1 + geom_point(data=subset(availableSites,(availableSites$productLength>40)), aes(x = siteLongitude, y = siteLatitude),colour="darkslategreen")
 
-#gg1 <- gg1 + geom_point(data=availableSites, aes(x = siteLongitude, y = siteLatitude),colour="green")
+#gg1 <- gg1 + geom_point(data=availableSites, aes(x = siteLongitude, y = siteLatitude),colour="green") #will plot all sites that have data for the desired product
 
 gg1
