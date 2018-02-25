@@ -1,4 +1,4 @@
-setwd("/Users/Kathryn/Documents/PhD_Research/")
+setwd("/Users/Kathryn/Documents/PhD_Research/NEFI_pheno")
 
 library("MODISTools")
 
@@ -21,17 +21,19 @@ for (i in seq(1,nrow(siteData))){
   siteName <- siteData[i,1]
   latVal <- siteData[i,2]
   longVal <-siteData[i,3]
+  
+  #GOES NDVI
   NDVI.fileName <- paste("GOES_NDVI_",siteName,"2017.csv",sep="")
-  GOES <- read.csv(NDVI.fileName,header=FALSE) #TRUE
+  GOES <- read.csv(NDVI.fileName,header=FALSE) 
   GOES_Days <- as.numeric(GOES[1,])
   GOES_NDVI <- as.numeric(GOES[2,])
   GOES.time = as.Date(GOES_Days,origin="2017-01-01")
-
+  
   #MODIS EVI
   
   #only have to do the following line if you do not already have the data
   #MODISSubsets(data.frame(lat=latVal,long=longVal,start.date=2017,end.date=2017),
-             #Product="MOD13Q1",Bands="250m_16_days_EVI",Size=c(1,1),StartDate=TRUE) 
+  #Product="MOD13Q1",Bands="250m_16_days_EVI",Size=c(1,1),StartDate=TRUE) 
   
   EVIfilePattern <- paste("EVI_Lat",substr(as.character(latVal),1,5),sep="")
   NDVIfilePattern <- paste("NDVI_Lat",substr(as.character(latVal),1,5),sep="")
@@ -45,22 +47,23 @@ for (i in seq(1,nrow(siteData))){
   URL <-  as.character(siteData[i,4])
   phenoData <- download.phenocam(URL)
   phenoData2017 <- subset(phenoData,year==2017)
-  print(siteName)
+  #print(siteName) #To keep track of progression
   GCC <- phenoData2017$gcc_mean
   PC.time = as.Date(phenoData2017$date)
+  
+  #Plotting
   if(i %in% c(6,8,10,12,15)){ #smaller values have a smaller ylim
     plot(MODIS.time,EVI,main=siteName,xlab="Time",ylab="Value",ylim=c(-0.2,0.5),pch=19,cex=1.5) 
   }
   else{
     plot(MODIS.time,EVI,main=siteName,xlab="Time",ylab="Value",ylim=c(-0.2,1),pch=19,cex=1.5)
   }
+  
   points(GOES.time,GOES_NDVI,col="Blue",pch=19,cex=1.5)
   points(PC.time,GCC,col="Red",pch=19,cex=1.5)
   points(MODIS.time,NDVI,col="Magenta",pch=19,cex=1.5)
-
+  
   legend("topleft",c("MODIS EVI","MODIS NDVI","PhenoCam","GOES NDVI"),pch=c(19,19,19,19),col=c("Black","Magenta","Red","Blue"),cex=c(1.5,1.5,1.5,1.5))
 }
 
 dev.off()
-
-
