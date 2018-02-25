@@ -1,0 +1,58 @@
+#!/usr/bin/env Rscript 
+
+library("ncdf4")
+library(plyr)
+
+calNDVI <- function(R2,R3){
+  return((R3-R2)/(R3+R2))
+}
+
+createNDVI <- function(day.time){
+  #Function to create a file with NDVI values for a specific day/time
+  #outputs a csv file
+  #day.time needs to be in the format "20171821658"
+  #will need to change this to account for the files being in a different folder
+  filestrC02 <- paste("OR_ABI-L1b-RadC-M3C02_G16_s",day.time,sep="")
+  filestrC03 <- paste("OR_ABI-L1b-RadC-M3C03_G16_s",day.time,sep="")
+  R3 <- ncvar_get(nc_open(dir(pattern=filestrC03)),"Rad")
+  R2 <- ncvar_get(nc_open(dir(pattern=filestrC02)),"Rad") #the full R2 dataset
+  NDVI.vals <- matrix(ncol=3000,nrow=5000)
+  for(i in seq(1,nrow(R2),2)){
+    for(j in seq(1,ncol(R2),2)){
+      R2.val <- mean(R2[i,j],R2[(i+1),j],R2[i,(j+1)],R2[(i+1),(j+1)])
+      R3.val <- R3[(i/2),(j/2)]
+      NDVI.vals[(i/2),(j/2)] <- calNDVI(R2.val,R3.val)
+    }
+    if(i%%500==1){
+      print(i) #done to keep track of progress
+    }
+  }
+  file.output.name <- paste("GOES16_NDVI_",day.time,".csv",sep="")
+  write.table(NDVI.vals,file.output.name,row.names=FALSE,sep=",")
+  return(NDVI.vals)
+}
+
+getSpecificNDVI <- function(ind2,ind3,day.time){
+  #Function to calculate the NDVI when you have a known pixel
+  #print("Entered getSpecificNDVI")
+  filestrC02 <- paste("OR_ABI-L1b-RadC-M3C02_G16_s",day.time,sep="")
+  filestrC03 <- paste("OR_ABI-L1b-RadC-M3C03_G16_s",day.time,sep="")
+  R2.file <-nc_open(paste("GOES_Data2017/",dir(path="GOES_Data2017",pattern=filestrC02),sep=""))
+  R3.file <-nc_open(paste("GOES_Data2017/",dir(path="GOES_Data2017",pattern=filestrC03),sep=""))
+  
+  R3 <- ncvar_get(R3.file,"Rad")
+  R2 <- ncvar_get(R2.file,"Rad") #the full R2 dataset
+  i2 <- ind2[1]
+  j2 <- ind2[2]
+  i3 <- ind3[1]
+  j3 <- ind3[2]
+  #print(dim(R2))
+  R3.val <- R3[i3,j3]
+  R2.val <- mean(R2[i2,j2],R2[(i2+1),j2],R2[i2,(j2+1)],R2[(i2+1),(j2+1)])
+  return(calNDVI(R2.val,R3.val))
+  
+}
+
+#NDVI.vals.1821657 <- createNDVI("20171821657")
+
+#testfile <- nc_open(paste("GOES_Data2017/",dir(path="GOES_Data2017",pattern=filestrC02test),sep=""))
