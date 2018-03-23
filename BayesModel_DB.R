@@ -1,4 +1,7 @@
 source("downloadPhenoCam.R")
+source("PC_data.R")
+source("MODIS_data.R")
+source("GOES_data.R")
 library(rjags)
 library(coda)
 
@@ -7,50 +10,21 @@ library(coda)
 ##' @param Lat  latitude of desired site in decimals
 ##' @param Long longitude of desired site in decimals
 ##' @param data.source data source (GOES.NDVI, MODIS.NDVI, MODIS.EVI, PC.GCC)
+##' @param site.name Site Name
 ##' @param URL PhenoCam network URL
 ##' @param season spring or autumn
-createBayesModel.DB <- function(Lat,Long,data.source,URL,season) {
+##' @param download Boolean to indicate whether you need to download the MODIS data (true) or not (false)
+createBayesModel.DB <- function(Lat, Long, data.source,site.name,URL,season,download ) {
   nchain = 3
-  inits <- list()
+  c(Lat,Long,site.name,URL,download) #to get rid of unused arguments error
   if(data.source=="PC.GCC"){
-    ##Data
-    PC.data <- subset(download.phenocam(harvURL),year==2017)
-    PC.time = as.Date(PC.data$date)
-    if(season=="spring"){
-      y <- PC.data$gcc_mean[1:182]
-      x <- lubridate::yday(PC.time[1:182])
-    }
-    if(season=="autumn"){
-      y <- PC.data$gcc_mean[182:365]
-      x <- lubridate::yday(PC.time[182:365])
-    }
-    
-    data <- list(x=x,y=y,n=length(y))
-    ##Specify Priors
-    data$beta.c <- 7.5
-    data$alpha.c <- 2
-    data$alpha.d <- 3
-    data$beta.d <- 7
-    data$s1 <- 0.5
-    data$s2 <- 0.2
-    data$v.a <- 3
-    data$v.b <- 0.01
-    if(season=="spring"){
-      data$mean.a <- 30
-      data$mean.b <- -0.11
-      for(i in 1:nchain){
-        inits[[i]] <- list(s1 = 0.6, s2 = 0.3, v.a = 3.2, v.b = 0.012,
-                           mean.a = 32, mean.b = -0.13)
-        # inits[[i]] <- list(alpha.c = rnorm(1,2.5,0.3),beta.c = rnorm(1,7.5,0.5),alpha.d = 
-        #                      rnorm(1,3,0.2), beta.d = rnorm(1,7,0.5), s1 = rnorm(1,0.5,0.01),
-        #                    s2 = rnorm(1,0.2,0.01), v.a = rnorm(1,3,0.3), v.b = rnorm(1,0.01,0.001),
-        #                    mean.a = rnorm(1,30,5), mean.b = rnorm(1,-0.11,0.02))
-      }
-    }
-    if(season=="autumn"){
-      data$mean.a <- -30
-      data$mean.b <- 0.11
-    }
+    data = PC_data(URL,season)
+  }
+  else if(data.source=="MODIS.EVI" || data.source == "MODIS.NDVI"){
+    data = MODIS_data(Lat,Long,data.source,season,download)
+  }
+  else if(data.source=="GOES_NDVI"){
+    data = GOES_data(site.name,season)
   }
   DB_model <- "
   model{
@@ -67,23 +41,28 @@ createBayesModel.DB <- function(Lat,Long,data.source,URL,season) {
     }
   }
   "
-  j.model   <- jags.model(file = textConnection(DB_model),
-                          data = data,
-                          n.chains = nchain)
-  var.out   <- coda.samples (model = j.model,
-                              variable.names = c("a","b","c","d","prec"),
-                              n.iter = 1000)
-  return(var.out)
+
+   # j.model   <- jags.model(file = textConnection(DB_model),
+   #                         data = data,
+   #                         n.chains = nchain) #cannot figure out how to include the inits
+   # var.out   <- coda.samples (model = j.model,
+   #                             variable.names = c("a","b","c","d","prec"),
+   #                             n.iter = 1000)
+  return(data)
 
 }
 
 harvLat <- 42.5378
 harvLong <- -72.1715
 harvURL <- "http://phenocam.sr.unh.edu/data/archive/harvard/ROI/harvard_DB_0001_1day.csv"
-var.out <- createBayesModel.DB(harvLat,harvLong,"PC.GCC",harvURL,"spring")
+var.out <- createBayesModel.DB(harvLat,harvLong,"PC.GCC","HarvardForest",harvURL,"spring",FALSE)
+#var.out <- createBayesModel.DB("PC.GCC","spring",Lat=harvLat,long=harvLong,site.name="HarvardForest",URL=harvURL,download=FALSE)
+var.out2 <- createBayesModel.DB(harvLat,harvLong,"PC.GCC",harvURL,"autumn",FALSE)
+var.out3 <- createBayesModel.DB(harvLat,harvLong,"MODIS.EVI",harvURL,"spring",FALSE)
+var.out4 <- createBayesModel.DB(harvLat,harvLong,"GOES_NDVI","HarvardForest", harvURL,"spring",FALSE)
 
 var.mat <- as.matrix(var.out)
-plot(var.out)
+plot(var.out2)
 
 gelman.diag(var.out)
 GBR <- gelman.plot(var.out)

@@ -110,6 +110,11 @@ plot(times2,vals2)
 hist(rgamma(100,5))
 ```
 
+```{r}
+
+```
+
+
 4. Data fusion? (fitting one curve across all the data from the different sources at a site)
 
 <center><h2>Results</h2></center>
