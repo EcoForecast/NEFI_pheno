@@ -27,7 +27,7 @@ getABI_Index <- function(lat,long){
 
 getDataIndex <- function(vals,ch){
   #Takes in the y,x coordinates on the ABI grid (vals) and returns a list of the i,j index for the product matrices
-  #ch refers to the channel number (2 or 3)
+  #ch refers to the channel number (2,3, or ACM)
   #From PUG_L1b-vol3 pg 15
   #NDVI should use channel 3
   
@@ -42,6 +42,13 @@ getDataIndex <- function(vals,ch){
     x.add_offset <- -0.075033001601696
     y.scale_factor <- -1.40000001920271e-05 
     y.add_offset <- 0.126552999019623 
+  }
+  if(ch=="ACM"){
+    x.scale_factor <- 5.60000007681083e-05
+    x.add_offset <- -0.0750119984149933
+    y.scale_factor <- -5.60000007681083e-05
+    y.add_offset <- 0.126532003283501
+    
   }
   i <- (vals[2]-x.add_offset)/x.scale_factor
   j <- (vals[1]-y.add_offset)/y.scale_factor
