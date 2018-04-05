@@ -42,6 +42,10 @@ getSpecificNDVI <- function(ind2,ind3,day.time){
   
   R3 <- ncvar_get(R3.file,"Rad")
   R2 <- ncvar_get(R2.file,"Rad") #the full R2 dataset
+  R3.kappa0 <- ncvar_get(R3.file,"kappa0")
+  R2.kappa0 <- ncvar_get(R2.file,"kappa0")
+  R3 <- R3 * R3.kappa0 #done to covert radiance to reflectance
+  R2 <- R2 * R2.kappa0
   i2 <- ind2[1]
   j2 <- ind2[2]
   i3 <- ind3[1]
