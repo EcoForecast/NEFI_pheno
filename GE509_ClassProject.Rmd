@@ -4,15 +4,16 @@ author: "Kathryn Wheeler"
 output: html_document
 ---
 
-```{r,echo=FALSE}
+```{r}
 ## Settings
 library(rjags)
 library(coda)
 library("MODISTools")
+library("numDeriv")
 
 ```
 
-```{r,echo=FALSE}
+```{r}
 ##' Download Phenocam data
 ##' 
 ##' @param URL  web address where data is located
@@ -186,10 +187,30 @@ pheno.logistic <- function(a,b,c,d,xseq){
   return(c/(1 + exp(a+b*xseq))+d)
 }
 
+K.prime <- function(a,b,c,d,t){
+  z <- exp(a+b*t)
+  num1 <- 3*z*(1-z)*(1+z)**3*(2*(1+z)**3+b**2*c**2*z)
+  den1 <- ((1+z)**4+(b*c*z)**2)**(5/2)
+  num2 <- (1+z)**2*(1+2*z-5*z**2)
+  den2 <- ((1+z)**4+(b*c*z)**2)**(3/2)
+  return(b**3*c*z*((num1/den1)-num2/den2))
+}
+
 ```
 
-```{r,echo=FALSE}
+```{r}
 siteData <- read.csv("GE509_Project_Sites.csv",header=FALSE)
+results.table <- data.frame(matrix(nrow=nrow(siteData)*3,ncol=7))
+colnames(results.table) <- c("Burnin","Eff. Sample Size","a+-SE","b+-SE","c+-SE","d+-SE","precision+-SE")
+rownames(results.table) <- c("HarvForest GOES","HarvForest MODIS","HarvForest PhenoCam","Bartlett GOES","Bartlett MODIS","Bartlett PhenoCam","missouriozarks GOES","missouriozarks MODIS","missouriozarks PhenoCam","willowCreek GOES","willowCreek MODIS","willowCreek PhenoCam")
+PC.trans.dates <- matrix(nrow=nrow(siteData),ncol=3)
+colnames(PC.trans.dates) <- c("Trans1","Trans2","Trans3")
+MODIS.trans.dates <- matrix(nrow=nrow(siteData),ncol=3)
+colnames(MODIS.trans.dates) <- c("Trans1","Trans2","Trans3")
+GOES.trans.dates <- matrix(nrow=nrow(siteData),ncol=3)
+colnames(GOES.trans.dates) <- c("Trans1","Trans2","Trans3")
+nrows <- 1
+
 for (i in seq(1,nrow(siteData))){
   siteName <- as.character(siteData[i,1])
   Lat <- as.character(siteData[i,2])
@@ -204,7 +225,8 @@ sum.GOES <- summary(out.GOES$var.out)
 #gelman.diag(out.GOES$var.out)
 GBR <- gelman.plot(out.GOES$var.out)
 burnin <- GBR$last.iter[tail(which(apply(GBR$shrink[,,2]>1.05,1,any)),1)+1]
-#burnin
+results.table[nrows,1] <-  burnin
+results.table[nrows,2] <-  3*(20000-burnin)
 if(length(burnin) == 0) burnin = 1
 var.burn <- window(((out.GOES$var.out)),start=burnin)
 burn.sum <- summary(var.burn)
@@ -213,6 +235,13 @@ var.GOES.a <- burn.sum$statistics[1,1]
 var.GOES.b <- burn.sum$statistics[2,1]
 var.GOES.c <- burn.sum$statistics[3,1]
 var.GOES.d <- burn.sum$statistics[4,1]
+
+results.table[nrows,3] <-paste(as.character(burn.sum$statistics[1,1]),"+-",as.character(burn.sum$statistics[1,2]))
+results.table[nrows,4] <- paste(as.character(burn.sum$statistics[2,1]),"+-",as.character(burn.sum$statistics[2,2]))
+results.table[nrows,5] <- paste(as.character(burn.sum$statistics[3,1]),"+-",as.character(burn.sum$statistics[3,2]))
+results.table[nrows,6] <-paste(as.character(burn.sum$statistics[4,1]),"+-",as.character(burn.sum$statistics[4,2]))
+results.table[nrows,7] <-paste(as.character(burn.sum$statistics[5,1]),"+-",as.character(burn.sum$statistics[5,2]))
+
 x.GOES <- out.GOES$x
 var.GOES.pred <- pheno.logistic(var.GOES.a,var.GOES.b,var.GOES.c,var.GOES.d,xseq=x.GOES)
 var.mat<-as.matrix(var.burn)
@@ -232,12 +261,14 @@ ci <- apply(ycred,2,quantile,c(0.025,0.5, 0.975), na.rm= TRUE)
 xpred.GOES <- xpred
 ci.GOES <- ci
 
-#plot(x=list(),y=list(),xlim=c(180,365),ylim=c(0,1))
-#lines(x.GOES,var.GOES.pred,col="Black")
-#points(out.GOES$x,out.GOES$y,col="Black")
-#lines(xpred,ci[1,], col="black", lty = 2)
-#lines(xpred,ci[3,],col="black",lty=2)
+xseq <- seq(182,365)
+K.prime.vals.mean <- K.prime(var.GOES.a,var.GOES.b,var.GOES.c,var.GOES.d,xseq)
 
+max.index <- which.max(K.prime.vals.mean)
+GOES.trans.dates[i,2] <- xseq[max.index]
+GOES.trans.dates[i,1] <- xseq[which.min(K.prime.vals.mean[1:max.index])]
+GOES.trans.dates[i,3] <- xseq[which.min(K.prime.vals.mean)]
+nrows <- nrows + 1
 #MODIS:
 out.MODIS <- createBayesModel.DB(Lat = Lat, Long=Long,data.source = "MODIS.NDVI")
 #plot(out.MODIS$var.out)
@@ -246,7 +277,8 @@ out.MODIS <- createBayesModel.DB(Lat = Lat, Long=Long,data.source = "MODIS.NDVI"
 #gelman.diag(out.MODIS$var.out)
 GBR <- gelman.plot(out.MODIS$var.out)
 burnin <- GBR$last.iter[tail(which(apply(GBR$shrink[,,2]>1.05,1,any)),1)+1]
-#burnin
+results.table[nrows,1] <-  burnin
+results.table[nrows,2] <-  3*(20000-burnin)
 if(length(burnin) == 0) burnin = 1
 var.burn <- window(((out.MODIS$var.out)),start=burnin)
 burn.sum <- summary(var.burn)
@@ -255,6 +287,13 @@ var.a <- burn.sum$statistics[1,1]
 var.b <- burn.sum$statistics[2,1]
 var.c <- burn.sum$statistics[3,1]
 var.d <- burn.sum$statistics[4,1]
+
+results.table[nrows,3] <-paste(as.character(burn.sum$statistics[1,1]),"+-",as.character(burn.sum$statistics[1,2]))
+results.table[nrows,4] <- paste(as.character(burn.sum$statistics[2,1]),"+-",as.character(burn.sum$statistics[2,2]))
+results.table[nrows,5] <- paste(as.character(burn.sum$statistics[3,1]),"+-",as.character(burn.sum$statistics[3,2]))
+results.table[nrows,6] <-paste(as.character(burn.sum$statistics[4,1]),"+-",as.character(burn.sum$statistics[4,2]))
+results.table[nrows,7] <-paste(as.character(burn.sum$statistics[5,1]),"+-",as.character(burn.sum$statistics[5,2]))
+
 x.MODIS <- out.MODIS$x
 var.MODIS.pred <- pheno.logistic(var.a,var.b,var.c,var.d,xseq=x.MODIS)
 
@@ -271,14 +310,18 @@ for(g in 1:10000){
   Ey <- (c[g]/(1 + exp(a[g]+b[g]*xpred))+d[g])
   ycred[g,] <- Ey
 }
-ci <- apply(ycred,2,quantile,c(0.025,0.5, 0.975), na.rm= TRUE)
+ci.MODIS <- apply(ycred,2,quantile,c(0.025,0.5, 0.975), na.rm= TRUE)
 xpred.MODIS <- xpred
-ci.MODIS <- ci
 
-#plot(x=list(),y=list(),xlim=c(180,365),ylim=c(0,1))
-#lines(x.MODIS,var.MODIS.pred)
-#points(out.MODIS$x,out.MODIS$y)
+xseq <- seq(182,365)
+K.prime.vals.mean <- K.prime(var.a,var.b,var.c,var.d,xseq)
 
+max.index <- which.max(K.prime.vals.mean)
+MODIS.trans.dates[i,2] <- xseq[max.index]
+MODIS.trans.dates[i,1] <- xseq[which.min(K.prime.vals.mean[1:max.index])]
+MODIS.trans.dates[i,3] <- xseq[which.min(K.prime.vals.mean)]
+
+nrows <- nrows+1
 #PC:
 out.PC <- createBayesModel.DB(data.source="PC.GCC",URL=URL)
 #plot(out.PC$var.out)
@@ -287,7 +330,9 @@ out.PC <- createBayesModel.DB(data.source="PC.GCC",URL=URL)
 #gelman.diag(out.PC$var.out)
 GBR <- gelman.plot(out.PC$var.out)
 burnin <- GBR$last.iter[tail(which(apply(GBR$shrink[,,2]>1.05,1,any)),1)+1]
-#burnin
+results.table[nrows,1] <-  burnin
+results.table[nrows,2] <-  3*(20000-burnin)
+
 if(length(burnin) == 0) burnin = 1
 var.burn <- window(((out.PC$var.out)),start=burnin)
 burn.sum <- summary(var.burn)
@@ -296,8 +341,16 @@ var.a <- burn.sum$statistics[1,1]
 var.b <- burn.sum$statistics[2,1]
 var.c <- burn.sum$statistics[3,1]
 var.d <- burn.sum$statistics[4,1]
+
+results.table[nrows,3] <-paste(as.character(burn.sum$statistics[1,1]),"+-",as.character(burn.sum$statistics[1,2]))
+results.table[nrows,4] <- paste(as.character(burn.sum$statistics[2,1]),"+-",as.character(burn.sum$statistics[2,2]))
+results.table[nrows,5] <- paste(as.character(burn.sum$statistics[3,1]),"+-",as.character(burn.sum$statistics[3,2]))
+results.table[nrows,6] <-paste(as.character(burn.sum$statistics[4,1]),"+-",as.character(burn.sum$statistics[4,2]))
+results.table[nrows,7] <-paste(as.character(burn.sum$statistics[5,1]),"+-",as.character(burn.sum$statistics[5,2]))
+
 x.PC <- out.PC$x
 
+var.PC.pred <- pheno.logistic(var.a,var.b,var.c,var.d,xseq=x.PC)
 var.mat<-as.matrix(var.burn)
 
 a<-var.mat[,1]
@@ -311,9 +364,16 @@ for(g in 1:10000){
   Ey <- (c[g]/(1 + exp(a[g]+b[g]*xpred))+d[g])
   ycred[g,] <- Ey
 }
-ci <- apply(ycred,2,quantile,c(0.025,0.5, 0.975), na.rm= TRUE)
+ci.PC <- apply(ycred,2,quantile,c(0.025,0.5, 0.975), na.rm= TRUE)
+xpred.PC <- xpred
 
-var.PC.pred <- pheno.logistic(var.a,var.b,var.c,var.d,xseq=x.PC)
+xseq <- seq(182,365)
+K.prime.vals.mean <- K.prime(var.a,var.b,var.c,var.d,xseq)
+
+max.index <- which.max(K.prime.vals.mean)
+PC.trans.dates[i,2] <- xseq[max.index]
+PC.trans.dates[i,1] <- xseq[which.min(K.prime.vals.mean[1:max.index])]
+PC.trans.dates[i,3] <- xseq[which.min(K.prime.vals.mean)]
 
 plot(x=list(),y=list(),xlim=c(180,365),ylim=c(0,1),ylab="Value",xlab="Day of Year",main=siteName)
 lines(x.GOES,var.GOES.pred,col="black")
@@ -321,16 +381,59 @@ lines(xpred.GOES,ci.GOES[1,], col="black", lty = 2)
 lines(xpred.GOES,ci.GOES[3,],col="black",lty=2)
 points(out.GOES$x,out.GOES$y,col="Black")
 lines(x.PC,var.PC.pred,col="green")
-lines(xpred,ci[1,], col="green", lty = 2)
-lines(xpred,ci[3,],col="green",lty=2)
+lines(xpred,ci.PC[1,], col="green", lty = 2)
+lines(xpred,ci.PC[3,],col="green",lty=2)
 points(out.PC$x,out.PC$y,col="green")
 lines(x.MODIS,var.MODIS.pred,col="red")
 lines(xpred.MODIS,ci.MODIS[1,], col="red", lty = 2)
 lines(xpred.MODIS,ci.MODIS[3,],col="red",lty=2)
 points(out.MODIS$x,out.MODIS$y,col="red")
+nrows <- nrows+1
 }
 
 ```
 
+
+Fig. 1-4: Plots showing logistic curve fits (solid line) of data points (open circles) with 95% credible intervals (dashed line). Green indicates PhenoCam GCC, red indicates MODIS NDVI, and black indicates GOES NDVI. 
+
+
+
+```{r}
+results.table
+```
+
+
+```{r}
+plot(PC.trans.dates[,1],GOES.trans.dates[,1],xlim=c(200,350),ylim=c(200,350),col="Black",ylab="GOES Date",xlab="PhenoCam Date")
+abline(a=0,b=1)
+points(PC.trans.dates[,2],GOES.trans.dates[,2],col="Green")
+points(PC.trans.dates[,3],GOES.trans.dates[,3],col="Red")
+```
+
+Fig 5. Comparison between the phenological transition dates from GOES data vs PhenoCam data for the four different sites. Black circles indicate the start of senescence, green indicates the senescence inflection point, and red indicates the end of senescence. The black line denotes a 1:1 relationship. 
+
+
+```{r}
+plot(PC.trans.dates[,1],MODIS.trans.dates[,1],xlim=c(200,350),ylim=c(200,350),col="black",ylab="MODIS Date",xlab="PhenoCam Date")
+abline(a=0,b=1)
+points(PC.trans.dates[,2],MODIS.trans.dates[,2],col="Green")
+points(PC.trans.dates[,3],MODIS.trans.dates[,3],col="Red")
+```
+
+Fig 6. Comparison between the phenological transition dates from MODIS data vs PhenoCam data for the four different sites. Black circles indicate the start of senescence, green indicates the senescence inflection point, and red indicates the end of senescence. The black line denotes a 1:1 relationship. 
+
+
+```{r}
+plot(GOES.trans.dates[,1],MODIS.trans.dates[,1],xlim=c(200,350),ylim=c(200,350),col="black",ylab="MODIS Date",xlab="GOES Date")
+abline(a=0,b=1)
+points(GOES.trans.dates[,2],MODIS.trans.dates[,2],col="green")
+points(GOES.trans.dates[,3],MODIS.trans.dates[,3],col="red")
+```
+
+Fig 7. Comparison between the phenological transition dates from MODIS data vs GOES data for the four different sites. Black circles indicate the start of senescence, green indicates the senescence inflection point, and red indicates the end of senescence. The black line denotes a 1:1 relationship. 
+
+_Results:_
+
+Logistic curves were fitted for autumn phenology changes in four broadleaf deciduous forests based on three remote sensing sources: MODIS NDVI, GOES NDVI, and PhenoCam GCC. Burnin values, effective sample size, and mean parameter values for all sites and data sources can be found in Table 1. For all sites, the credible interval for PhenoCam was narrowest followed by GOES, with MODIS resulting in the widest credible interval (Figures 1-4). Reasonable logistic curves were fit for both PhenoCam and GOES, but the MODIS NDVI fit does not appear reasonable for all sites. GOES predicted a later date for the start of senescence and the inflection point of senescence than PhenoCam for all sites and predicted an earlier end of senescence for all sites except for one (Figure 5). For the majority of transition dates, PhenoCam predicted later dates than MODIS, except for one senescence inflection date and one end of senescence date (Figure 6).  Likewise, GOES predicted later dates for all transitions, except for one senescence inflection date and one start senescence date (Figure 7). 
 
 
