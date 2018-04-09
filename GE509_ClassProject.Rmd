@@ -1,0 +1,336 @@
+---
+title: "GE509_ClassProject Preliminary Analysis"
+author: "Kathryn Wheeler"
+output: html_document
+---
+
+```{r,echo=FALSE}
+## Settings
+library(rjags)
+library(coda)
+library("MODISTools")
+
+```
+
+```{r,echo=FALSE}
+##' Download Phenocam data
+##' 
+##' @param URL  web address where data is located
+download.phenocam <- function(URL) {
+  ## check that we've been passed a URL
+  if (length(URL) == 1 & is.character(URL) & substr(URL,1,4)=="http") {
+    
+    ## read data
+    dat <- read.csv(URL,skip = 22)
+    
+    ## convert date
+    dat$date <- as.Date(as.character(dat$date))
+    
+    return(dat)
+  } else {
+    print(paste("download.phenocam: Input URL not provided correctly",URL))
+  }
+}
+
+
+
+##' Create a Bayes Model for a deciduous broadleaf site
+##' 
+##' @param Lat  latitude of desired site in decimals
+##' @param Long longitude of desired site in decimals
+##' @param data.source data source (GOES.NDVI, MODIS.NDVI, MODIS.EVI, PC.GCC)
+##' @param site.name Site Name
+##' @param URL PhenoCam network URL
+createBayesModel.DB <- function(Lat=0, Long=0, data.source,site.name="",URL="") {
+  nchain = 3
+  inits <- list()
+  if(data.source=="PC.GCC"){
+    data = PC_data(URL)
+    for(i in 1:nchain){
+      inits[[i]] <- list(a=-30,b=rnorm(1,0.09,0.05),c=rnorm(1,0.2,0.05),d=rnorm(1,0.35,0.05))
+    }
+  }
+  else if(data.source=="MODIS.EVI" || data.source == "MODIS.NDVI"){
+    data = MODIS_data(Lat,Long,data.source)
+    for(i in 1:nchain){
+      inits[[i]] <- list(a=-30,b=rnorm(1,0.225,0.05),c=0.4,d=0.4)
+    }
+  }
+  else if(data.source=="GOES.NDVI"){
+    data = GOES_data(site.name)
+    for(i in 1:nchain){
+      inits[[i]] <- list(a=-30,b=rnorm(1,0.225,0.05),c=0.4,d=0.4)
+    }
+  }
+  DB_model <- "
+  model{
+    ##priors
+    a ~ dnorm(mean.a,v.a)
+    b ~ dnorm(mean.b,v.b)
+    d ~ dbeta(alpha.d,beta.d)
+    c ~ dbeta(alpha.c,beta.c)
+    prec ~ dgamma(s1,s2)
+  
+    for(i in 1:n){
+    mu[i] <- c/(1 + exp(a+b*x[i]))+d   	## process model
+    y[i]  ~ dnorm(mu[i],prec)		## data model (will need to change to beta eventually)
+    }
+  }
+  "
+   j.model   <- jags.model(file = textConnection(DB_model),
+                           data = data,
+                           inits=inits,
+                           n.chains = nchain)
+   var.out   <- coda.samples (model = j.model,
+                               variable.names = c("a","b","c","d","prec"),
+                               n.iter = 20000)
+  output <- list()
+  output$var.out <- var.out
+  output$x <- data$x
+  output$y <- data$y
+  return(output)
+}
+
+##' For GOES NDVI data, construct the data object for input into MCMC
+##' 
+##' @param site.name Site Name
+GOES_data <- function(site.name) {
+  ##Data
+  NDVI.fileName <- paste("GOES_NDVI_",site.name,"2017_kappaDQF.csv",sep="")
+  GOES <- read.csv(NDVI.fileName,header=FALSE) 
+  
+  GOES_Days <- as.numeric(GOES[1,])
+  GOES_NDVI <- as.numeric(GOES[2,])
+  
+  sep.val <- min(which(GOES_Days>182)) 
+  y <- GOES_NDVI[sep.val:length(GOES_Days)]
+  x <- GOES_Days[sep.val:length(GOES_Days)]
+  
+  data <- list(x=x,y=y,n=length(y))
+  ##Specify Priors
+  data$alpha.c <- 4
+  data$beta.c <- 3
+  data$alpha.d <- 2
+  data$beta.d <- 3
+  data$s1 <- 0.5
+  data$s2 <- 0.2
+  data$v.a <- 3
+  data$v.b <- 2
+  data$mean.a <- -30
+  data$mean.b <- 0.4
+
+  return(data)
+}
+
+##' For PhenoCam data, construct the data object for input into MCMC
+##' 
+##' @param URL PhenoCam network URL
+PC_data <- function(URL) {
+  ##Data
+  PC.data <- subset(download.phenocam(URL),year==2017)
+  PC.time = as.Date(PC.data$date)
+  y <- PC.data$gcc_mean[182:365]
+  x <- lubridate::yday(PC.time[182:365])
+  data <- list(x=x,y=y,n=length(y))
+  ##Specify Priors
+  data$beta.c <- 7.5
+  data$alpha.c <- 2
+  data$alpha.d <- 3
+  data$beta.d <- 7
+  data$s1 <- 0.5
+  data$s2 <- 0.2
+  data$v.a <- 3
+  data$v.b <- 0.01
+  data$mean.a <- -30
+  data$mean.b <- 0.11
+  return(data)
+}
+
+##' For MODIS EVI data, construct the data object for input into MCMC
+##' 
+##' @param Lat  latitude of desired site in decimals
+##' @param Long longitude of desired site in decimals
+##' @param data.source data source (GOES.NDVI, MODIS.NDVI, MODIS.EVI, PC.GCC)
+MODIS_data <- function(Lat,Long,data.source) {
+  ##Data
+  if(data.source == "MODIS.NDVI"){
+    filePattern <- paste("NDVI_Lat",substr(as.character(Lat),1,5),sep="") 
+  }
+  else if(data.source == "MODIS.EVI"){
+    filePattern <- paste("EVI_Lat",substr(as.character(Lat),1,5),sep="")
+  }
+  MODIS = read.csv(list.files(pattern=filePattern)[1],header=FALSE,as.is=TRUE,na.string="-3000")
+  dat = apply(MODIS[,11:ncol(MODIS)],1,mean,na.rm=TRUE)*0.0001
+  MODIS.time = as.Date(substr(MODIS[,10],1,7),format="%Y%j")
+  y <- dat[13:22]
+  x <- lubridate::yday(MODIS.time[13:22])
+  print(x)
+
+  data <- list(x=x,y=y,n=length(y))
+  ##Specify Priors
+  data$alpha.c <- 3
+  data$beta.c <- 5
+  data$alpha.d <- 3
+  data$beta.d <- 5
+  data$s1 <- 0.5
+  data$s2 <- 0.2
+  data$v.a <- 3
+  data$v.b <- 40
+  data$mean.a <- -30
+  data$mean.b <- 0.23
+
+  return(data)
+}
+
+pheno.logistic <- function(a,b,c,d,xseq){
+  return(c/(1 + exp(a+b*xseq))+d)
+}
+
+```
+
+```{r,echo=FALSE}
+siteData <- read.csv("GE509_Project_Sites.csv",header=FALSE)
+for (i in seq(1,nrow(siteData))){
+  siteName <- as.character(siteData[i,1])
+  Lat <- as.character(siteData[i,2])
+  Long <-as.character(siteData[i,3])
+  URL <- as.character(siteData[i,4])
+  
+#GOES
+out.GOES <- createBayesModel.DB(data.source="GOES.NDVI",site.name =  siteName)
+sum.GOES <- summary(out.GOES$var.out)
+#sum.GOES
+#plot(out.GOES$var.out)
+#gelman.diag(out.GOES$var.out)
+GBR <- gelman.plot(out.GOES$var.out)
+burnin <- GBR$last.iter[tail(which(apply(GBR$shrink[,,2]>1.05,1,any)),1)+1]
+#burnin
+if(length(burnin) == 0) burnin = 1
+var.burn <- window(((out.GOES$var.out)),start=burnin)
+burn.sum <- summary(var.burn)
+
+var.GOES.a <- burn.sum$statistics[1,1]
+var.GOES.b <- burn.sum$statistics[2,1]
+var.GOES.c <- burn.sum$statistics[3,1]
+var.GOES.d <- burn.sum$statistics[4,1]
+x.GOES <- out.GOES$x
+var.GOES.pred <- pheno.logistic(var.GOES.a,var.GOES.b,var.GOES.c,var.GOES.d,xseq=x.GOES)
+var.mat<-as.matrix(var.burn)
+
+a<-var.mat[,1]
+b<-var.mat[,2]
+c <- var.mat[,3]
+d <- var.mat[,4]
+xpred <- seq(182,365, by =1)
+ycred <- matrix(0,nrow=10000,ncol=184)
+
+for(g in 1:10000){
+  Ey <- (c[g]/(1 + exp(a[g]+b[g]*xpred))+d[g])
+  ycred[g,] <- Ey
+}
+ci <- apply(ycred,2,quantile,c(0.025,0.5, 0.975), na.rm= TRUE)
+xpred.GOES <- xpred
+ci.GOES <- ci
+
+#plot(x=list(),y=list(),xlim=c(180,365),ylim=c(0,1))
+#lines(x.GOES,var.GOES.pred,col="Black")
+#points(out.GOES$x,out.GOES$y,col="Black")
+#lines(xpred,ci[1,], col="black", lty = 2)
+#lines(xpred,ci[3,],col="black",lty=2)
+
+#MODIS:
+out.MODIS <- createBayesModel.DB(Lat = Lat, Long=Long,data.source = "MODIS.NDVI")
+#plot(out.MODIS$var.out)
+#summary(out.MODIS$var.out)
+
+#gelman.diag(out.MODIS$var.out)
+GBR <- gelman.plot(out.MODIS$var.out)
+burnin <- GBR$last.iter[tail(which(apply(GBR$shrink[,,2]>1.05,1,any)),1)+1]
+#burnin
+if(length(burnin) == 0) burnin = 1
+var.burn <- window(((out.MODIS$var.out)),start=burnin)
+burn.sum <- summary(var.burn)
+#burn.sum
+var.a <- burn.sum$statistics[1,1]
+var.b <- burn.sum$statistics[2,1]
+var.c <- burn.sum$statistics[3,1]
+var.d <- burn.sum$statistics[4,1]
+x.MODIS <- out.MODIS$x
+var.MODIS.pred <- pheno.logistic(var.a,var.b,var.c,var.d,xseq=x.MODIS)
+
+var.mat<-as.matrix(var.burn)
+
+a<-var.mat[,1]
+b<-var.mat[,2]
+c <- var.mat[,3]
+d <- var.mat[,4]
+xpred <- seq(182,365, by =1)
+ycred <- matrix(0,nrow=10000,ncol=184)
+
+for(g in 1:10000){
+  Ey <- (c[g]/(1 + exp(a[g]+b[g]*xpred))+d[g])
+  ycred[g,] <- Ey
+}
+ci <- apply(ycred,2,quantile,c(0.025,0.5, 0.975), na.rm= TRUE)
+xpred.MODIS <- xpred
+ci.MODIS <- ci
+
+#plot(x=list(),y=list(),xlim=c(180,365),ylim=c(0,1))
+#lines(x.MODIS,var.MODIS.pred)
+#points(out.MODIS$x,out.MODIS$y)
+
+#PC:
+out.PC <- createBayesModel.DB(data.source="PC.GCC",URL=URL)
+#plot(out.PC$var.out)
+#summary(out.PC$var.out)
+
+#gelman.diag(out.PC$var.out)
+GBR <- gelman.plot(out.PC$var.out)
+burnin <- GBR$last.iter[tail(which(apply(GBR$shrink[,,2]>1.05,1,any)),1)+1]
+#burnin
+if(length(burnin) == 0) burnin = 1
+var.burn <- window(((out.PC$var.out)),start=burnin)
+burn.sum <- summary(var.burn)
+
+var.a <- burn.sum$statistics[1,1]
+var.b <- burn.sum$statistics[2,1]
+var.c <- burn.sum$statistics[3,1]
+var.d <- burn.sum$statistics[4,1]
+x.PC <- out.PC$x
+
+var.mat<-as.matrix(var.burn)
+
+a<-var.mat[,1]
+b<-var.mat[,2]
+c <- var.mat[,3]
+d <- var.mat[,4]
+xpred <- seq(182,365, by =1)
+ycred <- matrix(0,nrow=10000,ncol=184)
+
+for(g in 1:10000){
+  Ey <- (c[g]/(1 + exp(a[g]+b[g]*xpred))+d[g])
+  ycred[g,] <- Ey
+}
+ci <- apply(ycred,2,quantile,c(0.025,0.5, 0.975), na.rm= TRUE)
+
+var.PC.pred <- pheno.logistic(var.a,var.b,var.c,var.d,xseq=x.PC)
+
+plot(x=list(),y=list(),xlim=c(180,365),ylim=c(0,1),ylab="Value",xlab="Day of Year",main=siteName)
+lines(x.GOES,var.GOES.pred,col="black")
+lines(xpred.GOES,ci.GOES[1,], col="black", lty = 2)
+lines(xpred.GOES,ci.GOES[3,],col="black",lty=2)
+points(out.GOES$x,out.GOES$y,col="Black")
+lines(x.PC,var.PC.pred,col="green")
+lines(xpred,ci[1,], col="green", lty = 2)
+lines(xpred,ci[3,],col="green",lty=2)
+points(out.PC$x,out.PC$y,col="green")
+lines(x.MODIS,var.MODIS.pred,col="red")
+lines(xpred.MODIS,ci.MODIS[1,], col="red", lty = 2)
+lines(xpred.MODIS,ci.MODIS[3,],col="red",lty=2)
+points(out.MODIS$x,out.MODIS$y,col="red")
+}
+
+```
+
+
+
