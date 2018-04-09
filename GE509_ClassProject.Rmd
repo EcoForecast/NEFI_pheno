@@ -38,7 +38,7 @@ download.phenocam <- function(URL) {
 ##' 
 ##' @param Lat  latitude of desired site in decimals
 ##' @param Long longitude of desired site in decimals
-##' @param data.source data source (GOES.NDVI, MODIS.NDVI, MODIS.EVI, PC.GCC)
+##' @param data.source data source (GOES.NDVI, MODIS.NDVI, PC.GCC)
 ##' @param site.name Site Name
 ##' @param URL PhenoCam network URL
 createBayesModel.DB <- function(Lat=0, Long=0, data.source,site.name="",URL="") {
@@ -50,7 +50,7 @@ createBayesModel.DB <- function(Lat=0, Long=0, data.source,site.name="",URL="") 
       inits[[i]] <- list(a=-30,b=rnorm(1,0.09,0.05),c=rnorm(1,0.2,0.05),d=rnorm(1,0.35,0.05))
     }
   }
-  else if(data.source=="MODIS.EVI" || data.source == "MODIS.NDVI"){
+  else if(data.source == "MODIS.NDVI"){
     data = MODIS_data(Lat,Long,data.source)
     for(i in 1:nchain){
       inits[[i]] <- list(a=-30,b=rnorm(1,0.225,0.05),c=0.4,d=0.4)
