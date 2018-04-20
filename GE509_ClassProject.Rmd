@@ -1,4 +1,4 @@
----
+log(---
 title: "GE509_ClassProject Preliminary Analysis"
 author: "Kathryn Wheeler"
 output: html_document
@@ -42,8 +42,8 @@ download.phenocam <- function(URL) {
 ##' @param data.source data source (GOES.NDVI, MODIS.NDVI, PC.GCC)
 ##' @param site.name Site Name
 ##' @param URL PhenoCam network URL
-createBayesModel.DB <- function(Lat=0, Long=0, data.source,site.name="",URL="") {
-  nchain = 3
+createBayesModel.DB <- function(Lat=0, Long=0, data.source,site.name="",URL="",niter=30000) {
+  nchain = 5
   inits <- list()
   if(data.source=="PC.GCC"){
     data = PC_data(URL)
@@ -53,14 +53,15 @@ createBayesModel.DB <- function(Lat=0, Long=0, data.source,site.name="",URL="") 
   }
   else if(data.source == "MODIS.NDVI"){
     data = MODIS_data(Lat,Long,data.source)
-    for(i in 1:nchain){
-      inits[[i]] <- list(a=-30,b=rnorm(1,0.225,0.05),c=0.4,d=0.4)
+    for(i in 1:(nchain)){
+      inits[[i]] <- list(a=rnorm(1,-30,5),b=rnorm(1,0.11,0.05),c=0.2,d=0.7)
     }
   }
   else if(data.source=="GOES.NDVI"){
     data = GOES_data(site.name)
-    for(i in 1:nchain){
-      inits[[i]] <- list(a=-30,b=rnorm(1,0.225,0.05),c=0.4,d=0.4)
+    for(i in 1:(nchain-1)){
+      inits[[i]] <- list(a=-30,b=rnorm(1,0.24,0.1),c=0.4,d=0.4)
+      inits[[nchain]] <- list(a=-29.9,b=0.25,c=0.40,d=0.40)
     }
   }
   DB_model <- "
@@ -84,7 +85,7 @@ createBayesModel.DB <- function(Lat=0, Long=0, data.source,site.name="",URL="") 
                            n.chains = nchain)
    var.out   <- coda.samples (model = j.model,
                                variable.names = c("a","b","c","d","prec"),
-                               n.iter = 20000)
+                               n.iter = niter)
   output <- list()
   output$var.out <- var.out
   output$x <- data$x
@@ -97,7 +98,7 @@ createBayesModel.DB <- function(Lat=0, Long=0, data.source,site.name="",URL="") 
 ##' @param site.name Site Name
 GOES_data <- function(site.name) {
   ##Data
-  NDVI.fileName <- paste("GOES_NDVI_",site.name,"2017_kappaDQF.csv",sep="")
+  NDVI.fileName <- paste("GOES_NDVI_",site.name,"2017_kappaDQF2.csv",sep="")
   GOES <- read.csv(NDVI.fileName,header=FALSE) 
   
   GOES_Days <- as.numeric(GOES[1,])
@@ -169,16 +170,16 @@ MODIS_data <- function(Lat,Long,data.source) {
 
   data <- list(x=x,y=y,n=length(y))
   ##Specify Priors
-  data$alpha.c <- 3
+  data$alpha.c <- 1
   data$beta.c <- 5
-  data$alpha.d <- 3
+  data$alpha.d <- 3.5
   data$beta.d <- 5
-  data$s1 <- 0.5
-  data$s2 <- 0.2
-  data$v.a <- 3
-  data$v.b <- 40
+  data$s1 <- 0.001#0.5
+  data$s2 <- 0.00001#0.2
+  data$v.a <- 0.1#0.00001
+  data$v.b <- 10#0.00001
   data$mean.a <- -30
-  data$mean.b <- 0.23
+  data$mean.b <- 0.11
 
   return(data)
 }
@@ -210,19 +211,24 @@ colnames(MODIS.trans.dates) <- c("Trans1","Trans2","Trans3")
 GOES.trans.dates <- matrix(nrow=nrow(siteData),ncol=3)
 colnames(GOES.trans.dates) <- c("Trans1","Trans2","Trans3")
 nrows <- 1
-
 for (i in seq(1,nrow(siteData))){
+  i=1
   siteName <- as.character(siteData[i,1])
   Lat <- as.character(siteData[i,2])
   Long <-as.character(siteData[i,3])
   URL <- as.character(siteData[i,4])
   
 #GOES
-out.GOES <- createBayesModel.DB(data.source="GOES.NDVI",site.name =  siteName)
+  if(i==2){
+    out.GOES <- createBayesModel.DB(data.source="GOES.NDVI",site.name =  siteName,niter=400000)
+  }
+  else{
+    out.GOES <- createBayesModel.DB(data.source="GOES.NDVI",site.name =  siteName)
+  }
 sum.GOES <- summary(out.GOES$var.out)
 #sum.GOES
 #plot(out.GOES$var.out)
-#gelman.diag(out.GOES$var.out)
+gelman.diag(out.GOES$var.out)
 GBR <- gelman.plot(out.GOES$var.out)
 burnin <- GBR$last.iter[tail(which(apply(GBR$shrink[,,2]>1.05,1,any)),1)+1]
 results.table[nrows,1] <-  burnin
@@ -272,9 +278,9 @@ nrows <- nrows + 1
 #MODIS:
 out.MODIS <- createBayesModel.DB(Lat = Lat, Long=Long,data.source = "MODIS.NDVI")
 #plot(out.MODIS$var.out)
-#summary(out.MODIS$var.out)
+summary(out.MODIS$var.out)
 
-#gelman.diag(out.MODIS$var.out)
+gelman.diag(out.MODIS$var.out)
 GBR <- gelman.plot(out.MODIS$var.out)
 burnin <- GBR$last.iter[tail(which(apply(GBR$shrink[,,2]>1.05,1,any)),1)+1]
 results.table[nrows,1] <-  burnin
@@ -327,7 +333,7 @@ out.PC <- createBayesModel.DB(data.source="PC.GCC",URL=URL)
 #plot(out.PC$var.out)
 #summary(out.PC$var.out)
 
-#gelman.diag(out.PC$var.out)
+gelman.diag(out.PC$var.out)
 GBR <- gelman.plot(out.PC$var.out)
 burnin <- GBR$last.iter[tail(which(apply(GBR$shrink[,,2]>1.05,1,any)),1)+1]
 results.table[nrows,1] <-  burnin
