@@ -86,7 +86,7 @@ createBayesModel.DB <- function(Lat=0, Long=0, data.source,site.name="",URL="",n
                            n.chains = nchain)
    var.out   <- coda.samples (model = j.model,
                                variable.names = c("a","b","c","d","prec"),
-                               n.iter = 30000)
+                               n.iter = niter)
   output <- list()
   output$var.out <- var.out
   output$x <- data$x
@@ -162,19 +162,15 @@ PC_data <- function(URL) {
 ##' @param data.source data source (GOES.NDVI, MODIS.NDVI, MODIS.EVI, PC.GCC)
 MODIS_data <- function(Lat,Long,data.source,site.name) {
   ##Data
-  fileName <- paste(site.name,"_MODIS_NDVI.csv",sep="")
-  options(scipen=999)
-  MODIS = read.csv(fileName,header=FALSE,as.is=TRUE,na.string="-3000")
-  dat <- MODIS[,7]
-
-  x <- as.character(MODIS[,5])
-  x <- x[8:length(x)]
-
-  y <- dat[8:length(dat)]
-
+  #site.name <- "HarvardForest"
+  fileName <- paste(site.name,"_MODIS_NDVI2.csv",sep="")
+  #options(scipen=999)
+  #options(scipen=0)
+  MODIS = read.csv(fileName,header=FALSE)
+  y <- MODIS[,7]
+  x <- as.integer(MODIS[,5])
   for(i in 1:length(x)){
-    x[i] <- as.numeric(substr(x[i],5,7))
-    if(as.numeric(x[i])<100){
+    if(x[i]<100){
       x[i] <- as.numeric(x[i]) + 365
     }
   }
@@ -214,7 +210,7 @@ K.prime <- function(a,b,c,d,t){
 siteData <- read.csv("GE509_Project_Sites.csv",header=FALSE)
 results.table <- data.frame(matrix(nrow=nrow(siteData)*3,ncol=7))
 colnames(results.table) <- c("Burnin","Eff. Sample Size","a+-SE","b+-SE","c+-SE","d+-SE","precision+-SE")
-rownames(results.table) <- c("HarvForest GOES","HarvForest MODIS","HarvForest PhenoCam","Bartlett GOES","Bartlett MODIS","Bartlett PhenoCam","missouriozarks GOES","missouriozarks MODIS","missouriozarks PhenoCam","willowCreek GOES","willowCreek MODIS","willowCreek PhenoCam")
+#rownames(results.table) <- c("HarvForest GOES","HarvForest MODIS","HarvForest PhenoCam","Bartlett GOES","Bartlett MODIS","Bartlett PhenoCam","missouriozarks GOES","missouriozarks MODIS","missouriozarks PhenoCam","willowCreek GOES","willowCreek MODIS","willowCreek PhenoCam")
 PC.trans.dates <- matrix(nrow=nrow(siteData),ncol=3)
 colnames(PC.trans.dates) <- c("Trans1","Trans2","Trans3")
 MODIS.trans.dates <- matrix(nrow=nrow(siteData),ncol=3)
@@ -222,20 +218,20 @@ colnames(MODIS.trans.dates) <- c("Trans1","Trans2","Trans3")
 GOES.trans.dates <- matrix(nrow=nrow(siteData),ncol=3)
 colnames(GOES.trans.dates) <- c("Trans1","Trans2","Trans3")
 nrows <- 1
-for (i in seq(1,nrow(siteData))){
-  i=3
+iseq <- c(1,3,4,7)
+for (i in iseq){
   siteName <- as.character(siteData[i,1])
   Lat <- as.character(siteData[i,2])
   Long <-as.character(siteData[i,3])
   URL <- as.character(siteData[i,4])
   
 #GOES
-  if(i==2){
-    out.GOES <- createBayesModel.DB(data.source="GOES.NDVI",site.name =  siteName,niter=400000)
-  }
-  else{
+  # if(i==2){
+  #   out.GOES <- createBayesModel.DB(data.source="GOES.NDVI",site.name =  siteName,niter=400000)
+  # }
+  # else{
     out.GOES <- createBayesModel.DB(data.source="GOES.NDVI",site.name =  siteName)
-  }
+  #}
 #sum.GOES <- summary(out.GOES$var.out)
 #sum.GOES
 #plot(out.GOES$var.out)
@@ -247,6 +243,10 @@ results.table[nrows,2] <-  3*(20000-burnin)
 if(length(burnin) == 0) burnin = 1
 var.burn <- window(((out.GOES$var.out)),start=burnin)
 burn.sum <- summary(var.burn)
+howland.GOES.varBurn <- var.burn
+fileName <- paste(siteName,"_GOES_varBurn.RData",sep="")
+save(howland.GOES.varBurn,file=fileName)
+
 
 var.GOES.a <- burn.sum$statistics[1,1]
 var.GOES.b <- burn.sum$statistics[2,1]
@@ -287,11 +287,17 @@ GOES.trans.dates[i,1] <- xseq[which.min(K.prime.vals.mean[1:max.index])]
 GOES.trans.dates[i,3] <- xseq[which.min(K.prime.vals.mean)]
 nrows <- nrows + 1
 #MODIS:
-out.MODIS <- createBayesModel.DB(Lat = Lat, Long=Long,data.source = "MODIS.NDVI",site.name=siteName)#,niter=500000)
+if(i==10){
+  out.MODIS <- createBayesModel.DB(Lat = Lat, Long=Long,data.source = "MODIS.NDVI",site.name=siteName,niter=80000)
+}
+else{
+  out.MODIS <- createBayesModel.DB(Lat = Lat, Long=Long,data.source = "MODIS.NDVI",site.name=siteName,niter=300000)
+}
+
 #plot(out.MODIS$var.out)
 #summary(out.MODIS$var.out)
 
-#gelman.diag(out.MODIS$var.out)
+gelman.diag(out.MODIS$var.out)
 GBR <- gelman.plot(out.MODIS$var.out)
 burnin <- GBR$last.iter[tail(which(apply(GBR$shrink[,,2]>1.05,1,any)),1)+1]
 results.table[nrows,1] <-  burnin
@@ -300,6 +306,11 @@ if(length(burnin) == 0) burnin = 1
 var.burn <- window(((out.MODIS$var.out)),start=burnin)
 burn.sum <- summary(var.burn)
 #burn.sum
+
+howland.MODIS.varBurn <- var.burn
+fileName <- paste(siteName,"_MODIS_varBurn.RData",sep="")
+save(howland.MODIS.varBurn,file=fileName)
+
 var.a <- burn.sum$statistics[1,1]
 var.b <- burn.sum$statistics[2,1]
 var.c <- burn.sum$statistics[3,1]
@@ -320,8 +331,8 @@ a<-var.mat[,1]
 b<-var.mat[,2]
 c <- var.mat[,3]
 d <- var.mat[,4]
-xpred <- seq(182,365, by =1)
-ycred <- matrix(0,nrow=10000,ncol=184)
+xpred <- seq(x.MODIS[1],x.MODIS[length(x.MODIS)], by =1)
+ycred <- matrix(0,nrow=10000,ncol=length(xpred))
 
 for(g in 1:10000){
   Ey <- (c[g]/(1 + exp(a[g]+b[g]*xpred))+d[g])
@@ -344,7 +355,7 @@ out.PC <- createBayesModel.DB(data.source="PC.GCC",URL=URL)#,niter=400000)
 #plot(out.PC$var.out)
 #summary(out.PC$var.out)
 
-#gelman.diag(out.PC$var.out)
+gelman.diag(out.PC$var.out)
 GBR <- gelman.plot(out.PC$var.out)
 burnin <- GBR$last.iter[tail(which(apply(GBR$shrink[,,2]>1.05,1,any)),1)+1]
 results.table[nrows,1] <-  burnin
@@ -353,6 +364,10 @@ results.table[nrows,2] <-  3*(20000-burnin)
 if(length(burnin) == 0) burnin = 1
 var.burn <- window(((out.PC$var.out)),start=burnin)
 burn.sum <- summary(var.burn)
+
+Coweeta.PC.varBurn <- var.burn
+fileName <- paste(siteName,"_PC_varBurn.RData",sep="")
+save(Coweeta.PC.varBurn,file=fileName)
 
 var.a <- burn.sum$statistics[1,1]
 var.b <- burn.sum$statistics[2,1]
@@ -374,8 +389,8 @@ a<-var.mat[,1]
 b<-var.mat[,2]
 c <- var.mat[,3]
 d <- var.mat[,4]
-xpred <- seq(182,365, by =1)
-ycred <- matrix(0,nrow=10000,ncol=184)
+xpred <- seq(x.PC[1],x.PC[length(x.PC)], by =1)
+ycred <- matrix(0,nrow=10000,ncol=length(xpred))
 
 for(g in 1:10000){
   Ey <- (c[g]/(1 + exp(a[g]+b[g]*xpred))+d[g])
@@ -392,7 +407,7 @@ PC.trans.dates[i,2] <- xseq[max.index]
 PC.trans.dates[i,1] <- xseq[which.min(K.prime.vals.mean[1:max.index])]
 PC.trans.dates[i,3] <- xseq[which.min(K.prime.vals.mean)]
 
-plot(x=list(),y=list(),xlim=c(180,500),ylim=c(0,1),ylab="Value",xlab="Day of Year",main=siteName)
+plot(x=list(),y=list(),xlim=c(160,420),ylim=c(0,1),ylab="Value",xlab="Day of Year",main=siteName)
 lines(x.GOES,var.GOES.pred,col="black")
 lines(xpred.GOES,ci.GOES[1,], col="black", lty = 2)
 lines(xpred.GOES,ci.GOES[3,],col="black",lty=2)
