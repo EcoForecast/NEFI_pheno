@@ -68,6 +68,7 @@ createNDVI_GOES <- function(lat,long,siteID){
 
   }
   days3 <- seq(1,60)
+<<<<<<< HEAD
   
   for (i in days3){
     if(i<10) {
@@ -100,7 +101,11 @@ createNDVI_GOES <- function(lat,long,siteID){
   write.table(output,file=fileName,sep=",",col.names=FALSE,row.names=FALSE)
 }
 
+<<<<<<< HEAD
 createNDVI_GOES(lat=31.7438,long=-110.0522,siteID="luckyHills")
+=======
+#createNDVI_GOES(lat=31.7438,long=-110.0522,siteID="luckyHills")
+>>>>>>> 2d041b25705f850f2be2aa0c2b137f8fa18a4d90
 
 
 
