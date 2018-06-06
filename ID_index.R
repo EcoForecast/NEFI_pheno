@@ -3,7 +3,7 @@
 library("ncdf4")
 library(plyr)
 
-getABI_Index <- function(lat,long){
+getABI_Index <- function(lat,long,year){
   #Function to determine the index of the ABI fixed grid that corresponds to a geodetic (normal) latitude and longitude. 
   #lat and long should be in radians not degrees
   #Note: to index into the ABI fixed grid, you index by [y,x] not [x,y].
@@ -11,7 +11,12 @@ getABI_Index <- function(lat,long){
   
   #values from netcdf metadata:
   H <- 42164160  #goes_imagery_projection:perspective_point_height + goes_imagery_proj:semi-major_axis 
-  long0 <- -1.562069680 #goes_imagery_projection:longitude_of_projection_origin; NOTE: after GOES-16 becomes GOES-East and is operational this will change to -1.308996939 to indicate the new longitude (75W) 
+  if(year==2017){
+    long0 <- -1.562069680  #goes_imagery_projection:longitude_of_projection_origin (changed after GOES-16 entered final orbit)
+  }
+  else{
+  long0 <- -1.308996939  #goes_imagery_projection:longitude_of_projection_origin 
+  }
   r.pol <- 6356752.31414     #goes_imagery_projection:semi_minor_axis
   r.eq <- 6378137 #goes_imagery_projection:semi_major_axis
   e.value <- 0.0818191910435
@@ -25,7 +30,7 @@ getABI_Index <- function(lat,long){
   return(c(y,x))
 }
 
-getDataIndex <- function(vals,ch){
+getDataIndex <- function(vals,ch,year){
   #Takes in the y,x coordinates on the ABI grid (vals) and returns a list of the i,j index for the product matrices
   #ch refers to the channel number (2,3, or ACM)
   #From PUG_L1b-vol3 pg 15
@@ -33,21 +38,42 @@ getDataIndex <- function(vals,ch){
   
   if(ch==3){
     x.scale_factor <- 2.80000003840541e-05 #values from netcdf files under dimensions:x:scale_factor
-    x.add_offset <- -0.0750259980559349
     y.scale_factor <- -2.80000003840541e-05
-    y.add_offset <- 0.126545995473862
+    
+    if(year==2017){
+      x.add_offset <- -0.0750259980559349
+      y.add_offset <- 0.126545995473862
+    }
+    else{
+      x.add_offset <- -0.101346001029015
+      y.add_offset <- 0.12822599709034
+    }
   }
-  if(ch==2){
+  else if(ch==2){
     x.scale_factor <- 1.40000001920271e-05
-    x.add_offset <- -0.075033001601696
     y.scale_factor <- -1.40000001920271e-05 
-    y.add_offset <- 0.126552999019623 
+    
+    if(year==2017){
+      x.add_offset <- -0.075033001601696
+      y.add_offset <- 0.126552999019623 
+    }
+    else{
+      x.add_offset <- -0.101352997124195
+      y.add_offset <- 0.128233000636101
+    }
   }
-  if(ch=="ACM"){
+  else if(ch=="ACM"){
     x.scale_factor <- 5.60000007681083e-05
-    x.add_offset <- -0.0750119984149933
     y.scale_factor <- -5.60000007681083e-05
-    y.add_offset <- 0.126532003283501
+
+    if(year==2017){
+      x.add_offset <- -0.0750119984149933
+      y.add_offset <- 0.126532003283501
+    }
+    else{
+      x.add_offset <- -0.101332001388073
+      y.add_offset <- 0.128212004899979
+    }
     
   }
   i <- (vals[2]-x.add_offset)/x.scale_factor
@@ -56,11 +82,11 @@ getDataIndex <- function(vals,ch){
 }
 
 #Test example from PUG_L1b-vol3
-#getABI_Index(0.590726966,-1.47813561) #passed by returning (0.095340,-0.024052)
+#getABI_Index(0.590726966,-1.47813561,2017) #passed by returning (0.095340,-0.024052)
 
 #Test for coordinates:
 #flor.lat <- 25.204*2*pi/360
 #flor.long <- -80.7098*2*pi/360
-#getDataIndex(getABI_Index(flor.lat,flor.long),3)#NDVI will use channel 3
+#getDataIndex(getABI_Index(flor.lat,flor.long,2017),3)#NDVI will use channel 3
 
 

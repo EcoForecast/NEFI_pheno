@@ -14,7 +14,7 @@ download.phenocam <- function(URL) {
     print(paste("download.phenocam: Input URL not provided correctly",URL))
   }
 }
-pdf(file="PhenoCurves.pdf",width=8,height=8)
+pdf(file="PhenoCurvesKappaDQF.pdf",width=8,height=8)
 siteData <- read.csv("GOES_Paper_Sites.csv",header=FALSE)
 
 for (i in seq(1,nrow(siteData))){
@@ -23,8 +23,8 @@ for (i in seq(1,nrow(siteData))){
   longVal <-siteData[i,3]
   
   #GOES NDVI
-  NDVI.fileName <- paste("GOES_NDVI_",siteName,"2017.csv",sep="")
-  GOES <- read.csv(NDVI.fileName,header=FALSE) 
+  NDVI.fileName <- paste("GOES_NDVI_",siteName,"2017_kappaDQF.csv",sep="")
+  GOES <- read.csv(NDVI.fileName,header=FALSE)
   GOES_Days <- as.numeric(GOES[1,])
   GOES_NDVI <- as.numeric(GOES[2,])
   GOES.time = as.Date(GOES_Days,origin="2017-01-01")
@@ -32,8 +32,8 @@ for (i in seq(1,nrow(siteData))){
   #MODIS EVI
   
   #only have to do the following line if you do not already have the data
-  #MODISSubsets(data.frame(lat=latVal,long=longVal,start.date=2017,end.date=2017),
-  #Product="MOD13Q1",Bands="250m_16_days_EVI",Size=c(1,1),StartDate=TRUE) 
+  # MODISSubsets(data.frame(lat=latVal,long=longVal,start.date=2017,end.date=2017),
+  # Product="MOD13Q1",Bands="250m_16_days_EVI",Size=c(1,1),StartDate=TRUE)
   
   EVIfilePattern <- paste("EVI_Lat",substr(as.character(latVal),1,5),sep="")
   NDVIfilePattern <- paste("NDVI_Lat",substr(as.character(latVal),1,5),sep="")
@@ -52,7 +52,7 @@ for (i in seq(1,nrow(siteData))){
   PC.time = as.Date(phenoData2017$date)
   
   #Plotting
-  if(i %in% c(6,8,10,12,15)){ #smaller values have a smaller ylim
+  if(i %in% c(6,8,12,15)){ #smaller values have a smaller ylim
     plot(MODIS.time,EVI,main=siteName,xlab="Time",ylab="Value",ylim=c(-0.2,0.5),pch=19,cex=1.5) 
   }
   else{
@@ -65,5 +65,6 @@ for (i in seq(1,nrow(siteData))){
   
   legend("topleft",c("MODIS EVI","MODIS NDVI","PhenoCam","GOES NDVI"),pch=c(19,19,19,19),col=c("Black","Magenta","Red","Blue"),cex=c(1.5,1.5,1.5,1.5))
 }
+results.table[2:19,]
 
 dev.off()

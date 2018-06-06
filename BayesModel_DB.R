@@ -9,57 +9,65 @@ library(coda)
 ##' 
 ##' @param Lat  latitude of desired site in decimals
 ##' @param Long longitude of desired site in decimals
-##' @param data.source data source (GOES.NDVI, MODIS.NDVI, MODIS.EVI, PC.GCC)
+##' @param data.source data source (GOES.NDVI, MODIS.NDVI, PC.GCC)
 ##' @param site.name Site Name
 ##' @param URL PhenoCam network URL
-##' @param season spring or autumn
-##' @param download Boolean to indicate whether you need to download the MODIS data (true) or not (false)
-createBayesModel.DB <- function(Lat=0, Long=0, data.source,site.name="",URL="",season,download=FALSE ) {
-  nchain = 3
-  #c(Lat,Long,site.name,URL,download) #to get rid of unused arguments error
+createBayesModel.DB <- function(Lat=0, Long=0, data.source,site.name="",URL="",niter=100000) {
+  nchain = 5
+  inits <- list()
   if(data.source=="PC.GCC"){
-    data = PC_data(URL,season)
-  }
-  else if(data.source=="MODIS.EVI" || data.source == "MODIS.NDVI"){
-    data = MODIS_data(Lat,Long,data.source,season,download)
-  }
-  else if(data.source=="GOES_NDVI"){
-    data = GOES_data(site.name,season)
-  }
-  #print(data)
-  DB_model <- "
-  model{
-    ##priors
-    a ~ dnorm(mean.a,v.a)
-    b ~ dnorm(mean.b,v.b)
-    d ~ dbeta(alpha.d,beta.d)
-    c ~ dbeta(alpha.c,beta.c)
-    prec ~ dgamma(s1,s2)
-  
-    for(i in 1:n){
-    mu[i] <- c/(1 + exp(a+b*x[i]))+d   	## process model
-    y[i]  ~ dnorm(mu[i],prec)		## data model (will need to change to beta eventually)
+    data = PC_data(URL)
+    print(data$x)
+    for(i in 1:nchain){
+      inits[[i]] <- list(a=-30,b=rnorm(1,0.10,0.015),c=rnorm(1,0.05,0.01),d=rnorm(1,0.33,0.03))
     }
   }
+  else if(data.source == "MODIS.NDVI"){
+    data = MODIS_data(Lat,Long,data.source,site.name=site.name)
+    for(i in 1:(nchain)){
+      inits[[i]] <- list(a=rnorm(1,-30,3),b=rnorm(1,0.11,0.05),c=0.2,d=0.7)
+    }
+  }
+  else if(data.source=="GOES.NDVI"){
+    data = GOES_data(site.name)
+    for(i in 1:(nchain)){
+      inits[[i]] <- list(a=rnorm(1,-29.9,0.3),b=rnorm(1,0.25,0.1),c=rnorm(1,0.4,0.1),d=rnorm(1,0.4,0.1))
+    }
+  }
+  data$s1 <- 0.001
+  data$s2 <- 0.00001
+  data$v.a <- 1
+  data$v.b <- .001
+  data$mean.a <- -30
+  data$mean.b <- 0.11
+  
+  DB_model <- "
+  model{
+  ##priors
+  a ~ dnorm(mean.a,v.a)
+  b ~ dnorm(mean.b,v.b)
+  d ~ dbeta(alpha.d,beta.d)
+  c ~ dbeta(alpha.c,beta.c)
+  prec ~ dgamma(s1,s2)
+  
+  for(i in 1:n){
+  mu[i] <- c/(1 + exp(a+b*x[i]))+d   	## process model
+  y[i]  ~ dnorm(mu[i],prec)		## data model (will need to change to beta eventually)
+  }
+  }
   "
-    #print(data$x)
-   inits <- list()
-   for(i in 1:nchain){
-     inits[[i]] <- list(a=30,b=rnorm(1,-0.225,0.3),c=rnorm(1,0.4,0.2),d=rnorm(1,0.4,0.2))
-   }
-   j.model   <- jags.model(file = textConnection(DB_model),
-                           data = data,
-                           inits=inits,
-                           n.chains = nchain) #cannot figure out how to include the inits
-   var.out   <- coda.samples (model = j.model,
-                               variable.names = c("a","b","c","d","prec"),
-                               n.iter = 10000)
+  j.model   <- jags.model(file = textConnection(DB_model),
+                          data = data,
+                          inits=inits,
+                          n.chains = nchain)
+  var.out   <- coda.samples (model = j.model,
+                             variable.names = c("a","b","c","d","prec"),
+                             n.iter = niter)
   output <- list()
   output$var.out <- var.out
   output$x <- data$x
   output$y <- data$y
   return(output)
-
 }
 
 pheno.logistic <- function(a,b,c,d,xseq){
