@@ -52,16 +52,16 @@ getSpecificNDVI <- function(ind2,ind3,day.time){
   i3 <- ind3[1]
   j3 <- ind3[2]
 
-  #print(c(R3.DQF[i3,j3],R2.DQF[i2,j2],)
-
-  if(R3.DQF[i3,j3]==0 & R2.DQF[i2,j2]==0 & R2.DQF[i2,j2]==0 & R2.DQF[(i2+1),j2]==0 & R2.DQF[i2,(j2+1)]==0 & R2.DQF[(i2+1),(j2+1)]==0){
+  #if(R3.DQF[i3,j3]==0 & R2.DQF[i2,j2]==0 & R2.DQF[i2,j2]==0 & R2.DQF[(i2+1),j2]==0 & R2.DQF[i2,(j2+1)]==0 & R2.DQF[(i2+1),(j2+1)]==0){
     R3.val <- R3[i3,j3]
+  
+    #print(R3.val)
     R2.val <- mean(R2[i2,j2],R2[(i2+1),j2],R2[i2,(j2+1)],R2[(i2+1),(j2+1)])
     output <- calNDVI(R2.val,R3.val)
-  }
-  else{
-    output <- NA
-  }
+  #}
+  #else{
+  #  output <- NA
+  #}
   return(output)
 
 }

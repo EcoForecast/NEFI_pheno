@@ -1,3 +1,6 @@
+#!/usr/bin/env Rscript
+
+install.packages("/projectnb/dietzelab/kiwheel/NEFI_pheno/PhenologyBayesModeling",repo=NULL)
 library("PhenologyBayesModeling")
 library("rjags")
 library("runjags")
@@ -6,11 +9,11 @@ siteData <- read.csv("GOES_Paper_Sites.csv",header=FALSE)
 startDay <- 110
 endDay <- 424
 xseq <- seq(startDay,endDay,1)
+)
+iseq <- seq(1,21)
 
-iseq <- c(8,16,19,20,21)
-
-for(i in iseq){
-  i <- 7
+#for(i in iseq){
+  #i <- 7
   siteName <- as.character(siteData[i,1])
   print(siteName)
   URL <- as.character(siteData[i,4])
@@ -39,4 +42,4 @@ for(i in iseq){
     graphMCMC_Outputs(outputFileName = "SH_PhenoFit.pdf",siteFileName = "GOES_Paper_Sites.csv",iseq=7,startDay = startDay,endDay = endDay)
     
   }
-}
+#}
