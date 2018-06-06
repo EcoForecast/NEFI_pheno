@@ -46,23 +46,22 @@ getSpecificNDVI <- function(ind2,ind3,day.time){
   R2.kappa0 <- ncvar_get(R2.file,"kappa0")
   R3 <- R3 * R3.kappa0 #done to covert radiance to reflectance
   R2 <- R2 * R2.kappa0
-  R3.DQF <- ncvar_get(R3.file,"DQF")
-  R2.DQF <- ncvar_get(R2.file,"DQF")
+
   i2 <- ind2[1]
   j2 <- ind2[2]
   i3 <- ind3[1]
   j3 <- ind3[2]
 
-  #print(c(R3.DQF[i3,j3],R2.DQF[i2,j2],)
+  #if(R3.DQF[i3,j3]==0 & R2.DQF[i2,j2]==0 & R2.DQF[i2,j2]==0 & R2.DQF[(i2+1),j2]==0 & R2.DQF[i2,(j2+1)]==0 & R2.DQF[(i2+1),(j2+1)]==0){
+  R3.val <- R3[i3,j3]
 
-  if(R3.DQF[i3,j3]==0 & R2.DQF[i2,j2]==0 & R2.DQF[i2,j2]==0 & R2.DQF[(i2+1),j2]==0 & R2.DQF[i2,(j2+1)]==0 & R2.DQF[(i2+1),(j2+1)]==0){
-    R3.val <- R3[i3,j3]
-    R2.val <- mean(R2[i2,j2],R2[(i2+1),j2],R2[i2,(j2+1)],R2[(i2+1),(j2+1)])
-    output <- calNDVI(R2.val,R3.val)
-  }
-  else{
-    output <- NA
-  }
+  #print(R3.val)
+  R2.val <- mean(R2[i2,j2],R2[(i2+1),j2],R2[i2,(j2+1)],R2[(i2+1),(j2+1)])
+  output <- calNDVI(R2.val,R3.val)
+  #}
+  #else{
+  #  output <- NA
+  #}
   return(output)
 
 }
