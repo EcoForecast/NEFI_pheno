@@ -9,7 +9,7 @@ graphMCMC_Outputs <- function(outputFileName,siteFileName,iseq,startDay,endDay){
     PFT <- as.character(siteData[i,5])
 
     #GOES
-    data.GOES = GOES_data(siteName=siteName,startDay = startDay,endDay = endDay)
+    #data.GOES = GOES_data(siteName=siteName,startDay = startDay,endDay = endDay)
     inputFileName <- paste(siteName,"_GOES_varBurn.RData",sep="")
     load(inputFileName)
 
@@ -17,7 +17,7 @@ graphMCMC_Outputs <- function(outputFileName,siteFileName,iseq,startDay,endDay){
     ci.GOES <- createCI(PFT=PFT,var.mat=var.mat,xseq=xseq)
 
     #MODIS:
-    data.MODIS = MODIS_data(siteName=siteName)
+    #data.MODIS = MODIS_data(siteName=siteName)
     inputFileName <- paste(siteName,"_MODIS_varBurn.RData",sep="")
     load(inputFileName)
 
@@ -25,7 +25,7 @@ graphMCMC_Outputs <- function(outputFileName,siteFileName,iseq,startDay,endDay){
     ci.MODIS <- createCI(PFT=PFT,var.mat=var.mat,xseq=xseq)
 
     #PC:
-    data.PC = PC_data(URL=URL,startDay=startDay,endDay=endDay)
+    #data.PC = PC_data(URL=URL,startDay=startDay,endDay=endDay)
     inputFileName <- paste(siteName,"_PC_varBurn.RData",sep="")
     load(inputFileName)
 
