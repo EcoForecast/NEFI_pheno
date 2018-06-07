@@ -1,14 +1,14 @@
 library("rjags")
 library("runjags")
 
-runMCMC_Model <- function(j.model,variableNames){
+runMCMC_Model <- function(j.model,variableNames,maxIter=1000000000){
   var.out   <- coda.samples (model = j.model,
                              variable.names = variableNames,
                              n.iter = 10000)
-  numb <- 1
+  numb <- 1000
   continue <- TRUE
-  while(continue){
-    print(numb*10000)
+  while(continue & numb<maxIter){
+    print(numb)
     new.out   <- coda.samples (model = j.model,
                                variable.names = variableNames,
                                n.iter = 10000)
@@ -35,7 +35,11 @@ runMCMC_Model <- function(j.model,variableNames){
         }
       }
     }
-    numb <- numb+1
+    numb <- numb+10000
+  }
+  if(continue==TRUE){
+    print("Model Did not Converge")
+    
   }
   return(var.out)
 }
