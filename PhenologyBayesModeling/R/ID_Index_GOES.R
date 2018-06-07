@@ -1,7 +1,7 @@
 library("ncdf4")
 library(plyr)
 
-getABI_Index <- function(lat,long,orbitVersion="NEW"){
+getABI_Index <- function(lat,long,orbitVersion){
   #Function to determine the index of the ABI fixed grid that corresponds to a geodetic (normal) latitude and longitude.
   #lat and long should be in radians not degrees
   #Note: to index into the ABI fixed grid, you index by [y,x] not [x,y].
@@ -28,7 +28,7 @@ getABI_Index <- function(lat,long,orbitVersion="NEW"){
   return(c(y,x))
 }
 
-getDataIndex <- function(vals,ch,orbitVersion="NEW"){
+getDataIndex <- function(vals,ch,orbitVersion){
   #Takes in the y,x coordinates on the ABI grid (vals) and returns a list of the i,j index for the product matrices
   #ch refers to the channel number (2,3, or ACM)
   #From PUG_L1b-vol3 pg 15

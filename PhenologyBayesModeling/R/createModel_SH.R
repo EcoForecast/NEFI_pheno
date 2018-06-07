@@ -10,7 +10,10 @@ createBayesModel.SH <- function(dataSource,siteName="",URL="") {
   nchain = 5
   inits <- list()
   if(dataSource=="PC.GCC"){
-    data = PC_data(URL=URL,startDay = 110,endDay = 424)
+    fileName <- paste(siteName,"_PC_Data.RData",sep="")
+    load(fileName)
+    data <- PC.data
+    #data = PC_data(URL=URL,startDay = 110,endDay = 424)
     for(i in 1:nchain){
       inits[[i]] <- list(a=rnorm(1,-30,3),b=rnorm(1,0.11,0.05),c=rnorm(1,0.25,0.05),d=rnorm(1,0.15,0.05))
     }
