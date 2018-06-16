@@ -7,7 +7,7 @@ library("runjags")
 ##' @param siteName Site Name
 ##' @param URL PhenoCam network URL
 createBayesModel.SH <- function(dataSource,siteName="",URL="") {
-  nchain = 5
+  nchain = 10
   inits <- list()
   if(dataSource=="PC.GCC"){
     fileName <- paste(siteName,"_PC_Data.RData",sep="")
@@ -19,6 +19,7 @@ createBayesModel.SH <- function(dataSource,siteName="",URL="") {
     }
     data$mean.d <- 0.3
     data$mean.c <- 0.1
+    print(data$y)
   }
   else if(dataSource == "MODIS.NDVI"){
     data = MODIS_data(siteName=siteName)
@@ -33,7 +34,10 @@ createBayesModel.SH <- function(dataSource,siteName="",URL="") {
     for(i in 1:(nchain)){
       inits[[i]] <- list(a=rnorm(1,30,1),b=rnorm(1,-0.14,0.01),c=rnorm(1,0.25,0.02),d=rnorm(1,0.15,0.001),r=rnorm(1,-0.02,0.002),k=rnorm(1,240,5))
     }
+    data$mean.c <- 0.25
+    data$mean.d <- 0.15
   }
+
   data$mean.a <- 30
   data$p.a <- 1/(3**2)#10
   data$mean.b <- -0.14

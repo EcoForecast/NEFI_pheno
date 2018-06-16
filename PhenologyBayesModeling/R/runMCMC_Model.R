@@ -4,24 +4,31 @@ library("runjags")
 runMCMC_Model <- function(j.model,variableNames,maxIter=1000000000){
   var.out   <- coda.samples (model = j.model,
                              variable.names = variableNames,
-                             n.iter = 10000)
-  numb <- 1000
+                             n.iter = 50000)
+  numb <- 50000
   continue <- TRUE
+  GBR.bad <- TRUE
   while(continue & numb<maxIter){
     print(numb)
     new.out   <- coda.samples (model = j.model,
                                variable.names = variableNames,
-                               n.iter = 10000)
+                               n.iter = 30000)
     var.out <- combine.mcmc(mcmc.objects=list(var.out,new.out),collapse.chains = FALSE)
-    GBR.vals <- gelman.diag(var.out)
     continue <- FALSE
-    for(i in 1:nrow(GBR.vals$psrf)){
-      for(j in 1:ncol(GBR.vals$psrf)){
-        if(GBR.vals$psrf[i,j]>1.04){
-          continue = TRUE
+    if(GBR.bad){
+      GBR.vals <- gelman.diag(var.out)
+      GBR.bad <- FALSE
+      for(i in 1:nrow(GBR.vals$psrf)){
+        for(j in 1:ncol(GBR.vals$psrf)){
+          if(GBR.vals$psrf[i,j]>1.04){
+            continue <-  TRUE
+            GBR.bad <- TRUE
+          }
         }
       }
+      print(GBR.vals)
     }
+
     if(!continue){
       GBR <- gelman.plot(var.out)
       burnin <- GBR$last.iter[tail(which(apply(GBR$shrink[,,2]>1.05,1,any)),1)+1]
@@ -30,16 +37,16 @@ runMCMC_Model <- function(j.model,variableNames,maxIter=1000000000){
       var.burn <- var.out
       effsize <- effectiveSize(var.burn)
       for(i in 1:length(effsize)){
-        if(effsize[i]<5000){
+        if(effsize[i]<100){
           continue = TRUE
         }
       }
+      print(effsize)
     }
-    numb <- numb+10000
+    numb <- numb+30000
   }
   if(continue==TRUE){
     print("Model Did not Converge")
-    
   }
   return(var.out)
 }
