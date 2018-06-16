@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-install.packages("/projectnb/dietzelab/kiwheel/NEFI_pheno/PhenologyBayesModeling",repo=NULL)
+#install.packages("PhenologyBayesModeling")
 library("PhenologyBayesModeling")
 library("rjags")
 library("runjags")
@@ -13,7 +13,7 @@ xseq <- seq(startDay,endDay,1)
 iseq <- c(7,15,18,19,20,21)
 
 for(i in iseq){
-  #i <- 7
+  i <- 7
   siteName <- as.character(siteData[i,1])
   print(siteName)
   URL <- as.character(siteData[i,4])
@@ -24,21 +24,21 @@ for(i in iseq){
     if(!file.exists(fileName)){
       j.model.PC <- createBayesModel.SH(dataSource="PC.GCC",siteName=siteName,URL=URL)
       PC.md.out <- runMCMC_Model(j.model=j.model.PC,variableNames = SH.vars)
-      save(var.burn,file=fileName)
+      save(PC.md.out,file=fileName)
     }
     print("PC Done")
     fileName <- paste(siteName,"_MODIS_varBurn.RData",sep="")
     if(!file.exists(fileName)){
       j.model.MODIS <- createBayesModel.SH(dataSource="MODIS.NDVI",siteName=siteName)
       MODIS.md.out <- runMCMC_Model(j.model=j.model.MODIS,variableNames = SH.vars)
-      save(var.burn,file=fileName)
+      save(MODIS.md.out,file=fileName)
     }
     print("MODIS Done")
     fileName <- paste(siteName,"_GOES_varBurn.RData",sep="")
     if(!file.exists(fileName)){
       j.model.GOES <- createBayesModel.SH(dataSource="GOES.NDVI",siteName=siteName)
       GOES.md.out <- runMCMC_Model(j.model=j.model.GOES,variableNames = SH.vars)
-      save(var.burn,file=fileName)
+      save(GOES.md.out,file=fileName)
     }
     print("GOES Done")
   }
