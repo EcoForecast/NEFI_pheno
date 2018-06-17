@@ -15,6 +15,12 @@ GOES_data <- function(siteName,startDay,endDay) {
   GOES_Days <- as.numeric(GOES[1,])
   GOES_NDVI <- as.numeric(GOES[2,])
 
+  for(i in 1:length(GOES_Days)){
+    if(GOES_Days[i]<100){
+      GOES_Days[i] <- as.numeric(GOES_Days[i]) + 365
+    }
+  }
+
   days <- which(GOES_Days>startDay&GOES_Days<endDay)
 
   y <- GOES_NDVI[days]
