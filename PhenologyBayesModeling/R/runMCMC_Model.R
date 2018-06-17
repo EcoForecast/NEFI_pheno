@@ -8,6 +8,7 @@ runMCMC_Model <- function(j.model,variableNames,maxIter=1000000000){
   numb <- 50000
   continue <- TRUE
   GBR.bad <- TRUE
+  burnin <- 0
   while(continue & numb<maxIter){
     print(numb)
     new.out   <- coda.samples (model = j.model,
@@ -30,14 +31,16 @@ runMCMC_Model <- function(j.model,variableNames,maxIter=1000000000){
     }
 
     if(!continue){
-      GBR <- gelman.plot(var.out)
-      burnin <- GBR$last.iter[tail(which(apply(GBR$shrink[,,2]>1.05,1,any)),1)+1]
-      if(length(burnin) == 0) burnin = 1
+      if(burnin==0){
+        GBR <- gelman.plot(var.out)
+        burnin <- GBR$last.iter[tail(which(apply(GBR$shrink[,,2]>1.05,1,any)),1)+1]
+        if(length(burnin) == 0) burnin = 1
+      }
       var.burn <- window(var.out,start=burnin)
       var.burn <- var.out
       effsize <- effectiveSize(var.burn)
       for(i in 1:length(effsize)){
-        if(effsize[i]<100){
+        if(effsize[i]<5000){
           continue = TRUE
         }
       }
