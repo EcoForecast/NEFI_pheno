@@ -19,7 +19,7 @@ createBayesModel.SH <- function(dataSource,siteName="",URL="") {
     }
     data$mean.d <- 0.3
     data$mean.c <- 0.1
-    print(data$y)
+    #print(data$y)
   }
   else if(dataSource == "MODIS.NDVI"){
     data = MODIS_data(siteName=siteName)
