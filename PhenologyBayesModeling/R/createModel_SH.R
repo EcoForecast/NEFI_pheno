@@ -39,13 +39,13 @@ createBayesModel.SH <- function(dataSource,siteName="",URL="") {
   }
 
   data$mean.a <- 30
-  data$p.a <- 1/(3**2)#10
+  data$p.a <- 0.01#1/(3**2)#10
   data$mean.b <- -0.14
-  data$p.b <- 1/(0.01**2)
-  data$p.c <- 1/(0.05**2)#10000
-  data$p.d <- 1/(0.05**2)#10000#1/(0.01**2)
+  data$p.b <- 100#1/(0.01**2)
+  data$p.c <- 10#1/(0.05**2)#10000
+  data$p.d <- 10#1/(0.05**2)#10000#1/(0.01**2)
   data$mean.r <- -0.02
-  data$p.r <- 1/(0.005**2)
+  data$p.r <- 1000#1/(0.005**2)
   data$s1 <- 0.001
   data$s2 <- 0.00001
   data$mean.k <- 240

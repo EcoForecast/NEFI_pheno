@@ -5,6 +5,7 @@ graphMCMC_Outputs <- function(outputFileName,siteFileName,iseq,startDay,endDay){
 
   for (i in iseq){
     siteName <- as.character(siteData[i,1])
+    print(siteName)
     URL <- as.character(siteData[i,4])
     PFT <- as.character(siteData[i,5])
 
@@ -13,7 +14,7 @@ graphMCMC_Outputs <- function(outputFileName,siteFileName,iseq,startDay,endDay){
     inputFileName <- paste(siteName,"_GOES_varBurn.RData",sep="")
     load(inputFileName)
 
-    var.mat<-as.matrix(var.burn)
+    var.mat<-as.matrix(GOES.md.out)
     ci.GOES <- createCI(PFT=PFT,var.mat=var.mat,xseq=xseq)
 
     #MODIS:
@@ -21,7 +22,7 @@ graphMCMC_Outputs <- function(outputFileName,siteFileName,iseq,startDay,endDay){
     inputFileName <- paste(siteName,"_MODIS_varBurn.RData",sep="")
     load(inputFileName)
 
-    var.mat<-as.matrix(var.burn)
+    var.mat<-as.matrix(MODIS.md.out)
     ci.MODIS <- createCI(PFT=PFT,var.mat=var.mat,xseq=xseq)
 
     #PC:
@@ -29,7 +30,7 @@ graphMCMC_Outputs <- function(outputFileName,siteFileName,iseq,startDay,endDay){
     inputFileName <- paste(siteName,"_PC_varBurn.RData",sep="")
     load(inputFileName)
 
-    var.mat<-as.matrix(var.burn)
+    var.mat<-as.matrix(PC.md.out)
     ci.PC <- createCI(PFT=PFT,var.mat=var.mat,xseq=xseq)
 
     par(mfrow=c(1,1))
