@@ -12,6 +12,9 @@ shrublandYvals <- function(a,b,c,d,k,r,xseq){
   if(k<110){
     bk <- 1
   }
+  if(k>424){
+    bk <- 424
+  }
   greenup <- pheno.logistic(a=a,b=b,c=c,d=d,xseq[1:bk])
   gd.xseq <- xseq[(bk+1):length(xseq)]-k
   greendown <- c*exp(r*gd.xseq)+d
