@@ -10,7 +10,7 @@ createNDVI_GOES2 <- function(lat,long,siteID){
 
   days <- seq(61,109)
   NDVI.vals <- list()
-  for (i in days3){
+  for (i in days){
     print(i)
     if(i<10) {
       day.time <- paste("201800",i,"165",sep="")
