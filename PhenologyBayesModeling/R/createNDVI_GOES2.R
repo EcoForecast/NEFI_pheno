@@ -8,6 +8,10 @@ createNDVI_GOES2 <- function(lat,long,siteID){
   lat.rd <- lat*2*pi/360
   long.rd <- long*2*pi/360
 
+  Ind2 <- getDataIndex(getABI_Index(lat.rd,long.rd,orbitVersion="NEW"),2,orbitVersion="NEW")
+  Ind3 <- getDataIndex(getABI_Index(lat.rd,long.rd,orbitVersion="NEW"),3,orbitVersion="NEW")
+  ACM.ind <- getDataIndex(getABI_Index(lat.rd,long.rd,orbitVersion="NEW"),"ACM",orbitVersion="NEW")
+
   days <- seq(61,109)
   NDVI.vals <- list()
   for (i in days){
