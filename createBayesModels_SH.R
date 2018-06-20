@@ -1,17 +1,24 @@
 #!/usr/bin/env Rscript
 
-#install.packages("PhenologyBayesModeling")
+#install.packages("/projectnb/dietzelab/kiwheel/NEFI_pheno/PhenologyBayesModeling",repo=NULL)
+#module load R/3.4.2
+#module load jags
+install.packages("coda",repo="http://cloud.r-project.org/",lib = '/projectnb/dietzelab/kiwheel/Rlibrary')#, configure.args = "--with-jags-lib=/share/pkg/jags/4.0.0/install/lib")
+library("coda")
 library("PhenologyBayesModeling")
-library("rjags")
-library("runjags")
+install.packages("rjags",repo="http://cloud.r-project.org/", configure.args = "--with-jags-include=/share/pkg/jags/4.0.0/install/lib",lib = '/projectnb/dietzelab/kiwheel/Rlibrary')
+install.packages("runjags",repo="http://cloud.r-project.org/", configure.args = "--with-jags-include=/share/pkg/jags/4.0.0/install/lib",lib = '/projectnb/dietzelab/kiwheel/Rlibrary')
+#install.packages("rjags",repo="http://cloud.r-project.org/",lib = '/projectnb/dietzelab/kiwheel/Rlibrary')
+library("rjags",lib = '/projectnb/dietzelab/kiwheel/Rlibrary')#,configure.args = "--with-jags-include-lib=/share/pkg/jags/4.0.0/install/lib")
+library("runjags",lib = '/projectnb/dietzelab/kiwheel/Rlibrary')#,configure.args = "--with-jags-include-lib=/share/pkg/jags/4.0.0/install/lib")
 
 siteData <- read.csv("GOES_Paper_Sites.csv",header=FALSE)
 startDay <- 110
 endDay <- 424
 xseq <- seq(startDay,endDay,1)
 
-iseq <- c(7,15,18,19,20,21)
-i=19
+#iseq <- c(7,15,18,19,20)
+iseq <- c(7,18)
 for(i in iseq){
   siteName <- as.character(siteData[i,1])
   print(siteName)
