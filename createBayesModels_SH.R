@@ -11,9 +11,8 @@ endDay <- 424
 xseq <- seq(startDay,endDay,1)
 
 iseq <- c(7,15,18,19,20,21)
-
+i=19
 for(i in iseq){
-  i <- 7
   siteName <- as.character(siteData[i,1])
   print(siteName)
   URL <- as.character(siteData[i,4])
