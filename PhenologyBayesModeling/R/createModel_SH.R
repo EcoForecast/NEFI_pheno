@@ -15,7 +15,7 @@ createBayesModel.SH <- function(dataSource,siteName="",URL="") {
     data <- PC.data
     #data = PC_data(URL=URL,startDay = 110,endDay = 424)
     for(i in 1:nchain){
-      inits[[i]] <- list(a=rnorm(1,-30,3),b=rnorm(1,0.11,0.05),c=rnorm(1,0.25,0.05),d=rnorm(1,0.15,0.05),k=rnorm(1,max(data$y),5))
+      inits[[i]] <- list(a=rnorm(1,-30,3),b=rnorm(1,0.11,0.05),c=rnorm(1,0.25,0.05),d=rnorm(1,0.15,0.05),k=rnorm(1,max(data$y,na.rm = TRUE),5))
     }
     data$mean.d <- 0.3
     data$mean.c <- 0.1
@@ -24,7 +24,7 @@ createBayesModel.SH <- function(dataSource,siteName="",URL="") {
   else if(dataSource == "MODIS.NDVI"){
     data = MODIS_data(siteName=siteName)
     for(i in 1:(nchain)){
-      inits[[i]] <- list(a=rnorm(1,-30,3),b=rnorm(1,0.11,0.05),c=rnorm(1,0.25,0.05),d=rnorm(1,0.15,0.05),k=rnorm(1,max(data$y),5))
+      inits[[i]] <- list(a=rnorm(1,-30,3),b=rnorm(1,0.11,0.05),c=rnorm(1,0.25,0.05),d=rnorm(1,0.15,0.05),k=rnorm(1,max(data$y,na.rm = TRUE),5))
     }
     data$mean.c <- 0.25
     data$mean.d <- 0.15
@@ -32,7 +32,7 @@ createBayesModel.SH <- function(dataSource,siteName="",URL="") {
   else if(dataSource=="GOES.NDVI"){
     data = GOES_data(siteName,startDay = 110,endDay = 424)
     for(i in 1:(nchain)){
-      inits[[i]] <- list(a=rnorm(1,30,1),b=rnorm(1,-0.14,0.01),c=rnorm(1,0.25,0.02),d=rnorm(1,0.15,0.001),r=rnorm(1,-0.02,0.002),k=rnorm(1,max(data$y),5))#k=rnorm(1,240,5))
+      inits[[i]] <- list(a=rnorm(1,30,1),b=rnorm(1,-0.14,0.01),c=rnorm(1,0.25,0.02),d=rnorm(1,0.15,0.001),r=rnorm(1,-0.02,0.002),k=rnorm(1,max(data$y,na.rm = TRUE),5))#k=rnorm(1,240,5))
     }
     data$mean.c <- 0.25
     data$mean.d <- 0.15
