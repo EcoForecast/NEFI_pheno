@@ -68,8 +68,8 @@ createNDVI_GOES <- function(lat,long,siteID){
     }
 
   }
-  days3 <- c(seq(1,5),seq(7,46),seq(49,53),seq(55,60))
-  
+  days3 <- c(seq(1,5),seq(7,46),seq(49,53),seq(55,109))
+
   for (i in days3){
     print(i)
     if(i<10) {
