@@ -15,10 +15,7 @@ createBayesModel.SH <- function(dataSource,siteName="",URL="",startDay,endDay,la
   nchain = 10
   inits <- list()
   if(dataSource=="PC.GCC"){
-    fileName <- paste(siteName,"_PC_Data.RData",sep="")
-    load(fileName)
-    data <- PC.data
-    #data = PC_data(URL=URL,startDay = 110,endDay = 424)
+    data <- PC_data(siteName=siteName,URL=URL,startDay=startDay,endDay=endDay)
     inits.mu <- createInits_SH(data)
     for(i in 1:nchain){
       inits[[i]] <- list(Tran=rnorm(1,150,10),b=rnorm(1,0.11,0.05),c=rnorm(1,inits.mu$c,0.02),d=rnorm(1,inits.mu$d,0.02),r=rnorm(1,-0.02,0.002),k=rnorm(1,inits.mu$k,5))
@@ -26,7 +23,6 @@ createBayesModel.SH <- function(dataSource,siteName="",URL="",startDay,endDay,la
     print(inits)
     data$mean.d <- 0.3
     data$mean.c <- 0.1
-    #print(data$y)
   }
   else if(dataSource == "MODIS.NDVI"){
     data = MODIS_data(siteName=siteName,lat=lat,long=long,startDay = startDay,endDay = endDay,metric="NDVI")
@@ -68,7 +64,6 @@ createBayesModel.SH <- function(dataSource,siteName="",URL="",startDay,endDay,la
   data$s2 <- 0.00001
   data$mean.k <- 240
   data$p.k <- 1/(50**2)
-  print(data$mean.k)
 
   SH_model <- "
   model{

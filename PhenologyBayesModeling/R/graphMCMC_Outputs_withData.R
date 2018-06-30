@@ -1,105 +1,141 @@
-graphMCMC_Outputs_withData <- function(outputFileName,siteFileName,iseq,startDay,endDay){
+graphMCMC_Outputs_withData <- function(outputFileName,siteFileName,iseq,startDaySH,endDaySH,startDayDB,endDayDB){
   pdf(file=outputFileName,width=8,height=8)
-  siteData <- read.csv(siteFileName,header=FALSE)
-  xseq <- seq(startDay,endDay,1)
+  siteData <- read.csv(siteFileName,header=TRUE)
 
   for (i in iseq){
-    siteName <- as.character(siteData[i,1])
+    siteName <- as.character(siteData$siteName[i])
     print(siteName)
-    URL <- as.character(siteData[i,4])
-    PFT <- as.character(siteData[i,5])
-
+    URL <- as.character(siteData$URL[i])
+    PFT <- as.character(siteData$PFT[i])
+    lat <- as.character(siteData$Lat[i])
+    long <- as.character(siteData$Long[i])
+    if(PFT=="DB"){
+      startDay <- startDayDB
+      endDay <- endDayDB
+    }
+    else if(PFT=="SH"){
+      startDay <- startDaySH
+      endDay <- endDaySH
+    }
+    xseq <- seq(startDay,endDay,1)
     #GOES
-    data.GOES = GOES_data(siteName=siteName,startDay = startDay,endDay = endDay)
-    inputFileName <- paste(siteName,"_GOES_varBurnINITS.RData",sep="")
+    # data.GOES = GOES_data(siteName=siteName,startDay = startDay,endDay = endDay)
+    # inputFileName <- paste(siteName,"_GOES_varBurnINITS.RData",sep="")
+    # load(inputFileName)
+    #
+    # var.mat<-as.matrix(GOES.md.out)
+    # GOES.c <- var.mat[,3]
+    # GOES.d <- var.mat[,4]
+    # if(PFT=="DB"){
+    #   GOES.a <- var.mat[,1]
+    #   GOES.b <- var.mat[,2]
+    #   GOES.trans <- mean(-(GOES.a/GOES.b))
+    # }
+    # else if(PFT=="SH"){
+    #   GOES.trans <- mean(var.mat[,5])
+    # }
+    # ci.GOES <- createCI(PFT=PFT,var.mat=var.mat,xseq=xseq)
+    # print("GOES Done")
+
+    #MODIS NDVI:
+    data.MODIS.N = MODIS_data(siteName=siteName,lat=lat,long=long,startDay=startDay,endDay=endDay,metric="NDVI")
+    inputFileName <- paste(siteName,"_MODIS_NDVI_varBurn.RData",sep="")
     load(inputFileName)
 
+    var.mat<-as.matrix(MODIS.N.md.out)
 
-    var.mat<-as.matrix(GOES.md.out)
-    GOES.c <- var.mat[,3]
-    GOES.d <- var.mat[,4]
     if(PFT=="DB"){
-      GOES.a <- var.mat[,1]
-      GOES.b <- var.mat[,2]
-      GOES.trans <- mean(-(GOES.a/GOES.b))
+      MODIS.N.Tran1<-var.mat[,1]
+      MODIS.N.Tran2<-var.mat[,2]
+      MODIS.N.c <- var.mat[,5]
+      MODIS.N.d <- var.mat[,6]
+
     }
     else if(PFT=="SH"){
-      GOES.trans <- mean(var.mat[,5])
+      MODIS.N.Tran1<-var.mat[,1]
+      MODIS.N.Tran2<-var.mat[,5]
+      MODIS.N.c <- var.mat[,3]
+      MODIS.N.d <- var.mat[,4]
     }
-    else if(PFT=="EN"){
-      GOES.trans <- mean(var.mat[,2])
-    }
-    ci.GOES <- createCI(PFT=PFT,var.mat=var.mat,xseq=xseq)
-    print("GOES Done")
 
-    #MODIS:
-    data.MODIS = MODIS_data(siteName=siteName)
-    inputFileName <- paste(siteName,"_MODIS_varBurnINITS.RData",sep="")
+    ci.MODIS.N <- createCI(PFT=PFT,var.mat=var.mat,xseq=xseq)
+    print("MODIS NDVI Done")
+
+    #MODIS EVI:
+    data.MODIS.E = MODIS_data(siteName=siteName,lat=lat,long=long,startDay=startDay,endDay=endDay,metric="EVI")
+    inputFileName <- paste(siteName,"_MODIS_EVI_varBurn.RData",sep="")
     load(inputFileName)
 
-    var.mat<-as.matrix(MODIS.md.out)
-    MODIS.c <- var.mat[,3]
-    MODIS.d <- var.mat[,4]
+    var.mat<-as.matrix(MODIS.E.md.out)
 
     if(PFT=="DB"){
-      MODIS.a <- var.mat[,1]
-      MODIS.b <- var.mat[,2]
-      MODIS.trans <- mean(-(MODIS.a/MODIS.b))
+      MODIS.E.Tran1<-var.mat[,1]
+      MODIS.E.Tran2<-var.mat[,2]
+      MODIS.E.c <- var.mat[,5]
+      MODIS.E.d <- var.mat[,6]
+
     }
     else if(PFT=="SH"){
-      MODIS.trans <- mean(var.mat[,5])
+      MODIS.E.Tran1<-var.mat[,1]
+      MODIS.E.Tran2<-var.mat[,5]
+      MODIS.E.c <- var.mat[,3]
+      MODIS.E.d <- var.mat[,4]
     }
-    else if(PFT=="EN"){
-      MODIS.trans <- mean(var.mat[,2])
-    }
-    ci.MODIS <- createCI(PFT=PFT,var.mat=var.mat,xseq=xseq)
-    print("MODIS Done")
 
-    #PC:
-    data.PC = PC_data(URL=URL,startDay=startDay,endDay=endDay)
-    inputFileName <- paste(siteName,"_PC_varBurnINITS.RData",sep="")
-    load(inputFileName)
+    ci.MODIS.E <- createCI(PFT=PFT,var.mat=var.mat,xseq=xseq)
+    print("MODIS EVI Done")
 
-    var.mat<-as.matrix(PC.md.out)
-    PC.c <- var.mat[,3]
-    PC.d <- var.mat[,4]
-    if(PFT=="DB"){
-      PC.a <- var.mat[,1]
-      PC.b <- var.mat[,2]
-      PC.trans <- mean(-(PC.a/PC.b))
-    }
-    else if(PFT=="SH"){
-      PC.trans <- mean(var.mat[,5])
-    }
-    else if(PFT=="EN"){
-      PC.trans <- mean(var.mat[,2])
-    }
-    ci.PC <- createCI(PFT=PFT,var.mat=var.mat,xseq=xseq)
-    print("PC Done")
+    # #PC:
+    # data.PC = PC_data(URL=URL,startDay=startDay,endDay=endDay)
+    # inputFileName <- paste(siteName,"_PC_varBurnINITS.RData",sep="")
+    # load(inputFileName)
+    #
+    # var.mat<-as.matrix(PC.md.out)
+    # PC.c <- var.mat[,3]
+    # PC.d <- var.mat[,4]
+    # if(PFT=="DB"){
+    #   PC.a <- var.mat[,1]
+    #   PC.b <- var.mat[,2]
+    #   PC.trans <- mean(-(PC.a/PC.b))
+    # }
+    # else if(PFT=="SH"){
+    #   PC.trans <- mean(var.mat[,5])
+    # }
+    # ci.PC <- createCI(PFT=PFT,var.mat=var.mat,xseq=xseq)
+    # print("PC Done")
 
     par(mfrow=c(1,1))
-    plot(x=list(),y=list(),xlim=c(100,500),ylim=c(-0.2,1.2),ylab="Value",xlab="Day of Year",main=paste(siteName,"GOES"),cex.axis=2,cex.lab=2,cex.main=2)
-    lines(xseq,ci.GOES[2,],col="black",lwd=2)
-    lines(xseq,ci.GOES[1,],col="black", lty = 2,lwd=2)
-    lines(xseq,ci.GOES[3,],col="black", lty = 2,lwd=2)
-    abline(v=mean(GOES.trans),col="black")
-    #print(length(data.GOES$x))
-    #print(length(rescale(c=GOES.c,d=GOES.d,yseq=data.GOES$y)))
-    points(data.GOES$x,rescale(c=mean(GOES.c),d=mean(GOES.d),yseq=data.GOES$y),col="Black",pch=20)
+    # plot(x=list(),y=list(),xlim=c(100,500),ylim=c(-0.2,1.2),ylab="Value",xlab="Day of Year",main=paste(siteName,"GOES"),cex.axis=2,cex.lab=2,cex.main=2)
+    # lines(xseq,ci.GOES[2,],col="black",lwd=2)
+    # lines(xseq,ci.GOES[1,],col="black", lty = 2,lwd=2)
+    # lines(xseq,ci.GOES[3,],col="black", lty = 2,lwd=2)
+    # abline(v=mean(GOES.trans),col="black")
+    # #print(length(data.GOES$x))
+    # #print(length(rescale(c=GOES.c,d=GOES.d,yseq=data.GOES$y)))
+    # points(data.GOES$x,rescale(c=mean(GOES.c),d=mean(GOES.d),yseq=data.GOES$y),col="Black",pch=20)
 
-    plot(x=list(),y=list(),xlim=c(100,500),ylim=c(-0.2,1.2),ylab="Value",xlab="Day of Year",main=paste(siteName,"PhenoCam"),cex.axis=2,cex.lab=2,cex.main=2)
-    lines(xseq,ci.PC[2,],col="cyan",lwd=2)
-    lines(xseq,ci.PC[1,],col="cyan", lty = 2,lwd=2)
-    lines(xseq,ci.PC[3,],col="cyan", lty = 2,lwd=2)
-    abline(v=mean(PC.trans),col="cyan")
-    points(data.PC$x,rescale(c=mean(PC.c),d=mean(PC.d),yseq=data.PC$y),col="cyan",pch=20)
+    # plot(x=list(),y=list(),xlim=c(100,500),ylim=c(-0.2,1.2),ylab="Value",xlab="Day of Year",main=paste(siteName,"PhenoCam"),cex.axis=2,cex.lab=2,cex.main=2)
+    # lines(xseq,ci.PC[2,],col="cyan",lwd=2)
+    # lines(xseq,ci.PC[1,],col="cyan", lty = 2,lwd=2)
+    # lines(xseq,ci.PC[3,],col="cyan", lty = 2,lwd=2)
+    # abline(v=mean(PC.trans),col="cyan")
+    # points(data.PC$x,rescale(c=mean(PC.c),d=mean(PC.d),yseq=data.PC$y),col="cyan",pch=20)
 
-    plot(x=list(),y=list(),xlim=c(100,500),ylim=c(-0.2,1.2),ylab="Value",xlab="Day of Year",main=paste(siteName,"MODIS"),cex.axis=2,cex.lab=2,cex.main=2)
-    lines(xseq,ci.MODIS[2,],col="red",lwd=2)
-    lines(xseq,ci.MODIS[1,],col="red", lty = 2,lwd=2)
-    lines(xseq,ci.MODIS[3,],col="red", lty = 2,lwd=2)
-    abline(v=mean(MODIS.trans),col="red")
-    points(data.MODIS$x,rescale(c=mean(MODIS.c),d=mean(MODIS.d),yseq=data.MODIS$y),col="red",pch=20)
+    plot(x=list(),y=list(),xlim=c(100,500),ylim=c(-0.2,1.2),ylab="Value",xlab="Day of Year",main=paste(siteName,"MODIS NDVI"),cex.axis=2,cex.lab=2,cex.main=2)
+    lines(xseq,ci.MODIS.N[2,],col="red",lwd=2)
+    lines(xseq,ci.MODIS.N[1,],col="red", lty = 2,lwd=2)
+    lines(xseq,ci.MODIS.N[3,],col="red", lty = 2,lwd=2)
+    abline(v=mean(MODIS.N.Tran1),col="red")
+    abline(v=mean(MODIS.N.Tran2),col="red")
+    points(data.MODIS.N$x,rescale(c=mean(MODIS.N.c),d=mean(MODIS.N.d),yseq=data.MODIS.N$y),col="red",pch=20)
+
+    plot(x=list(),y=list(),xlim=c(100,500),ylim=c(-0.2,1.2),ylab="Value",xlab="Day of Year",main=paste(siteName,"MODIS EVI"),cex.axis=2,cex.lab=2,cex.main=2)
+    lines(xseq,ci.MODIS.E[2,],col="red",lwd=2)
+    lines(xseq,ci.MODIS.E[1,],col="red", lty = 2,lwd=2)
+    lines(xseq,ci.MODIS.E[3,],col="red", lty = 2,lwd=2)
+    abline(v=mean(MODIS.E.Tran1),col="red")
+    abline(v=mean(MODIS.E.Tran2),col="red")
+    points(data.MODIS.E$x,rescale(c=mean(MODIS.E.c),d=mean(MODIS.E.d),yseq=data.MODIS.E$y),col="red",pch=20)
 
   }
   dev.off()
