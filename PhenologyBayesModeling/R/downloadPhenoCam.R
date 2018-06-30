@@ -7,7 +7,8 @@ download.phenocam <- function(URL) {
   if (length(URL) == 1 & is.character(URL) & substr(URL,1,4)=="http") {
 
     ## read data
-    dat <- read.csv(text=getURL(URL),skip = 22)
+    fileName <- getURL(URL)
+    dat <- read.csv(text=fileName,skip = 22)
 
     ## convert date
     dat$date <- as.Date(as.character(dat$date))
