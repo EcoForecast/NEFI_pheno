@@ -11,8 +11,8 @@ endDay <- 474
 xseq <- seq(startDay,endDay,1)
 
 #iseq <- seq(1,19)
-iseq <- c(18)
-
+#iseq <- c(9,14,17)
+iseq <- 7
 for(i in iseq){
   siteName <- as.character(siteData[i,1])
   print(siteName)
@@ -65,20 +65,20 @@ for(i in iseq){
     fileName <- paste(siteName,"_PC_varBurn.RData",sep="")
     if(!file.exists(fileName)){
       j.model.PC <- createBayesModel.SH(dataSource="PC.GCC",siteName=siteName,URL=URL)
-      PC.md.out <- runMCMC_Model(j.model=j.model.PC,variableNames = EN.vars)
-      save(var.burn,file=fileName)
+      PC.md.out <- runMCMC_Model(j.model=j.model.PC,variableNames = EN.vars,maxIter=10**6)
+      save(PC.md.out,file=fileName)
     }
     fileName <- paste(siteName,"_MODIS_varBurn.RData",sep="")
     if(!file.exists(fileName)){
       j.model.MODIS <- createBayesModel.SH(dataSource="MODIS.NDVI",siteName=siteName)
-      MODIS.md.out <- runMCMC_Model(j.model=j.model.MODIS,variableNames = EN.vars)
-      save(var.burn,file=fileName)
+      MODIS.md.out <- runMCMC_Model(j.model=j.model.MODIS,variableNames = EN.vars,maxIter=10**6)
+      save(MODIS.md.out,file=fileName)
     }
     fileName <- paste(siteName,"_GOES_varBurn.RData",sep="")
     if(!file.exists(fileName)){
       j.model.GOES <- createBayesModel.SH(dataSource="GOES.NDVI",siteName=siteName)
-      GOES.md.out <- runMCMC_Model(j.model=j.model.GOES,variableNames = EN.vars)
-      save(var.burn,file=fileName)
+      GOES.md.out <- runMCMC_Model(j.model=j.model.GOES,variableNames = EN.vars,maxIter=10**6)
+      save(GOES.md.out,file=fileName)
     }
   }
 
