@@ -11,7 +11,7 @@ graphMCMC_Outputs_withData <- function(outputFileName,siteFileName,iseq,startDay
 
     #GOES
     data.GOES = GOES_data(siteName=siteName,startDay = startDay,endDay = endDay)
-    inputFileName <- paste(siteName,"_GOES_varBurn.RData",sep="")
+    inputFileName <- paste(siteName,"_GOES_varBurnINITS.RData",sep="")
     load(inputFileName)
 
 
@@ -26,11 +26,15 @@ graphMCMC_Outputs_withData <- function(outputFileName,siteFileName,iseq,startDay
     else if(PFT=="SH"){
       GOES.trans <- mean(var.mat[,5])
     }
+    else if(PFT=="EN"){
+      GOES.trans <- mean(var.mat[,2])
+    }
     ci.GOES <- createCI(PFT=PFT,var.mat=var.mat,xseq=xseq)
+    print("GOES Done")
 
     #MODIS:
     data.MODIS = MODIS_data(siteName=siteName)
-    inputFileName <- paste(siteName,"_MODIS_varBurn.RData",sep="")
+    inputFileName <- paste(siteName,"_MODIS_varBurnINITS.RData",sep="")
     load(inputFileName)
 
     var.mat<-as.matrix(MODIS.md.out)
@@ -45,11 +49,15 @@ graphMCMC_Outputs_withData <- function(outputFileName,siteFileName,iseq,startDay
     else if(PFT=="SH"){
       MODIS.trans <- mean(var.mat[,5])
     }
+    else if(PFT=="EN"){
+      MODIS.trans <- mean(var.mat[,2])
+    }
     ci.MODIS <- createCI(PFT=PFT,var.mat=var.mat,xseq=xseq)
+    print("MODIS Done")
 
     #PC:
     data.PC = PC_data(URL=URL,startDay=startDay,endDay=endDay)
-    inputFileName <- paste(siteName,"_PC_varBurn.RData",sep="")
+    inputFileName <- paste(siteName,"_PC_varBurnINITS.RData",sep="")
     load(inputFileName)
 
     var.mat<-as.matrix(PC.md.out)
@@ -63,10 +71,14 @@ graphMCMC_Outputs_withData <- function(outputFileName,siteFileName,iseq,startDay
     else if(PFT=="SH"){
       PC.trans <- mean(var.mat[,5])
     }
+    else if(PFT=="EN"){
+      PC.trans <- mean(var.mat[,2])
+    }
     ci.PC <- createCI(PFT=PFT,var.mat=var.mat,xseq=xseq)
+    print("PC Done")
 
     par(mfrow=c(1,1))
-    plot(x=list(),y=list(),xlim=c(164,420),ylim=c(-0.2,1.2),ylab="Value",xlab="Day of Year",main=paste(siteName,"GOES"),cex.axis=2,cex.lab=2,cex.main=2)
+    plot(x=list(),y=list(),xlim=c(100,500),ylim=c(-0.2,1.2),ylab="Value",xlab="Day of Year",main=paste(siteName,"GOES"),cex.axis=2,cex.lab=2,cex.main=2)
     lines(xseq,ci.GOES[2,],col="black",lwd=2)
     lines(xseq,ci.GOES[1,],col="black", lty = 2,lwd=2)
     lines(xseq,ci.GOES[3,],col="black", lty = 2,lwd=2)
@@ -75,14 +87,14 @@ graphMCMC_Outputs_withData <- function(outputFileName,siteFileName,iseq,startDay
     #print(length(rescale(c=GOES.c,d=GOES.d,yseq=data.GOES$y)))
     points(data.GOES$x,rescale(c=mean(GOES.c),d=mean(GOES.d),yseq=data.GOES$y),col="Black",pch=20)
 
-    plot(x=list(),y=list(),xlim=c(164,420),ylim=c(-0.2,1.2),ylab="Value",xlab="Day of Year",main=paste(siteName,"PhenoCam"),cex.axis=2,cex.lab=2,cex.main=2)
+    plot(x=list(),y=list(),xlim=c(100,500),ylim=c(-0.2,1.2),ylab="Value",xlab="Day of Year",main=paste(siteName,"PhenoCam"),cex.axis=2,cex.lab=2,cex.main=2)
     lines(xseq,ci.PC[2,],col="cyan",lwd=2)
     lines(xseq,ci.PC[1,],col="cyan", lty = 2,lwd=2)
     lines(xseq,ci.PC[3,],col="cyan", lty = 2,lwd=2)
     abline(v=mean(PC.trans),col="cyan")
     points(data.PC$x,rescale(c=mean(PC.c),d=mean(PC.d),yseq=data.PC$y),col="cyan",pch=20)
 
-    plot(x=list(),y=list(),xlim=c(164,420),ylim=c(-0.2,1.2),ylab="Value",xlab="Day of Year",main=paste(siteName,"MODIS"),cex.axis=2,cex.lab=2,cex.main=2)
+    plot(x=list(),y=list(),xlim=c(100,500),ylim=c(-0.2,1.2),ylab="Value",xlab="Day of Year",main=paste(siteName,"MODIS"),cex.axis=2,cex.lab=2,cex.main=2)
     lines(xseq,ci.MODIS[2,],col="red",lwd=2)
     lines(xseq,ci.MODIS[1,],col="red", lty = 2,lwd=2)
     lines(xseq,ci.MODIS[3,],col="red", lty = 2,lwd=2)
