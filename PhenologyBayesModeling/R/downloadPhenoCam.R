@@ -1,3 +1,4 @@
+library("RCurl")
 ##' Download Phenocam data
 ##'
 ##' @param URL  web address where data is located
@@ -6,7 +7,7 @@ download.phenocam <- function(URL) {
   if (length(URL) == 1 & is.character(URL) & substr(URL,1,4)=="http") {
 
     ## read data
-    dat <- read.csv(url(URL),skip = 22)
+    dat <- read.csv(getURL(URL),skip = 22)
 
     ## convert date
     dat$date <- as.Date(as.character(dat$date))
