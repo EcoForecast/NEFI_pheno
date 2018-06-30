@@ -12,6 +12,7 @@ colnames(siteData) <- c("Name","Latitude","Longitude","URL","PFT")
 
 iseq <- c(1,2,3,7,8,9)
 iseq <- c(7,15,18,19)
+iseq <- c(1,2,3,4,5,6,8,10,12,13)
 
 gg1 <- ggplot(main="Selected Site Locations") +geom_polygon(data = dta, aes(x=long, y=lat, group=group),fill=NA,colour="black")# + cord_fixed(1.3)
 gg1 <- gg1 + geom_point(data=siteData[iseq,], aes(x = Longitude, y = Latitude))+theme_bw()

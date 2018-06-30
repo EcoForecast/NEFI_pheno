@@ -8,60 +8,89 @@ library("runjags")
 ##' @param dataSource data source (GOES.NDVI, MODIS.NDVI, PC.GCC)
 ##' @param siteName Site Name
 ##' @param URL PhenoCam network URL
-createBayesModel.DB <- function(dataSource,siteName="",URL="",niter=100000,startDay=164,endDay=425) {
+##' @param lat latitude of site in degrees
+##' @param long longitude of site in degrees
+##' @param startDay the day of year since 2017-01-01 to start the model
+##' @param endDay the day of year since 2017-01-01 to end the model
+##' @param niter the maximum number of iterations you want to give the model to converge within
+createBayesModel.DB <- function(dataSource,siteName="",URL="",niter=100000,startDay,endDay,lat,long) {
   nchain = 5
   inits <- list()
   if(dataSource=="PC.GCC"){
     fileName <- paste(siteName,"_PC_Data.RData",sep="")
     load(fileName)
     data <- PC.data
+    inits.mu <- createInits_DB(data)
     for(i in 1:nchain){
-      inits[[i]] <- list(a=-30,b=rnorm(1,0.10,0.015),c=rnorm(1,0.05,0.01),d=rnorm(1,0.33,0.03))
+      inits[[i]] <- list(TranS=rnorm(1,480,10),bF=rnorm(1,0.10,0.015),TranF=rnorm(1,280,10),bF=rnorm(1,0.11,0.05),c=rnorm(1,inits.mu$c,0.02),d=rnorm(1,inits.mu$d,0.001),k=rnorm(1,365,10))
     }
-    data$beta.c <- 5
-    data$alpha.c <- 3
-    data$alpha.d <- 4
-    data$beta.d <- 5
+    data$mean.c <- 0.1
+    data$mean.d <- 0.35
+    data$p.c <- 0.1
+    data$p.d <- 0.1
   }
   else if(dataSource == "MODIS.NDVI"){
-    data = MODIS_data(siteName=siteName)
+    data = MODIS_data(siteName=siteName,lat=lat,long=long,startDay = startDay,endDay = endDay,metric="NDVI")
+    inits.mu <- createInits_DB(data)
     for(i in 1:(nchain)){
-      inits[[i]] <- list(a=rnorm(1,-30,3),b=rnorm(1,0.11,0.05),c=0.2,d=0.7)
+      inits[[i]] <- list(TranS=rnorm(1,480,10),bS=rnorm(1,-0.09,0.05),TranF=rnorm(1,280,10),bF=rnorm(1,0.11,0.05),c=rnorm(1,inits.mu$c,0.02),d=rnorm(1,inits.mu$d,0.001),k=rnorm(1,365,10))
     }
-    data$beta.c <- 5
-    data$alpha.c <- 3
-    data$alpha.d <- 6
-    data$beta.d <- 4
+    data$mean.c <- 0.4
+    data$p.c <- 0.2
+    data$mean.d <- 0.6
+    data$p.d <- 0.2
+
+  }
+  else if(dataSource == "MODIS.EVI"){
+    data = MODIS_data(siteName=siteName,lat=lat,long=long,startDay = startDay,endDay = endDay,metric="EVI")
+    inits.mu <- createInits_DB(data)
+    for(i in 1:(nchain)){
+      inits[[i]] <- list(TranS=rnorm(1,480,10),bS=rnorm(1,-0.09,0.05),TranF=rnorm(1,280,10),bF=rnorm(1,0.11,0.05),c=rnorm(1,inits.mu$c,0.02),d=rnorm(1,inits.mu$d,0.001),k=rnorm(1,365,10))
+    }
+    data$mean.c <- 0.4
+    data$p.c <- 0.2
+    data$mean.d <- 0.6
+    data$p.d <- 0.2
   }
   else if(dataSource=="GOES.NDVI"){
-    data = GOES_data(siteName,startDay = 110,endDay = 424)
+    data = GOES_data(siteName,startDay = startDay,endDay = endDay)
     for(i in 1:(nchain)){
-      inits[[i]] <- list(a=rnorm(1,-29.9,0.3),b=rnorm(1,0.25,0.1),c=rnorm(1,0.4,0.1),d=rnorm(1,0.4,0.1))
+      inits[[i]] <- list(TranS=rnorm(1,480,10),bS=rnorm(1,-0.09,0.05),TranF=rnorm(1,280,10),bF=rnorm(1,0.11,0.05),c=rnorm(1,inits.mu$c,0.02),d=rnorm(1,inits.mu$d,0.001),k=rnorm(1,365,10))
     }
-    data$beta.c <- 5
-    data$alpha.c <- 3
-    data$alpha.d <- 4
-    data$beta.d <- 5
+    data$mean.c <- 0.4
+    data$p.c <- 0.2
+    data$mean.d <- 0.6
+    data$p.d <- 0.2
   }
   data$s1 <- 0.001
   data$s2 <- 0.00001
-  data$p.a <- 1
-  data$p.b <- .001
-  data$mean.a <- -30
-  data$mean.b <- 0.11
+  data$p.Tran <- 1/(40**2)
+  data$p.b <- 1/(0.05**2)
+  data$mean.TranF <- 300
+  data$mean.bF <- 0.10
+  data$mean.TranS <- 475
+  data$mean.bS <- -0.10
+  data$mean.k <- 365
+  data$p.k <- 30
 
   DB_model <- "
   model{
   ##priors
-  a ~ dnorm(mean.a,p.a)
-  b ~ dnorm(mean.b,p.b)
-  d ~ dbeta(alpha.d,beta.d)
-  c ~ dbeta(alpha.c,beta.c)
+  TranS ~ dnorm(mean.TranS,p.Tran) ##S for spring
+  bS ~ dnorm(mean.bS,p.b)
+  TranF ~ dnorm(mean.TranF,p.Tran)  ##F for fall/autumn
+  bF ~ dnorm(mean.bF,p.b)
+  d ~ dnorm(mean.d,p.d)
+  c ~ dnorm(mean.c,p.c)
+  k ~ dnorm(mean.k,p.k)
   prec ~ dgamma(s1,s2)
 
   for(i in 1:n){
-  mu[i] <- c/(1 + exp(a+b*x[i]))+d   	## process model
-  y[i]  ~ dnorm(mu[i],prec)		## data model (will need to change to beta eventually)
+  muF[i] <- c/(1+exp(bF*(x[i]-TranF)))+d ##process model for fall
+  muS[i] <- c/(1+exp(bS*(x[i]-TranS)))+d ##process model for Spring
+  mu[i] <- ifelse(x[i]>k,muS[i],muF[i])   #change point process model
+
+  y[i]  ~ dnorm(mu[i],prec)		## data model
   }
   }
   "
