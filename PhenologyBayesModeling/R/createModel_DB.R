@@ -17,10 +17,8 @@ createBayesModel.DB <- function(dataSource,siteName="",URL="",niter=100000,start
   nchain = 5
   inits <- list()
   if(dataSource=="PC.GCC"){
-    fileName <- paste(siteName,"_PC_Data.RData",sep="")
-    load(fileName)
-    data <- PC.data
-    inits.mu <- createInits_DB(data)
+    data <- PC_data(siteName=siteName,URL=URL,startDay=startDay,endDay=endDay)
+    inits.mu <- createInits(data=data,PFT=PFT)
     for(i in 1:nchain){
       inits[[i]] <- list(TranS=rnorm(1,480,10),bF=rnorm(1,0.10,0.015),TranF=rnorm(1,280,10),bF=rnorm(1,0.11,0.05),c=rnorm(1,inits.mu$c,0.02),d=rnorm(1,inits.mu$d,0.001),k=rnorm(1,365,10))
     }
@@ -31,7 +29,7 @@ createBayesModel.DB <- function(dataSource,siteName="",URL="",niter=100000,start
   }
   else if(dataSource == "MODIS.NDVI"){
     data = MODIS_data(siteName=siteName,lat=lat,long=long,startDay = startDay,endDay = endDay,metric="NDVI")
-    inits.mu <- createInits_DB(data)
+    inits.mu <- createInits(data=data,PFT=PFT)
     for(i in 1:(nchain)){
       inits[[i]] <- list(TranS=rnorm(1,480,10),bS=rnorm(1,-0.09,0.05),TranF=rnorm(1,280,10),bF=rnorm(1,0.11,0.05),c=rnorm(1,inits.mu$c,0.02),d=rnorm(1,inits.mu$d,0.001),k=rnorm(1,365,10))
     }
@@ -39,11 +37,10 @@ createBayesModel.DB <- function(dataSource,siteName="",URL="",niter=100000,start
     data$p.c <- 0.2
     data$mean.d <- 0.6
     data$p.d <- 0.2
-
   }
   else if(dataSource == "MODIS.EVI"){
     data = MODIS_data(siteName=siteName,lat=lat,long=long,startDay = startDay,endDay = endDay,metric="EVI")
-    inits.mu <- createInits_DB(data)
+    inits.mu <- createInits(data=data,PFT=PFT)
     for(i in 1:(nchain)){
       inits[[i]] <- list(TranS=rnorm(1,480,10),bS=rnorm(1,-0.09,0.05),TranF=rnorm(1,280,10),bF=rnorm(1,0.11,0.05),c=rnorm(1,inits.mu$c,0.02),d=rnorm(1,inits.mu$d,0.001),k=rnorm(1,365,10))
     }
@@ -54,6 +51,7 @@ createBayesModel.DB <- function(dataSource,siteName="",URL="",niter=100000,start
   }
   else if(dataSource=="GOES.NDVI"){
     data = GOES_data(siteName,startDay = startDay,endDay = endDay)
+    inits.mu <- createInits(data=data,PFT=PFT)
     for(i in 1:(nchain)){
       inits[[i]] <- list(TranS=rnorm(1,480,10),bS=rnorm(1,-0.09,0.05),TranF=rnorm(1,280,10),bF=rnorm(1,0.11,0.05),c=rnorm(1,inits.mu$c,0.02),d=rnorm(1,inits.mu$d,0.001),k=rnorm(1,365,10))
     }
