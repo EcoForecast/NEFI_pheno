@@ -33,8 +33,9 @@ createNDVI_GOES <- function(lat,long,startDay,endDay,fileName,TZ){
     }
 
     filestrACM <- paste("OR_ABI-L2-ACMC-M3_G16_s",day.time,sep="")
+    filepath <- dir(path="GOES_Data2017",pattern=filestrACM)
     filepath <- paste("GOES_Data2017/",dir(path="GOES_Data2017",pattern=filestrACM),sep="")
-    if(file.exists(filepath)){
+    if(file.exists(filepath) & !dir.exists(filepath)){
       ACM.file <-nc_open(filepath)
 
       print(i)
@@ -97,7 +98,7 @@ createNDVI_GOES <- function(lat,long,startDay,endDay,fileName,TZ){
     filestrACM <- paste("OR_ABI-L2-ACMC-M3_G16_s",day.time,sep="")
 
     filepath <- paste("GOES_Data2017/",dir(path="GOES_Data2017",pattern=filestrACM),sep="")
-    if(file.exists(filepath)){
+    if(file.exists(filepath) & !dir.exists(filepath)){
       ACM.file <-nc_open(filepath)
       clouds <- ncvar_get(ACM.file,"BCM")[ACM.ind[1],ACM.ind[2]]
       if(clouds == 0){
