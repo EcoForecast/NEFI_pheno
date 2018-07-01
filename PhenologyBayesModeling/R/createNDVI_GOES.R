@@ -40,17 +40,21 @@ createNDVI_GOES <- function(lat,long,startDay,endDay,fileName,TZ){
 
       print(i)
       clouds <- ncvar_get(ACM.file,"BCM")[ACM.ind[1],ACM.ind[2]]
-      if(clouds == 0){
-        NDVI.val <- getSpecificNDVI(Ind2,Ind3,day.time)
-        print(NDVI.val)
-        NDVI.vals <- c(NDVI.vals,NDVI.val)
+      if(!is.na(clouds)){
+        if(clouds == 0){
+          NDVI.val <- getSpecificNDVI(Ind2,Ind3,day.time)
+          print(NDVI.val)
+          NDVI.vals <- c(NDVI.vals,NDVI.val)
+        }
+        else{
+          NDVI.vals <- c(NDVI.vals,NA)
+        }
       }
       else{
         NDVI.vals <- c(NDVI.vals,NA)
       }
       days <- c(days,i)
     }
-
   }
   Ind2 <- getDataIndex(getABI_Index(lat.rd,long.rd,orbitVersion="NEW"),2,orbitVersion="NEW")
   Ind3 <- getDataIndex(getABI_Index(lat.rd,long.rd,orbitVersion="NEW"),3,orbitVersion="NEW")
@@ -70,9 +74,14 @@ createNDVI_GOES <- function(lat,long,startDay,endDay,fileName,TZ){
 
     print(i)
     clouds <- ncvar_get(ACM.file,"BCM")[ACM.ind[1],ACM.ind[2]]
-    if(clouds == 0){
-      NDVI.val <- getSpecificNDVI(Ind2,Ind3,day.time)
-      NDVI.vals <- c(NDVI.vals,NDVI.val)
+    if(!is.na(clouds)){
+      if(clouds == 0){
+        NDVI.val <- getSpecificNDVI(Ind2,Ind3,day.time)
+        NDVI.vals <- c(NDVI.vals,NDVI.val)
+      }
+      else{
+        NDVI.vals <- c(NDVI.vals,NA)
+      }
     }
     else{
       NDVI.vals <- c(NDVI.vals,NA)
@@ -101,9 +110,14 @@ createNDVI_GOES <- function(lat,long,startDay,endDay,fileName,TZ){
     if(file.exists(filepath) && !dir.exists(filepath)){
       ACM.file <-nc_open(filepath)
       clouds <- ncvar_get(ACM.file,"BCM")[ACM.ind[1],ACM.ind[2]]
-      if(clouds == 0){
-        NDVI.val <- getSpecificNDVI(Ind2,Ind3,day.time)
-        NDVI.vals <- c(NDVI.vals,NDVI.val)
+      if(!is.na(clouds)){
+        if(clouds == 0){
+          NDVI.val <- getSpecificNDVI(Ind2,Ind3,day.time)
+          NDVI.vals <- c(NDVI.vals,NDVI.val)
+        }
+        else{
+          NDVI.vals <- c(NDVI.vals,NA)
+        }
       }
       else{
         NDVI.vals <- c(NDVI.vals,NA)
