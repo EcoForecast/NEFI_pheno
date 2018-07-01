@@ -5,7 +5,7 @@ createInits <- function(data,PFT){
   c <- mean(sort(y,decreasing = TRUE)[1:5])-d
   init.mus <- list(d=d,c=c)
   if(PFT=="SH"){
-    data$k <- x[which(y==max(y,na.rm = TRUE))]
+    init.mus$k <- x[which(y==max(y,na.rm = TRUE))]
   }
   return(init.mus)
 }
