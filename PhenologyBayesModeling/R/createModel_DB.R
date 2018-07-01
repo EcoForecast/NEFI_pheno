@@ -20,7 +20,7 @@ createBayesModel.DB <- function(dataSource,siteName="",URL="",niter=100000,start
     data <- PC_data(siteName=siteName,URL=URL,startDay=startDay,endDay=endDay)
     inits.mu <- createInits(data=data,PFT=PFT)
     for(i in 1:nchain){
-      inits[[i]] <- list(TranS=rnorm(1,480,10),bF=rnorm(1,0.10,0.015),TranF=rnorm(1,280,10),bF=rnorm(1,0.11,0.05),c=rnorm(1,inits.mu$c,0.02),d=rnorm(1,inits.mu$d,0.001),k=rnorm(1,365,10))
+      inits[[i]] <- list(TranS=rnorm(1,480,10),bS=rnorm(1,-0.10,0.015),TranF=rnorm(1,280,10),bF=rnorm(1,0.11,0.05),c=rnorm(1,inits.mu$c,0.02),d=rnorm(1,inits.mu$d,0.001),k=rnorm(1,365,10))
     }
     data$mean.c <- 0.1
     data$mean.d <- 0.35
