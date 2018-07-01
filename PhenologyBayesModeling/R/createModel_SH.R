@@ -16,7 +16,7 @@ createBayesModel.SH <- function(dataSource,siteName="",URL="",startDay,endDay,la
   inits <- list()
   if(dataSource=="PC.GCC"){
     data <- PC_data(siteName=siteName,URL=URL,startDay=startDay,endDay=endDay)
-    inits.mu <- createInits_SH(data)
+    inits.mu <- createInits(data=data,PFT="SH")
     for(i in 1:nchain){
       inits[[i]] <- list(Tran=rnorm(1,150,10),b=rnorm(1,0.11,0.05),c=rnorm(1,inits.mu$c,0.02),d=rnorm(1,inits.mu$d,0.02),r=rnorm(1,-0.02,0.002),k=rnorm(1,inits.mu$k,5))
     }
@@ -26,7 +26,7 @@ createBayesModel.SH <- function(dataSource,siteName="",URL="",startDay,endDay,la
   }
   else if(dataSource == "MODIS.NDVI"){
     data = MODIS_data(siteName=siteName,lat=lat,long=long,startDay = startDay,endDay = endDay,metric="NDVI")
-    inits.mu <- createInits_SH(data)
+    inits.mu <- createInits(data=data,PFT="SH")
     for(i in 1:(nchain)){
       inits[[i]] <- list(Tran=rnorm(1,150,10),b=rnorm(1,0.11,0.05),c=rnorm(1,inits.mu$c,0.02),d=rnorm(1,inits.mu$d,0.02),r=rnorm(1,-0.02,0.002),k=rnorm(1,inits.mu$k,5))
     }
@@ -35,7 +35,7 @@ createBayesModel.SH <- function(dataSource,siteName="",URL="",startDay,endDay,la
   }
   else if(dataSource == "MODIS.EVI"){
     data = MODIS_data(siteName=siteName,lat=lat,long=long,startDay = startDay,endDay = endDay,metric="EVI")
-    inits.mu <- createInits_SH(data)
+    inits.mu <- createInits(data=data,PFT="SH")
     for(i in 1:(nchain)){
       inits[[i]] <- list(Tran=rnorm(1,150,10),b=rnorm(1,0.11,0.05),c=rnorm(1,inits.mu$c,0.02),d=rnorm(1,inits.mu$d,0.02),r=rnorm(1,-0.02,0.002),k=rnorm(1,inits.mu$k,5))
     }
@@ -44,7 +44,7 @@ createBayesModel.SH <- function(dataSource,siteName="",URL="",startDay,endDay,la
   }
   else if(dataSource=="GOES.NDVI"){
     data = GOES_data(siteName,startDay = 110,endDay = 424)
-    inits.mu <- createInits_SH(data)
+    inits.mu <- createInits(data=data,PFT="SH")
     for(i in 1:(nchain)){
       inits[[i]] <- list(Tran=rnorm(1,150,1),b=rnorm(1,-0.14,0.01),c=rnorm(1,inits.mu$c,0.02),d=rnorm(1,inits.mu$d,0.001),r=rnorm(1,-0.02,0.002),k=rnorm(1,inits.mu$k,5))
     }
