@@ -15,25 +15,9 @@ PC_data <- function(siteName,URL,startDay,endDay) {
     PC.time = as.Date(PC.data$date)
     y <- PC.data$midday_gcc[startDay:endDay]
     x <- lubridate::yday(PC.time[startDay:endDay])
-    print(x)
-
-    if(startDay<100){ #Don't want to add to the first days of 2017
-      for(i in 100:length(x)){
-        if(!is.na(x[i])){
-          if(x[i]<100){
-            x[i] <- x[i]+365
-          }
-        }
-      }
-    }
-    else{
-      for(i in 1:length(x)){
-        if(!is.na(x[i])){
-          if(x[i]<100){
-            x[i] <- x[i]+365
-          }
-        }
-      }
+    bk <- which(xseq==366)
+    for(i in bk:length(x)){
+      x[i] <- x[i]+365
     }
     data <- list(x=x,y=y,n=length(y))
     save(data,file=fileName)
