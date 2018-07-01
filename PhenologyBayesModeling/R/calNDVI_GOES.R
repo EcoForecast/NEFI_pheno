@@ -39,7 +39,7 @@ getSpecificNDVI <- function(ind2,ind3,day.time){
   filestrC03 <- paste("OR_ABI-L1b-RadC-M3C03_G16_s",day.time,sep="")
   filepathC02 <- paste("GOES_Data2017/",dir(path="GOES_Data2017",pattern=filestrC02),sep="")
   filepathC03 <- paste("GOES_Data2017/",dir(path="GOES_Data2017",pattern=filestrC03),sep="")
-  if(file.exists(filepathC02) & file.exists(filepathC03) & !dir.exists(filepathC02) & !dir.exists(filepathC03)){
+  if(file.exists(filepathC02) && file.exists(filepathC03) && !dir.exists(filepathC02) && !dir.exists(filepathC03)){
     R2.file <-nc_open(filepathC02)
     R3.file <-nc_open(filepathC02)
 
@@ -57,8 +57,8 @@ getSpecificNDVI <- function(ind2,ind3,day.time){
     i3 <- ind3[1]
     j3 <- ind3[2]
 
-    if(!is.na(R3.DQF[i3,j3]) & !is.na(R2.DQF[i2,j2]) & !is.na(R2.DQF[i2,j2]) & !is.na(R2.DQF[(i2+1),j2]) & !is.na(R2.DQF[i2,(j2+1)]) & !is.na(R2.DQF[(i2+1),(j2+1)])){
-      if(R3.DQF[i3,j3]==0 & R2.DQF[i2,j2]==0 & R2.DQF[i2,j2]==0 & R2.DQF[(i2+1),j2]==0 & R2.DQF[i2,(j2+1)]==0 & R2.DQF[(i2+1),(j2+1)]==0){
+    if(!is.na(R3.DQF[i3,j3]) && !is.na(R2.DQF[i2,j2]) && !is.na(R2.DQF[i2,j2]) && !is.na(R2.DQF[(i2+1),j2]) && !is.na(R2.DQF[i2,(j2+1)]) && !is.na(R2.DQF[(i2+1),(j2+1)])){
+      if(R3.DQF[i3,j3]==0 && R2.DQF[i2,j2]==0 && R2.DQF[i2,j2]==0 && R2.DQF[(i2+1),j2]==0 && R2.DQF[i2,(j2+1)]==0 && R2.DQF[(i2+1),(j2+1)]==0){
         R3.val <- R3[i3,j3]
         R2.val <- mean(R2[i2,j2],R2[(i2+1),j2],R2[i2,(j2+1)],R2[(i2+1),(j2+1)])
         output <- calNDVI(R2.val,R3.val)
