@@ -1,14 +1,14 @@
-library("RCurl")
+library("curl")
 ##' Download Phenocam data
 ##'
 ##' @param URL  web address where data is located
-download.phenocam <- function(URL) {
+download.phenocam <- function(URL,fileName) {
   ## check that we've been passed a URL
   if (length(URL) == 1 & is.character(URL) & substr(URL,1,4)=="http") {
 
     ## read data
-    fileName <- getURL(URL)
-    dat <- read.csv(text=fileName,skip = 22)
+    curl::curl_download(URL,destfile=location)
+    dat <- read.csv(test=fileName,skip=22)
 
     ## convert date
     dat$date <- as.Date(as.character(dat$date))
