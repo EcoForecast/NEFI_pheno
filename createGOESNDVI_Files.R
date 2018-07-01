@@ -23,6 +23,6 @@ for(i in 1:nrow(siteData)){
     startDay <- 152
     endDay <- 546
   }
-  GOES_data <- function(siteName,lat,long,startDay,endDay,TZ)
+  GOES_data(siteName,lat,long,startDay,endDay,TZ)
 }
 
