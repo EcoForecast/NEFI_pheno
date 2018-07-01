@@ -1,3 +1,4 @@
+
 ##' For PhenoCam data, construct the data object for input into MCMC
 ##'
 ##' @param URL PhenoCam network URL
@@ -7,8 +8,7 @@ PC_data <- function(siteName,URL,startDay,endDay) {
   endDate <- as.Date(endDay,origin="2017-01-01")
   fileName <- paste(siteName,"_",startDate,"_",endDate,".RData",sep="")
   if(!file.exists(fileName)){
-    directory=getwd()
-    PC.data <- subset(download.phenocam(URL),year%in%c(2017,2018))
+    PC.data <- subset(download.phenocam(URL,fileName=fileName),year%in%c(2017,2018))
     PC.data <- PC.data[1:endDay,]
     PC.time = as.Date(PC.data$date)
     y <- PC.data$gcc_mean[startDay:endDay]
