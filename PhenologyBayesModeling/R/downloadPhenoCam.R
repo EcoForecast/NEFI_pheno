@@ -7,6 +7,7 @@ download.phenocam <- function(URL,fileName) {
   if (length(URL) == 1 & is.character(URL) & substr(URL,1,4)=="http") {
 
     ## read data
+    location <- paste(getwd(),"/",fileName,sep="")
     curl::curl_download(URL,destfile=location)
     dat <- read.csv(test=fileName,skip=22)
 
