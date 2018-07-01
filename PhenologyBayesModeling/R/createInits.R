@@ -1,3 +1,5 @@
+##' @param data The data in the form of a list with items x and y
+##' @param PFT Plant functional type ("SH" or "DB")
 createInits <- function(data,PFT){
   x <- data$x
   y <- data$y

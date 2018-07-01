@@ -1,7 +1,12 @@
 ##' For MODIS EVI data, construct the data object for input into MCMC
 ##'
-##' @param siteName
-MODIS_data <- function(siteName,lat,long,startDay,endDay,metric="NDVI") {
+##' @param siteName Site Name
+##' @param lat Latitude
+##' @param long Longitude
+##' @param startDay The start day counted as the day number after 2016-12-31
+##' @param endDay The end day counted as the day number after 2016-12-31
+##' @param metric "NDVI" or "EVI"
+MODIS_data <- function(siteName,lat,long,startDay,endDay,metric) {
   startDate <- as.Date(startDay,origin="2016-12-31")
   endDate <- as.Date(endDay,origin="2016-12-31")
   fileName <- paste(siteName,"_",metric,"_MOD13Q1_",startDate,"_",endDate,".csv",sep="")

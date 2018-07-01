@@ -3,40 +3,51 @@
 library("ncdf4")
 library(plyr)
 
-createNDVI_GOES <- function(lat,long,siteID){
+##' @param fileName Desired file name of output
+##' @param lat Latitude
+##' @param long Longitude
+##' @param startDay The start day counted as the day number after 2016-12-31
+##' @param endDay The end day counted as the day number after 2016-12-31
+##' @param TZ The timezone off of UTC
+createNDVI_GOES <- function(lat,long,startDay,endDay,fileName,TZ){
   #load/calcuate GOES NDVI data
   lat.rd <- lat*2*pi/360
   long.rd <- long*2*pi/360
+  Tstr <- paste(as.character(11+TZ),"5",sep="") #The time string, which changes based on the local time zone
 
   Ind2 <- getDataIndex(getABI_Index(lat.rd,long.rd,orbitVersion="OLD"),2,orbitVersion="OLD")
   Ind3 <- getDataIndex(getABI_Index(lat.rd,long.rd,orbitVersion="OLD"),3,orbitVersion="OLD")
   ACM.ind <- getDataIndex(getABI_Index(lat.rd,long.rd,orbitVersion="OLD"),"ACM",orbitVersion="OLD")
 
-  NDVI.vals <- list()
-
-  days1 <- c(seq(110,126),132,seq(134,136),seq(139,143),seq(146,154),seq(156,157),seq(159,161),seq(163,181),seq(182,188),seq(191,200),seq(203,207),209,seq(211,214),216,seq(218,220),seq(222,231),seq(233,264),seq(266,269),seq(273,289),seq(291,295),seq(297,301),seq(303,314),seq(316,324),seq(328,333))
+  NDVI.vals <- numeric()
+  days <- numeric()
+  days1 <- seq(startDay,333)
+  #days1 <- c(seq(110,126),132,seq(134,136),seq(139,143),seq(146,154),seq(156,157),seq(159,161),seq(163,181),seq(182,188),seq(191,200),seq(203,207),209,seq(211,214),216,seq(218,220),seq(222,231),seq(233,264),seq(266,269),seq(273,289),seq(291,295),seq(297,301),seq(303,314),seq(316,324),seq(328,333))
 
   for (i in days1){
     if(i<100){
-      day.time <- paste("20170",i,"165",sep="")
+      day.time <- paste("20170",i,Tstr,sep="")
     }
     else{
-      day.time <- paste("2017",i,"165",sep="")
+      day.time <- paste("2017",i,Tstr,sep="")
     }
-
 
     filestrACM <- paste("OR_ABI-L2-ACMC-M3_G16_s",day.time,sep="")
-    ACM.file <-nc_open(paste("GOES_Data2017/",dir(path="GOES_Data2017",pattern=filestrACM),sep=""))
+    filepath <- paste("GOES_Data2017/",dir(path="GOES_Data2017",pattern=filestrACM),sep="")
+    if(file.exists(filepath)){
+      ACM.file <-nc_open(filepath)
 
-    print(i)
-    clouds <- ncvar_get(ACM.file,"BCM")[ACM.ind[1],ACM.ind[2]]
-    if(clouds == 0){
-      NDVI.val <- getSpecificNDVI(Ind2,Ind3,day.time)
-      print(NDVI.val)
-      NDVI.vals <- c(NDVI.vals,NDVI.val)
-    }
-    else{
-      NDVI.vals <- c(NDVI.vals,NA)
+      print(i)
+      clouds <- ncvar_get(ACM.file,"BCM")[ACM.ind[1],ACM.ind[2]]
+      if(clouds == 0){
+        NDVI.val <- getSpecificNDVI(Ind2,Ind3,day.time)
+        print(NDVI.val)
+        NDVI.vals <- c(NDVI.vals,NDVI.val)
+      }
+      else{
+        NDVI.vals <- c(NDVI.vals,NA)
+      }
+      days <- c(days,i)
     }
 
   }
@@ -47,12 +58,11 @@ createNDVI_GOES <- function(lat,long,siteID){
   days2 <- c(348,seq(350,365))
   for (i in days2){
     if(i<100){
-      day.time <- paste("20170",i,"165",sep="")
+      day.time <- paste("20170",i,Tstr,sep="")
     }
     else{
-      day.time <- paste("2017",i,"165",sep="")
+      day.time <- paste("2017",i,Tstr,sep="")
     }
-
 
     filestrACM <- paste("OR_ABI-L2-ACMC-M3_G16_s",day.time,sep="")
     ACM.file <-nc_open(paste("GOES_Data2017/",dir(path="GOES_Data2017",pattern=filestrACM),sep=""))
@@ -66,47 +76,42 @@ createNDVI_GOES <- function(lat,long,siteID){
     else{
       NDVI.vals <- c(NDVI.vals,NA)
     }
+    days <- c(days,i)
 
   }
-  days3 <- c(seq(1,5),seq(7,46),seq(49,53),seq(55,109))
+  days3 <- seq(1,(endDay-365),1)
+  #days3 <- c(seq(1,5),seq(7,46),seq(49,53),seq(55,109))
 
   for (i in days3){
     print(i)
     if(i<10) {
-      day.time <- paste("201800",i,"165",sep="")
+      day.time <- paste("201800",i,Tstr,sep="")
     }
     else if(i<100){
-      day.time <- paste("20180",i,"165",sep="")
+      day.time <- paste("20180",i,Tstr,sep="")
     }
     else{
-      day.time <- paste("2018",i,"165",sep="")
+      day.time <- paste("2018",i,Tstr,sep="")
     }
 
     filestrACM <- paste("OR_ABI-L2-ACMC-M3_G16_s",day.time,sep="")
-    ACM.file <-nc_open(paste("GOES_Data2017/",dir(path="GOES_Data2017",pattern=filestrACM),sep=""))
 
-
-    clouds <- ncvar_get(ACM.file,"BCM")[ACM.ind[1],ACM.ind[2]]
-    if(clouds == 0){
-      NDVI.val <- getSpecificNDVI(Ind2,Ind3,day.time)
-      NDVI.vals <- c(NDVI.vals,NDVI.val)
+    filepath <- paste("GOES_Data2017/",dir(path="GOES_Data2017",pattern=filestrACM),sep="")
+    if(file.exists(filepath)){
+      ACM.file <-nc_open(filepath)
+      clouds <- ncvar_get(ACM.file,"BCM")[ACM.ind[1],ACM.ind[2]]
+      if(clouds == 0){
+        NDVI.val <- getSpecificNDVI(Ind2,Ind3,day.time)
+        NDVI.vals <- c(NDVI.vals,NDVI.val)
+      }
+      else{
+        NDVI.vals <- c(NDVI.vals,NA)
+      }
+      days <- c(days,i)
     }
-    else{
-      NDVI.vals <- c(NDVI.vals,NA)
-    }
-
   }
-  days <- c(days1,days2,days3)
-
-  fileName <- paste("GOES_NDVI_",siteID,"_kappaDQF.csv",sep="")
   output <- rbind(t(days),NDVI.vals)
   write.table(output,file=fileName,sep=",",col.names=FALSE,row.names=FALSE)
 }
 
-#createNDVI_GOES(lat=31.7438,long=-110.0522,siteID="luckyHills")
-
-#days <- c(seq(182,207),209,seq(211,214),seq(216,220),seq(222,231),seq(233,264),seq(266,269),seq(271,289),seq(291,295),seq(297,301),seq(303,314),seq(316,324),seq(328,333),348,seq(350,365))
-#days <- c(seq(182,207),209,seq(211,214),seq(216,220),seq(222,231),seq(233,264),seq(266,269),seq(271,295),seq(297,301),seq(303,324),seq(328,333),seq(348,365))
-#days <- c(seq(60,87),seq(89,93),seq(95,99),seq(101,103),seq(105,126),132,seq(134,136),seq(139,143),seq(146,154),seq(156,157),seq(159,161),seq(163,181))
-#days <- seq(163,181)
 
