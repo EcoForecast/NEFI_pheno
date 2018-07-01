@@ -92,7 +92,7 @@ createNDVI_GOES <- function(lat,long,startDay,endDay,fileName,TZ){
       days <- c(days,i)
     }
   }
-  days3 <- seq(1,(endDay-365),1)
+  days3 <- c(seq(1,12),seq(4,(endDay-365),1))
   #days3 <- c(seq(1,5),seq(7,46),seq(49,53),seq(55,109))
 
   for (i in days3){
