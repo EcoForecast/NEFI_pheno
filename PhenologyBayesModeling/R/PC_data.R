@@ -1,7 +1,9 @@
-
 ##' For PhenoCam data, construct the data object for input into MCMC
 ##'
 ##' @param URL PhenoCam network URL
+##' @param siteName The site name
+##' @param startDay The start day counted as the day number after 2016-12-31
+##' @param endDay The end day counted as the day number after 2016-12-31
 PC_data <- function(siteName,URL,startDay,endDay) {
   ##Data
   startDate <- as.Date(startDay,origin="2016-12-31")

@@ -1,15 +1,18 @@
 ##' For GOES NDVI data, construct the data object for input into MCMC
 ##'
 ##' @param siteName Site Name
-GOES_data <- function(siteName,startDay,endDay) {
-  ##Data
-  #NDVI.fileName1 <- paste("GOES_NDVI_",siteName,"2017_kappaDQF.csv",sep="")
-  #GOES1 <- read.csv(NDVI.fileName1,header=FALSE)
-  #NDVI.fileName2 <- paste("GOES_NDVI_",siteName,"2018_kappaDQF.csv",sep="")
-  #GOES2 <- read.csv(NDVI.fileName2,header=FALSE)
-  #GOES2[1,] <- GOES2[1,]+365
-  #GOES <- cbind(GOES1,GOES2)
-  GOES.fileName <- paste("GOES_NDVI_",siteName,"_kappaDQF.csv",sep="")
+##' @param lat Latitude
+##' @param long Longitude
+##' @param startDay The start day counted as the day number after 2016-12-31
+##' @param endDay The end day counted as the day number after 2016-12-31
+##' @param TZ The timezone off of UTC
+GOES_data <- function(siteName,lat,long,startDay,endDay,TZ) {
+  startDate <- as.Date(startDay,origin="2016-12-31")
+  endDate <- as.Date(endDay,origin="2016-12-31")
+  fileName <- paste("GOES_NDVI_",siteName,"_",startDate,"_",endDate,"_noon.csv",sep="")
+  if(!file.exits(GOES.fileName)){
+    createNDVI_GOES(lat=lat,long=long,startDay=startDay,endDay=endDay,fileName=fileName,TZ=TZ)
+  }
   GOES <- read.csv(GOES.fileName,header=FALSE)
 
   GOES_Days <- as.numeric(GOES[1,])
