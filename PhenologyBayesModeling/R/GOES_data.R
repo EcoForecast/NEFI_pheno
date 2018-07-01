@@ -10,7 +10,7 @@ GOES_data <- function(siteName,lat,long,startDay,endDay,TZ) {
   startDate <- as.Date(startDay,origin="2016-12-31")
   endDate <- as.Date(endDay,origin="2016-12-31")
   fileName <- paste("GOES_NDVI_",siteName,"_",startDate,"_",endDate,"_noon.csv",sep="")
-  if(!file.exits(GOES.fileName)){
+  if(!file.exists(GOES.fileName)){
     createNDVI_GOES(lat=lat,long=long,startDay=startDay,endDay=endDay,fileName=fileName,TZ=TZ)
   }
   GOES <- read.csv(GOES.fileName,header=FALSE)
