@@ -4,14 +4,14 @@
 ##' @param URL PhenoCam network URL
 PC_data <- function(siteName,URL,startDay,endDay) {
   ##Data
-  startDate <- as.Date(startDay,origin="2017-01-01")
-  endDate <- as.Date(endDay,origin="2017-01-01")
+  startDate <- as.Date(startDay,origin="2016-12-31")
+  endDate <- as.Date(endDay,origin="2016-12-31")
   fileName <- paste(siteName,"_",startDate,"_",endDate,"PC.RData",sep="")
   if(!file.exists(fileName)){
     PC.data <- subset(download.phenocam(URL),year%in%c(2017,2018))
     PC.data <- PC.data[1:endDay,]
     PC.time = as.Date(PC.data$date)
-    y <- PC.data$gcc_mean[startDay:endDay]
+    y <- PC.data$midday_gcc[startDay:endDay]
     x <- lubridate::yday(PC.time[startDay:endDay])
     print(x)
 

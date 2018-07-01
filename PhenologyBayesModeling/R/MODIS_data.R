@@ -2,8 +2,8 @@
 ##'
 ##' @param siteName
 MODIS_data <- function(siteName,lat,long,startDay,endDay,metric="NDVI") {
-  startDate <- as.Date(startDay,origin="2017-01-01")
-  endDate <- as.Date(endDay,origin="2017-01-01")
+  startDate <- as.Date(startDay,origin="2016-12-31")
+  endDate <- as.Date(endDay,origin="2016-12-31")
   fileName <- paste(siteName,"_",metric,"_MOD13Q1_",startDate,"_",endDate,".csv",sep="")
   if(!file.exists(fileName)){
     print("Downloading MODIS File")
