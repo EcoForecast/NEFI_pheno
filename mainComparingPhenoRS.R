@@ -1,20 +1,24 @@
 #!/usr/bin/env Rscript
+#Sys.setenv(LIBCURL_BUILD="winssl")
+#install.packages("https://github.com/jeroen/curl/archive/master.tar.gz", repos = NULL)
 
 install.packages("/projectnb/dietzelab/kiwheel/NEFI_pheno/PhenologyBayesModeling",repo=NULL)
+install.packages("MODISTools",repo="https://cloud.r-project.org/")
+#install.packages("curl",repo="https://cloud.r-project.org/")
 library("PhenologyBayesModeling")
 library("rjags")
 library("runjags")
 library("MODISTools")
+#library("curl")
 
 siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)
-startDay <- 152
-endDay <- 544
-xseq <- seq(startDay,endDay,1)
+#startDay <- 152
+#endDay <- 544
+#startDay <- 110
+#endDay <- 455
+#xseq <- seq(startDay,endDay,1)
 
-iseq <- 7
-iseq <- seq(1,5)
-iseq <- c(1)
-i <- 2
+iseq <- c(3,4,5)
 
 for(i in iseq){
   siteName <- as.character(siteData$siteName[i])
@@ -25,6 +29,9 @@ for(i in iseq){
   long <- as.character(siteData$Long[i])
                       
   if(PFT=="DB"){
+    startDay <- 152
+    endDay <- 544
+    xseq <- seq(startDay,endDay,1)
     DB.vars <- c("TranF","bF","TranS","bS","c","d","prec","k")
     fileName <- paste(siteName,"_PC_varBurn.RData",sep="")
     if(!file.exists(fileName)){
@@ -46,12 +53,15 @@ for(i in iseq){
     }
     fileName <- paste(siteName,"_GOES_varBurn.RData",sep="")
     if(!file.exists(fileName)){
-      j.model.GOES <- createBayesModel.DB(dataSource="GOES.NDVI",siteName=siteName,startDay = startDay,endDay = endDay)
-      GOES.md.out <- runMCMC_Model(j.model=j.model.GOES,variableNames = DB.vars)
-      save(GOES.md.out,file=fileName)
+     # j.model.GOES <- createBayesModel.DB(dataSource="GOES.NDVI",siteName=siteName,startDay = startDay,endDay = endDay)
+     # GOES.md.out <- runMCMC_Model(j.model=j.model.GOES,variableNames = DB.vars)
+     # save(GOES.md.out,file=fileName)
     }
   }
   else if(PFT=="SH"){
+    startDay <- 110
+    endDay <- 455
+    xseq <- seq(startDay,endDay,1)
     SH.vars <- c("Tran","b","c","d","k","r","prec")
     fileName <- paste(siteName,"_PC_varBurn.RData",sep="")
     if(!file.exists(fileName)){
@@ -73,9 +83,9 @@ for(i in iseq){
     }
     fileName <- paste(siteName,"_GOES_varBurn.RData",sep="")
     if(!file.exists(fileName)){
-      j.model.GOES <- createBayesModel.SH(dataSource="GOES.NDVI",siteName=siteName,startDay = startDay,endDay = endDay)
-      GOES.md.out <- runMCMC_Model(j.model=j.model.GOES,variableNames = SH.vars)
-      save(GOES.md.out,file=fileName)
+     # j.model.GOES <- createBayesModel.SH(dataSource="GOES.NDVI",siteName=siteName,startDay = startDay,endDay = endDay)
+     # GOES.md.out <- runMCMC_Model(j.model=j.model.GOES,variableNames = SH.vars)
+     # save(GOES.md.out,file=fileName)
     }
   }
 }
