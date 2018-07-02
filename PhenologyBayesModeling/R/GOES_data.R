@@ -13,7 +13,7 @@ GOES_data <- function(siteName,lat,long,startDay,endDay,TZ) {
   if(!file.exists(fileName)){
     createNDVI_GOES(lat=lat,long=long,startDay=startDay,endDay=endDay,fileName=fileName,TZ=TZ)
   }
-  GOES <- read.csv(GOES.fileName,header=FALSE)
+  GOES <- read.csv(fileName,header=FALSE)
 
   GOES_Days <- as.numeric(GOES[1,])
   GOES_NDVI <- as.numeric(GOES[2,])
