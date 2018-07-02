@@ -18,8 +18,9 @@ createBayesModel.SH <- function(dataSource,siteName="",URL="",startDay,endDay,la
     data <- PC_data(siteName=siteName,URL=URL,startDay=startDay,endDay=endDay)
     inits.mu <- createInits(data=data,PFT="SH")
     for(i in 1:nchain){
-      inits[[i]] <- list(Tran=rnorm(1,150,10),b=rnorm(1,0.11,0.05),c=rnorm(1,inits.mu$c,0.02),d=rnorm(1,inits.mu$d,0.02),r=rnorm(1,-0.02,0.002),k=rnorm(1,inits.mu$k,5))
+      #inits[[i]] <- list(Tran=rnorm(1,150,10),b=rnorm(1,0.11,0.05),c=rnorm(1,inits.mu$c,0.02),d=rnorm(1,inits.mu$d,0.02),r=rnorm(1,-0.02,0.002),k=rnorm(1,inits.mu$k,5))
       #inits[[i]] <- list(Tran=rnorm(1,204,3),b=rnorm(1,-0.156,0.02),c=rnorm(1,0.07,0.02),d=rnorm(1,0.32,0.02),r=rnorm(1,-0.0156,0.002),k=rnorm(1,211,5))
+      inits[[i]] <- list(Tran=rnorm(1,210,3),b=rnorm(1,-0.156,0.02),c=rnorm(1,0.015,0.02),d=rnorm(1,0.32,0.02),r=rnorm(1,-0.013,0.002),k=rnorm(1,240,5))
     }
     print(inits)
     data$mean.d <- 0.3
