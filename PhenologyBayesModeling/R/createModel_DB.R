@@ -13,7 +13,7 @@ library("runjags")
 ##' @param startDay the day of year since 2017-01-01 to start the model
 ##' @param endDay the day of year since 2017-01-01 to end the model
 ##' @param niter the maximum number of iterations you want to give the model to converge within
-createBayesModel.DB <- function(dataSource,siteName="",URL="",niter=100000,startDay,endDay,lat,long) {
+createBayesModel.DB <- function(dataSource,siteName="",URL="",niter=100000,startDay,endDay,lat,long,TZ=5) {
   nchain = 5
   inits <- list()
   if(dataSource=="PC.GCC"){
@@ -50,7 +50,7 @@ createBayesModel.DB <- function(dataSource,siteName="",URL="",niter=100000,start
     data$p.d <- 0.2
   }
   else if(dataSource=="GOES.NDVI"){
-    data = GOES_data(siteName,startDay = startDay,endDay = endDay)
+    data = GOES_data(siteName,startDay = startDay,endDay = endDay,lat=lat,long=long,TZ=TZ)
     inits.mu <- createInits(data=data,PFT=PFT)
     for(i in 1:(nchain)){
       inits[[i]] <- list(TranS=rnorm(1,480,10),bS=rnorm(1,-0.09,0.05),TranF=rnorm(1,280,10),bF=rnorm(1,0.11,0.05),c=rnorm(1,inits.mu$c,0.02),d=rnorm(1,inits.mu$d,0.001),k=rnorm(1,365,10))
