@@ -3,7 +3,7 @@
 library("ncdf4")
 library(plyr)
 
-createNDVI_GOES <- function(lat,long,siteID){
+createNDVI_GOES_OLD <- function(lat,long,siteID){
   #load/calcuate GOES NDVI data
   lat.rd <- lat*2*pi/360
   long.rd <- long*2*pi/360
