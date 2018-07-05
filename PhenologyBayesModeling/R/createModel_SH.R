@@ -48,7 +48,8 @@ createBayesModel.SH <- function(dataSource,siteName="",URL="",startDay,endDay,la
     data = GOES_data(siteName,startDay = startDay,endDay = endDay,lat=lat,long=long,TZ=TZ)
     inits.mu <- createInits(data=data,PFT="SH")
     for(i in 1:(nchain)){
-      inits[[i]] <- list(Tran=rnorm(1,150,1),b=rnorm(1,-0.14,0.01),c=rnorm(1,inits.mu$c,0.02),d=rnorm(1,inits.mu$d,0.001),r=rnorm(1,-0.02,0.002),k=rnorm(1,inits.mu$k,5))
+      #inits[[i]] <- list(Tran=rnorm(1,150,1),b=rnorm(1,-0.14,0.01),c=rnorm(1,inits.mu$c,0.02),d=rnorm(1,inits.mu$d,0.001),r=rnorm(1,-0.02,0.002),k=rnorm(1,inits.mu$k,5))
+      inits[[i]] <- list(Tran=rnorm(1,215,3),b=rnorm(1,-0.13,0.02),c=rnorm(1,inits.mu$c,0.02),d=rnorm(1,inits.mu$d,0.001),r=rnorm(1,-0.02,0.002),k=rnorm(1,inits.mu$k,5))
     }
     data$mean.c <- 0.25
     data$mean.d <- 0.15
