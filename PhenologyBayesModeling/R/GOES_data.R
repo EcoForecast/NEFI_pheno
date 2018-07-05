@@ -23,6 +23,10 @@ GOES_data <- function(siteName,lat,long,startDay,endDay,TZ) {
       GOES_Days[i] <- as.numeric(GOES_Days[i]) + 365
     }
   }
+  bk <- which(GOES_Days==366)
+  for(i in bk:length(GOES_Days)){
+    GOES_Days[i] <- GOES_Days[i]+365
+  }
 
   days <- which(GOES_Days>startDay&GOES_Days<endDay)
 
