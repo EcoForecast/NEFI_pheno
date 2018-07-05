@@ -13,7 +13,7 @@ createNDVI_GOES <- function(lat,long,startDay,endDay,fileName,TZ){
   #load/calcuate GOES NDVI data
   lat.rd <- as.numeric(lat)*2*pi/360
   long.rd <- as.numeric(long)*2*pi/360
-  Tstr <- paste(as.character(11+as.numeric(TZ)),"57",sep="") #The time string, which changes based on the local time zone
+  Tstr <- paste(as.character(11+as.numeric(TZ)),"52",sep="") #The time string, which changes based on the local time zone
   print(Tstr)
 
   Ind2 <- getDataIndex(getABI_Index(lat.rd,long.rd,orbitVersion="OLD"),2,orbitVersion="OLD")
