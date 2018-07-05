@@ -12,7 +12,7 @@ GOES_data <- function(siteName,lat,long,startDay,endDay,TZ) {
   fileName <- paste("GOES_NDVI_",siteName,"_",startDate,"_",endDate,"_noon.csv",sep="")
   if(!file.exists(fileName)){
     #createNDVI_GOES_OLD(lat=lat,long=long,startDay=startDay,endDay=endDay,fileName=fileName,TZ=TZ)
-    createNDVI_GOES_OLD(lat=lat,long=long,siteID=siteName)
+    createNDVI_GOES_OLD(lat=as.numeric(lat),long=as.numeric(long),siteID=siteName)
   }
   GOES <- read.csv(fileName,header=FALSE)
 
