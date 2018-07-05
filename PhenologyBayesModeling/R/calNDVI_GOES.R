@@ -41,7 +41,7 @@ getSpecificNDVI <- function(ind2,ind3,day.time){
   filepathC03 <- paste("GOES_Data2017/",dir(path="GOES_Data2017",pattern=filestrC03),sep="")
   if(file.exists(filepathC02) && file.exists(filepathC03) && !dir.exists(filepathC02) && !dir.exists(filepathC03)){
     R2.file <-nc_open(filepathC02)
-    R3.file <-nc_open(filepathC02)
+    R3.file <-nc_open(filepathC03)
 
     R3 <- ncvar_get(R3.file,"Rad")
     R2 <- ncvar_get(R2.file,"Rad") #the full R2 dataset
