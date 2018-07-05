@@ -14,7 +14,7 @@ createNDVI_GOES_OLD <- function(lat,long,siteID){
 
   NDVI.vals <- list()
 
-  days1 <- c(seq(110,126),132,seq(134,136),seq(139,143),seq(146,154),seq(156,157),seq(159,161),seq(163,181),seq(182,188),seq(191,200),seq(203,207),209,seq(211,214),216,seq(218,220),seq(222,231),seq(233,264),seq(266,269),seq(271,289),seq(291,295),seq(297,301),seq(303,314),seq(316,324),seq(328,333))
+  days1 <- c(seq(156,157),seq(159,161),seq(163,181),seq(182,188),seq(191,200),seq(203,207),209,seq(211,214),216,seq(218,220),seq(222,231),seq(233,264),seq(266,269),seq(271,289),seq(291,295),seq(297,301),seq(303,314),seq(316,324),seq(328,333))
 
   for (i in days1){
     if(i<100){
@@ -32,6 +32,7 @@ createNDVI_GOES_OLD <- function(lat,long,siteID){
     clouds <- ncvar_get(ACM.file,"BCM")[ACM.ind[1],ACM.ind[2]]
     if(clouds == 0){
       NDVI.val <- getSpecificNDVI(Ind2,Ind3,day.time)
+      print(NDVI.val)
       NDVI.vals <- c(NDVI.vals,NDVI.val)
     }
     else{
