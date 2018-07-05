@@ -10,6 +10,8 @@ library(plyr)
 ##' @param endDay The end day counted as the day number after 2016-12-31
 ##' @param TZ The timezone off of UTC
 createNDVI_GOES <- function(lat,long,startDay,endDay,fileName,TZ){
+  print(startDay)
+  print(endDay)
   #load/calcuate GOES NDVI data
   lat.rd <- as.numeric(lat)*2*pi/360
   long.rd <- as.numeric(long)*2*pi/360
