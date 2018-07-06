@@ -19,22 +19,27 @@ graphMCMC_Outputs_withData <- function(outputFileName,siteFileName,iseq,startDay
     }
     xseq <- seq(startDay,endDay,1)
     #GOES
-    # data.GOES = GOES_data(siteName=siteName,startDay = startDay,endDay = endDay)
-    # inputFileName <- paste(siteName,"_GOES_varBurnINITS.RData",sep="")
-    # load(inputFileName)
-    #
-    # var.mat<-as.matrix(GOES.md.out)
-    # GOES.c <- var.mat[,3]
-    # GOES.d <- var.mat[,4]
-    # if(PFT=="DB"){
-    #   GOES.a <- var.mat[,1]
-    #   GOES.b <- var.mat[,2]
-    #   GOES.trans <- mean(-(GOES.a/GOES.b))
-    # }
-    # else if(PFT=="SH"){
-    #   GOES.trans <- mean(var.mat[,5])
-    # }
-    # ci.GOES <- createCI(PFT=PFT,var.mat=var.mat,xseq=xseq)
+     data.GOES = GOES_data(siteName=siteName,startDay = startDay,endDay = endDay,lat=lat,long=long)
+     inputFileName <- paste(siteName,"_GOES_varBurn.RData",sep="")
+     load(inputFileName)
+
+     var.mat<-as.matrix(GOES.md.out)
+     GOES.c <- var.mat[,3]
+     GOES.d <- var.mat[,4]
+     if(PFT=="DB"){
+       GOES.Tran1<-var.mat[,1]
+       GOES.Tran2<-var.mat[,2]
+       GOES.c <- var.mat[,5]
+       GOES.d <- var.mat[,6]
+
+     }
+     else if(PFT=="SH"){
+       GOES.Tran1<-var.mat[,1]
+       GOES.Tran2<-var.mat[,5]
+       GOES.c <- var.mat[,3]
+       GOES.d <- var.mat[,4]
+     }
+     ci.GOES <- createCI(PFT=PFT,var.mat=var.mat,xseq=xseq)
     # print("GOES Done")
 
     #MODIS NDVI:
@@ -108,14 +113,13 @@ graphMCMC_Outputs_withData <- function(outputFileName,siteFileName,iseq,startDay
      print("PC Done")
 
     par(mfrow=c(1,1))
-    # plot(x=list(),y=list(),xlim=c(100,500),ylim=c(-0.2,1.2),ylab="Value",xlab="Day of Year",main=paste(siteName,"GOES"),cex.axis=2,cex.lab=2,cex.main=2)
-    # lines(xseq,ci.GOES[2,],col="black",lwd=2)
-    # lines(xseq,ci.GOES[1,],col="black", lty = 2,lwd=2)
-    # lines(xseq,ci.GOES[3,],col="black", lty = 2,lwd=2)
-    # abline(v=mean(GOES.trans),col="black")
-    # #print(length(data.GOES$x))
-    # #print(length(rescale(c=GOES.c,d=GOES.d,yseq=data.GOES$y)))
-    # points(data.GOES$x,rescale(c=mean(GOES.c),d=mean(GOES.d),yseq=data.GOES$y),col="Black",pch=20)
+    plot(x=list(),y=list(),xlim=c(100,550),ylim=c(-0.2,1.2),ylab="Value",xlab="Day of Year",main=paste(siteName,"GOES"),cex.axis=2,cex.lab=2,cex.main=2)
+    lines(xseq,ci.GOES[2,],col="black",lwd=2)
+    lines(xseq,ci.GOES[1,],col="black", lty = 2,lwd=2)
+    lines(xseq,ci.GOES[3,],col="black", lty = 2,lwd=2)
+    abline(v=mean(GOES.Tran1),col="black")
+    abline(v=mean(GOES.Tran2),col="black")
+    points(data.GOES$x,rescale(c=mean(GOES.c),d=mean(GOES.d),yseq=data.GOES$y),col="Black",pch=20)
 
     plot(x=list(),y=list(),xlim=c(100,550),ylim=c(-0.2,1.2),ylab="Value",xlab="Day of Year",main=paste(siteName,"PhenoCam"),cex.axis=2,cex.lab=2,cex.main=2)
     lines(xseq,ci.PC[2,],col="cyan",lwd=2)
