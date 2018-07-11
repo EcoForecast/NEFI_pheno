@@ -37,13 +37,14 @@ createNDVI_GOES_Avg <- function(lat,long,startDay,endDay,fileName,TZ){
     }
     for(j in seq(startT,endT,1)){
       day.hr <- paste(as.character(j),j,sep="")
-
+      print(day.hr)
       filestrACM <- paste("OR_ABI-L2-ACMC-M3_G16_s",day.hr,sep="")
       ACMfiles <- dir(path="GOES_Data2017",pattern=filestrACM)
+      print(length(ACMfiles))
       for(f in ACMfiles){
         day.time <- substr(f,24,34)
-        ACM.file <-nc_open(paste("GOES_Data2017/",f,sep=""))
         print(day.time)
+        ACM.file <-nc_open(paste("GOES_Data2017/",f,sep=""))
         clouds <- ncvar_get(ACM.file,"BCM")[ACM.ind[1],ACM.ind[2]]
         if(!is.na(clouds)){
           if(clouds == 0){
