@@ -6,12 +6,21 @@
 ##' @param startDay The start day counted as the day number after 2016-12-31
 ##' @param endDay The end day counted as the day number after 2016-12-31
 ##' @param TZ The timezone off of UTC
-GOES_data <- function(siteName,lat,long,startDay,endDay,TZ) {
+##' @param window Boolean of if you want to average out over a 4 hour window
+GOES_data <- function(siteName,lat,long,startDay,endDay,TZ,window=FALSE) {
   startDate <- as.Date(startDay,origin="2016-12-31")
   endDate <- as.Date(endDay,origin="2016-12-31")
+  if(window){
+    fileName <- paste("GOES_NDVI_",siteName,"_",startDate,"_",endDate,"_Avg.csv",sep="")
+    if(!file.exists(fileName)){
+      createNDVI_GOES_Avg(lat=lat,long=long,startDay=startDay,endDay=endDay,fileName=fileName,TZ=TZ)
+    }
+  }
+  else{
   fileName <- paste("GOES_NDVI_",siteName,"_",startDate,"_",endDate,"_noon.csv",sep="")
   if(!file.exists(fileName)){
     createNDVI_GOES(lat=lat,long=long,startDay=startDay,endDay=endDay,fileName=fileName,TZ=TZ)
+  }
   }
   GOES <- read.csv(fileName,header=FALSE)
 
