@@ -36,7 +36,7 @@ createNDVI_GOES_Avg <- function(lat,long,startDay,endDay,fileName,TZ){
       day <- paste("2017",i,sep="")
     }
     for(j in seq(startT,endT,1)){
-      day.hr <- paste(as.character(j),j,sep="")
+      day.hr <- paste(as.character(day),j,sep="")
       print(day.hr)
       filestrACM <- paste("OR_ABI-L2-ACMC-M3_G16_s",day.hr,sep="")
       ACMfiles <- dir(path="GOES_Data2017",pattern=filestrACM)
