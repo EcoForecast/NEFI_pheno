@@ -25,7 +25,8 @@ createNDVI_GOES_Avg <- function(lat,long,startDay,endDay,fileName,TZ){
   NDVI.vals <- numeric()
   NDVI.vars <- numeric()
   days <- numeric()
-  days1 <- seq(startDay,333)
+  #days1 <- seq(startDay,333)
+  days1 <- seq(startDay,180)
 
   for (i in days1){
     NDVI.day.vals <- numeric()
