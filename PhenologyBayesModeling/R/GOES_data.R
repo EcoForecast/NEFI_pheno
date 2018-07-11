@@ -22,6 +22,7 @@ GOES_data <- function(siteName,lat,long,startDay,endDay,TZ,window=FALSE) {
     createNDVI_GOES(lat=lat,long=long,startDay=startDay,endDay=endDay,fileName=fileName,TZ=TZ)
   }
   }
+  print(fileName)
   GOES <- read.csv(fileName,header=FALSE)
 
   GOES_Days <- as.numeric(GOES[1,])
@@ -43,6 +44,9 @@ GOES_data <- function(siteName,lat,long,startDay,endDay,TZ,window=FALSE) {
   x <- GOES_Days[days]
 
   data <- list(x=x,y=y,n=length(y))
+  if(window){
+    data$var <- as.numeric(GOES[3,])
+  }
   return(data)
 }
 
