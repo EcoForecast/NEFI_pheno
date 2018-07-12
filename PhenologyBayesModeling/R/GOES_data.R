@@ -25,7 +25,7 @@ GOES_data <- function(siteName,lat,long,startDay,endDay,TZ,window=FALSE) {
   }
   print(fileName)
   GOES <- read.csv(fileName,header=FALSE)
-
+  GOES <- GOES[,colSums(is.na(GOES)) == 0]
   GOES_Days <- as.numeric(GOES[1,])
   GOES_NDVI <- as.numeric(GOES[2,])
 
