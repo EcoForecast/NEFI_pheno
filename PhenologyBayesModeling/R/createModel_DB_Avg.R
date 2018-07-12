@@ -60,8 +60,8 @@ createBayesModel.DB_Avg <- function(dataSource,siteName="",URL="",niter=100000,s
     data$mean.d <- 0.6
     data$p.d <- 1/(0.2**2)
   }
-  #data$s1 <- 0.001
-  #data$s2 <- 0.00001
+  data$s1 <- 0.001
+  data$s2 <- 0.00001
   data$p.Tran <- 1/(40**2)
   data$p.b <- 1/(0.05**2)
   data$mean.TranF <- 300
@@ -81,14 +81,15 @@ createBayesModel.DB_Avg <- function(dataSource,siteName="",URL="",niter=100000,s
   d ~ dnorm(mean.d,p.d)
   c ~ dnorm(mean.c,p.c)
   k ~ dnorm(mean.k,p.k)
-  ##prec ~ dgamma(s1,s2)
+  prec ~ dgamma(s1,s2) #process error
 
   for(i in 1:n){
   muF[i] <- c/(1+exp(bF*(x[i]-TranF)))+d ##process model for fall
   muS[i] <- c/(1+exp(bS*(x[i]-TranS)))+d ##process model for Spring
   mu[i] <- ifelse(x[i]>k,muS[i],muF[i])   #change point process model
 
-  y[i]  ~ dnorm(mu[i],prec[i])		## data model for logistic
+  y[i] ~ dnorm(mu[i],prec)
+  yobs[i] ~ dnorm(y[i],obs.prec[i])
   }
   }
   "
@@ -99,3 +100,9 @@ createBayesModel.DB_Avg <- function(dataSource,siteName="",URL="",niter=100000,s
 
   return(j.model)
 }
+
+#y[i]  ~ dnorm(mu[i],prec[i])		## data model for logistic (need to divide betwen obs and process error or could add them together because they are precisions)
+#having them separate vs together might have different timing
+#y[i] ~ dnorm(mu[i],prec+prec.obs[i])
+#want to keep it as Gibbs and not MH (look at trace plots to see which converges quicker)(can look at acceptance rate of prec to see if it switches to another sampler)
+#might be slower because it has a extra dummy variable that you don't want to spit out
