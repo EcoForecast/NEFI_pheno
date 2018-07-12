@@ -28,6 +28,7 @@ GOES_data <- function(siteName,lat,long,startDay,endDay,TZ,window=FALSE) {
   GOES <- GOES[,colSums(is.na(GOES)) == 0]
   GOES_Days <- as.numeric(GOES[1,])
   GOES_NDVI <- as.numeric(GOES[2,])
+  print(GOES_Days[1:20])
 
   for(i in 1:length(GOES_Days)){
     if(GOES_Days[i]<100){
