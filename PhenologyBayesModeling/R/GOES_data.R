@@ -45,7 +45,7 @@ GOES_data <- function(siteName,lat,long,startDay,endDay,TZ,window=FALSE) {
 
   data <- list(x=x,y=y,n=length(y))
   if(window){
-    data$var <- as.numeric(GOES[3,])
+    data$prec <- 1/(as.numeric(GOES[3,]))
   }
   return(data)
 }
