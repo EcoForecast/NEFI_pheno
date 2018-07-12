@@ -11,7 +11,8 @@ GOES_data <- function(siteName,lat,long,startDay,endDay,TZ,window=FALSE) {
   startDate <- as.Date(startDay,origin="2016-12-31")
   endDate <- as.Date(endDay,origin="2016-12-31")
   if(window){
-    fileName <- paste("GOES_NDVI_",siteName,"_",startDate,"_",endDate,"_Avg.csv",sep="")
+    #fileName <- paste("GOES_NDVI_",siteName,"_",startDate,"_",endDate,"_Avg.csv",sep="")
+    fileName <- "GOES_NDVI_HarvardForest_Avg.csv"
     if(!file.exists(fileName)){
       createNDVI_GOES_Avg(lat=lat,long=long,startDay=startDay,endDay=endDay,fileName=fileName,TZ=TZ)
     }
