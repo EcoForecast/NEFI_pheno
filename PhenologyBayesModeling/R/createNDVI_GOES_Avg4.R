@@ -25,6 +25,7 @@ createNDVI_GOES_Avg4 <- function(lat,long,startDay,endDay,fileName,TZ){
   NDVI.vals <- numeric()
   NDVI.vars <- numeric()
   days <- numeric()
+  N <- numeric()
   # #days1 <- seq(startDay,333)
   # days1 <- seq(200,333)
   #
@@ -151,10 +152,11 @@ createNDVI_GOES_Avg4 <- function(lat,long,startDay,endDay,fileName,TZ){
      }
      NDVI.vals <- c(NDVI.vals,mean(NDVI.day.vals,na.rm = TRUE))
      NDVI.vars <- c(NDVI.vars,var(NDVI.day.vals,na.rm = TRUE))
+     N <- c(N,length(NDVI.day.vals[!is.na(NDVI.day.vals)]))
      days <- c(days,i)
    }
 
-  output <- rbind(t(days),NDVI.vals,NDVI.vars)
+  output <- rbind(t(days),NDVI.vals,NDVI.vars,N)
   write.table(output,file=fileName,sep=",",col.names=FALSE,row.names=FALSE)
 }
 
