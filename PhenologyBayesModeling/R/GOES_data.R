@@ -49,6 +49,7 @@ GOES_data <- function(siteName,lat,long,startDay,endDay,TZ,window=FALSE) {
   data <- list(x=x,y=y,n=length(y))
   if(window){
     data$obs.prec <- 1/(as.numeric(GOES[3,]))
+    data$size <- as.numeric(GOES[4,])
   }
   return(data)
 }
