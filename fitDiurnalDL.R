@@ -68,7 +68,7 @@ y[i]  ~ dnorm(mu[i],prec)		## data model
 }
 }
 "
-j.model   <- jags.model(file = textConnection(DB_model),
+j.model   <- jags.model(file = textConnection(DB_model_DL),
                         data = data,
                         inits=inits,
                         n.chains = nchain)
