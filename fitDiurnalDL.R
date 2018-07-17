@@ -1,3 +1,15 @@
+#!/usr/bin/env Rscript
+
+install.packages("/projectnb/dietzelab/kiwheel/NEFI_pheno/PhenologyBayesModeling",repo=NULL)
+#install.packages("MODISTools",repo="https://cloud.r-project.org/")
+#install.packages("curl",repo="https://cloud.r-project.org/")
+library("PhenologyBayesModeling")
+library("rjags")
+library("runjags")
+library("MODISTools")
+
+
+
 dat <- read.csv("GOES_NDVI_missouriozarks_20170606.csv",header=FALSE)
 data <- list()
 data$x <- as.numeric(substr(dat[1,],8,9))+as.numeric(substr(dat[1,],10,11))/60
