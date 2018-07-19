@@ -61,10 +61,10 @@ for(i in iseq){
   #quality <- as.character(dayData[i,]$Quality)
   InFileName <- paste("GOES_Diurnal_",siteName,"_",yr,mth,dy,".csv",sep="")
   print(InFileName)
-  fileData <- read.csv(InFileName,header=FALSE)
-  print(dim(fileData))
-  data$x <- as.numeric(fileData[3,])
-  data$y <- as.numeric(fileData[2,])
+  fileDat <- read.csv(InFileName,header=FALSE)
+  print(dim(fileDat))
+  data$x <- as.numeric(fileDat[3,])
+  data$y <- as.numeric(fileDat[2,])
   outFileName <- paste("DiurnalFit_",siteName,"_",yr,mth,dy,"varBurn.RData",sep="")
   if(!file.exists(outFileName)){
   data$mean.c <- 0.48
