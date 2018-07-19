@@ -47,7 +47,6 @@ for(i in 1:nchain){
 
 dayData <- read.csv("sampleDiurnalDays.csv",header=TRUE)
 pdf(file="DiurnalBayesFits.pdf",width=20,height=30)
-
 i <- 2
 iseq <- c(2,3)
 for(i in iseq){
@@ -62,8 +61,7 @@ for(i in iseq){
   InFileName <- paste("GOES_Diurnal_",siteName,"_",yr,mth,dy,".csv",sep="")
   print(InFileName)
   fileDat <- read.csv(InFileName,header=FALSE)
-  print(dim(fileDat))
-  print(fileDat[3,])
+  data <- list()
   data$x <- as.numeric(fileDat[3,])
   data$y <- as.numeric(fileDat[2,])
   outFileName <- paste("DiurnalFit_",siteName,"_",yr,mth,dy,"varBurn.RData",sep="")
