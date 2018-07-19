@@ -62,6 +62,7 @@ for(i in iseq){
   InFileName <- paste("GOES_Diurnal_",siteName,"_",yr,mth,dy,".csv",sep="")
   print(InFileName)
   fileData <- read.csv(InFileName,header=FALSE)
+  print(dim(fileData))
   data$x <- as.numeric(fileData[3,])
   data$y <- as.numeric(fileData[2,])
   outFileName <- paste("DiurnalFit_",siteName,"_",yr,mth,dy,"varBurn.RData",sep="")
