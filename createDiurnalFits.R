@@ -47,8 +47,8 @@ for(i in 1:nchain){
 
 dayData <- read.csv("sampleDiurnalDays.csv",header=TRUE)
 #pdf(file="DiurnalBayesFits.pdf",width=20,height=30)
-#i <- 2
-iseq <- seq(19,22)
+i <- 1
+iseq <- c(2,3)
 for(i in iseq){
   siteName <- as.character(dayData[i,]$Site)
   print(siteName)
@@ -86,7 +86,17 @@ for(i in iseq){
                           data = data,
                           inits=inits,
                           n.chains = nchain)
-  md.out <- runMCMC_Model(j.model,variableNames=c("TranL","bL","TranR","bR","c","d","k"))
+  md.out <- runMCMC_Model(j.model,variableNames=c("TranL","bL","TranR","bR","c","d","k"),baseNum=10000,iterSize=20000)
+  while(typeof(md.out)==typeof(FALSE)){
+    for(i in 1:nchain){
+      inits[[i]] <- list(TranL=rnorm(1,11.95,0.1),bL=rnorm(1,-1.5,0.3),TranR=rnorm(1,24,0.1),bR=rnorm(1,1.8,0.2),c=rnorm(1,0.48,0.5),d=rnorm(1,0.3,0.1),k=rnorm(1,17.5,1))
+    }
+    j.model   <- jags.model(file = textConnection(DB_model_DL),
+                            data = data,
+                            inits=inits,
+                            n.chains = nchain)
+    md.out <- runMCMC_Model(j.model,variableNames=c("TranL","bL","TranR","bR","c","d","k"))
+  }
   save(md.out,file=outFileName)
   }
   # load(outFileName)

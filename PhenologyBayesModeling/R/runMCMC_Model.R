@@ -1,11 +1,11 @@
 library("rjags")
 library("runjags")
 
-runMCMC_Model <- function(j.model,variableNames,maxIter=1000000000){
+runMCMC_Model <- function(j.model,variableNames,maxIter=1000000000,baseNum=50000,iterSize =30000){
   var.out   <- coda.samples (model = j.model,
                              variable.names = variableNames,
-                             n.iter = 50000)
-  numb <- 50000
+                             n.iter = baseNum)
+  numb <- baseNum
   continue <- TRUE
   GBR.bad <- TRUE
   burnin <- 0
@@ -13,7 +13,7 @@ runMCMC_Model <- function(j.model,variableNames,maxIter=1000000000){
     print(numb)
     new.out   <- coda.samples (model = j.model,
                                variable.names = variableNames,
-                               n.iter = 30000)
+                               n.iter = iterSize)
     var.out <- combine.mcmc(mcmc.objects=list(var.out,new.out),collapse.chains = FALSE)
     continue <- FALSE
     if(GBR.bad){
@@ -21,6 +21,11 @@ runMCMC_Model <- function(j.model,variableNames,maxIter=1000000000){
       GBR.bad <- FALSE
       for(i in 1:nrow(GBR.vals$psrf)){
         for(j in 1:ncol(GBR.vals$psrf)){
+          if(GBR.vals$psrf[i,j]>20){
+            print(GBR.vals)
+            print("GBR values too high")
+            return(FALSE)
+          }
           if(GBR.vals$psrf[i,j]>1.04){
             continue <-  TRUE
             GBR.bad <- TRUE
@@ -46,7 +51,7 @@ runMCMC_Model <- function(j.model,variableNames,maxIter=1000000000){
       }
       print(effsize)
     }
-    numb <- numb+30000
+    numb <- numb+iterSize
   }
   if(continue==TRUE){
     print("Model Did not Converge")
