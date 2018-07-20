@@ -11,6 +11,7 @@ library("doParallel")
 
 #detect cores.
 n.cores <- detectCores()
+n.cores <- 8
 
 #register the cores.
 registerDoParallel(cores=n.cores)
