@@ -48,7 +48,7 @@ for(i in 1:nchain){
 dayData <- read.csv("sampleDiurnalDays.csv",header=TRUE)
 #pdf(file="DiurnalBayesFits.pdf",width=20,height=30)
 i <- 1
-iseq <- c(2,3)
+iseq <- c(1,2)
 for(i in iseq){
   siteName <- as.character(dayData[i,]$Site)
   print(siteName)
