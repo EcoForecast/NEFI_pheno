@@ -2,11 +2,18 @@
 
 install.packages("/projectnb/dietzelab/kiwheel/NEFI_pheno/PhenologyBayesModeling",repo=NULL)
 install.packages("MODISTools",repo="https://cloud.r-project.org/")
-#install.packages("curl",repo="https://cloud.r-project.org/")
+install.packages("doParallel",repo="https://cloud.r-project.org/")
 library("PhenologyBayesModeling")
 library("rjags")
 library("runjags")
 library("MODISTools")
+library("doParallel")
+
+#detect cores.
+n.cores <- detectCores()
+
+#register the cores.
+registerDoParallel(cores=n.cores)
 
 diurnalLogistic <- function(TranL,bL,TranR,bR,c,d,k,xseq){
   bk <- which(xseq==round(k,digits=0))
@@ -46,10 +53,9 @@ for(i in 1:nchain){
 }
 
 dayData <- read.csv("sampleDiurnalDays.csv",header=TRUE)
-pdf(file="DiurnalBayesFits.pdf",width=20,height=30)
-i <- 1
-iseq <- c(2,3)
-for(i in iseq){
+#pdf(file="DiurnalBayesFits.pdf",width=20,height=30)
+output <- 
+foreach(i = 1:nrow(dayData)) %dopar% {
   siteName <- as.character(dayData[i,]$Site)
   print(siteName)
   yr <- as.character(dayData[i,]$Year)
@@ -121,4 +127,4 @@ for(i in iseq){
   # lines(xseq,CI[2,],col="red")
   
 }
-dev.off()
+#dev.off()
