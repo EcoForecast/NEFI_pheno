@@ -4,6 +4,14 @@
 library("ncdf4")
 library(plyr)
 library("PhenologyBayesModeling")
+library(doParallel)
+
+#detect cores.
+#n.cores <- detectCores()
+n.cores <- 8
+
+#register the cores.
+registerDoParallel(cores=n.cores)
 
 
 createNDVI_GOES_diurnal <- function(lat,long,siteID,startDay,endDay){
@@ -99,10 +107,11 @@ createNDVI_GOES_diurnal <- function(lat,long,siteID,startDay,endDay){
 
 
 siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)
-iseq <- seq(15,20)
+iseq <- c(seq(3,6),seq(9,11),seq(15,20))
 startDay <- 295
 endDay <- 304
-for(i in iseq){
+output <- 
+foreach(i = iseq) %dopar% {
   siteName <- as.character(siteData[i,1])
   lat <- as.numeric(siteData[i,2])
   long <- as.numeric(siteData[i,3])
