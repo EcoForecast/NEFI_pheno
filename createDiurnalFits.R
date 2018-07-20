@@ -46,9 +46,9 @@ for(i in 1:nchain){
 }
 
 dayData <- read.csv("sampleDiurnalDays.csv",header=TRUE)
-pdf(file="DiurnalBayesFits.pdf",width=20,height=30)
-i <- 2
-iseq <- c(2,3)
+#pdf(file="DiurnalBayesFits.pdf",width=20,height=30)
+#i <- 2
+iseq <- seq(19,22)
 for(i in iseq){
   siteName <- as.character(dayData[i,]$Site)
   print(siteName)
@@ -87,6 +87,7 @@ for(i in iseq){
                           inits=inits,
                           n.chains = nchain)
   md.out <- runMCMC_Model(j.model,variableNames=c("TranL","bL","TranR","bR","c","d","k"))
+  save(md.out,file=outFileName)
   }
   # load(outFileName)
   # out.mat <- as.matrix(md.out)
@@ -110,4 +111,4 @@ for(i in iseq){
   # lines(xseq,CI[2,],col="red")
   
 }
-dev.off()
+#dev.off()
