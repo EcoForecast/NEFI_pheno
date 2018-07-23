@@ -110,24 +110,40 @@ siteName <- as.character(siteData[1,1])
 lat <- as.numeric(siteData[1,2])
 long <- as.numeric(siteData[1,3])
 
-timeFrames <- matrix(ncol=2,nrow=10)
-timeFrames[1,] <- c(189,200) #July1
-timeFrames[2,] <- c(201,212) #July2
+# timeFrames <- matrix(ncol=2,nrow=10)
+# timeFrames[1,] <- c(189,200) #July1
+# timeFrames[2,] <- c(201,212) #July2
+# 
+# timeFrames[3,] <- c(220,231)
+# timeFrames[4,] <- c(232,243) #Aug 2
+# 
+# timeFrames[5,] <- c(251,261)
+# timeFrames[6,] <- c(262,273) #Sept 2
+# 
+# timeFrames[7,] <- c(312,321)
+# timeFrames[8,] <- c(322,334) #Nov 2
+# 
+# timeFrames[9,] <- c(342,351)
+# timeFrames[10,] <- c(352,365) #Jan 2
 
-timeFrames[3,] <- c(220,231)
-timeFrames[4,] <- c(232,243) #Aug 2
+timeFrames <- matrix(ncol=2,nrow=5)
+timeFrames[1,] <- c(189,190) #July1
+#timeFrames[2,] <- c(201,202) #July2
 
-timeFrames[5,] <- c(251,261)
-timeFrames[6,] <- c(262,273) #Sept 2
+timeFrames[2,] <- c(220,221)
+#timeFrames[4,] <- c(232,233) #Aug 2
 
-timeFrames[7,] <- c(312,321)
-timeFrames[8,] <- c(322,334) #Nov 2
+timeFrames[3,] <- c(251,252)
+#timeFrames[6,] <- c(262,263) #Sept 2
 
-timeFrames[9,] <- c(342,351)
-timeFrames[10,] <- c(352,365) #Jan 2
+timeFrames[4,] <- c(312,313)
+#timeFrames[8,] <- c(322,323) #Nov 2
+
+timeFrames[5,] <- c(342,343)
+#timeFrames[10,] <- c(352,353) #Jan 2
 
 
-output <- foreach(i = 1:10) %dopar% {
+output <- foreach(i = 1:5) %dopar% {
   startDay <- timeFrames[i,1]
   endDay <- timeFrames[i,2]
   print(timeFrames[i,])
