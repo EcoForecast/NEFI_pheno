@@ -55,7 +55,7 @@ createNDVI_GOES_diurnal <- function(lat,long,siteID,startDay,endDay){
     filestrACM <- paste("OR_ABI-L2-ACMC-M3_G16_s2017",days[i],sep="")
     ACM.files <- dir(path="GOES_Data2017",pattern=filestrACM)
     print(length(ACM.files))
-    if(!dir.exists(path(paste("GOES_Data2017/",dir(path="GOES_Data2017",pattern=filestrACM),sep="")))){
+    if(!dir.exists((paste("GOES_Data2017/",dir(path="GOES_Data2017",pattern=filestrACM),sep="")))){
       if(length(ACM.files>1)){
         for(j in 1:length(ACM.files)){
           day.time <- substr(ACM.files[j],24,34)
