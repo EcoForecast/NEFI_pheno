@@ -127,7 +127,7 @@ timeFrames[9,] <- c(342,351)
 timeFrames[10,] <- c(352,365) #Jan 2
 
 
-output <- foreach(i = 1:5) %dopar% {
+output <- foreach(i = 1:10) %dopar% {
   startDay <- timeFrames[i,1]
   endDay <- timeFrames[i,2]
   print(timeFrames[i,])
