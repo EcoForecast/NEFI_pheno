@@ -1,3 +1,5 @@
+#!/usr/bin/env Rscript
+
 #hr.seq <- c(seq(1,4,1),seq(8,24,1))
 hr.seq <- c("00","01","02","03","04",as.character(seq(8,23,1)))
 startDay <- 182
