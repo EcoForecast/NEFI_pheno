@@ -55,30 +55,40 @@ createNDVI_GOES_diurnal <- function(lat,long,siteID,startDay,endDay){
     filestrACM <- paste("OR_ABI-L2-ACMC-M3_G16_s2017",days[i],sep="")
     ACM.files <- dir(path="GOES_Data2017",pattern=filestrACM)
     print(length(ACM.files))
-    for(j in 1:length(ACM.files)){
-      day.time <- substr(ACM.files[j],24,34)
-      #print(j)
-      print(day.time)
-      day.time.vals <- c(day.time.vals,day.time)
-      filePath <- paste("GOES_Data2017/",ACM.files[j],sep="")
-      #print(filePath)
-      ACM.file <-nc_open(paste("GOES_Data2017/",ACM.files[j],sep=""))
-      #print(dim(ncvar_get(ACM.file, "BCM")))
-      #print(ACM.ind)
-      clouds <- ncvar_get(ACM.file,"BCM")[ACM.ind[1],ACM.ind[2]]
-      if(!is.na(clouds)){
-        if (clouds ==0){
-          filestrC03 <- paste("OR_ABI-L1b-RadC-M3C03_G16_s",day.time,sep="")
-          filestrC02 <- paste("OR_ABI-L1b-RadC-M3C02_G16_s",day.time,sep="")
-          filePathC02 <- paste("GOES_Data2017/",dir(path="GOES_Data2017",pattern=filestrC02),sep="")
-          filePathC03 <- paste("GOES_Data2017/",dir(path="GOES_Data2017",pattern=filestrC03),sep="")
-          if(nchar(filePathC02)>20 & nchar(filePathC03)>20){
-            R2.file <- nc_open(paste("GOES_Data2017/",dir(path="GOES_Data2017",pattern=filestrC02),sep=""))
-            R3.file <- nc_open(paste("GOES_Data2017/",dir(path="GOES_Data2017",pattern=filestrC03),sep=""))
-            R3.DQF <- ncvar_get(R3.file,"DQF")
-            R2.DQF <- ncvar_get(R2.file,"DQF")
-            if(R3.DQF[i3,j3]==0 & R2.DQF[i2,j2]==0 & R2.DQF[i2,j2]==0 & R2.DQF[(i2+1),j2]==0 & R2.DQF[i2,(j2+1)]==0 & R2.DQF[(i2+1),(j2+1)]==0){
-              NDVI.val <- getSpecificNDVI(Ind2,Ind3,day.time)
+    if(!dir.exists(path(paste("GOES_Data2017/",dir(path="GOES_Data2017",pattern=filestrACM),sep="")))){
+      if(length(ACM.files>1)){
+        for(j in 1:length(ACM.files)){
+          day.time <- substr(ACM.files[j],24,34)
+          #print(j)
+          print(day.time)
+          day.time.vals <- c(day.time.vals,day.time)
+          filePath <- paste("GOES_Data2017/",ACM.files[j],sep="")
+          #print(filePath)
+          ACM.file <-nc_open(paste("GOES_Data2017/",ACM.files[j],sep=""))
+          #print(dim(ncvar_get(ACM.file, "BCM")))
+          #print(ACM.ind)
+          clouds <- ncvar_get(ACM.file,"BCM")[ACM.ind[1],ACM.ind[2]]
+          if(!is.na(clouds)){
+            if (clouds ==0){
+              filestrC03 <- paste("OR_ABI-L1b-RadC-M3C03_G16_s",day.time,sep="")
+              filestrC02 <- paste("OR_ABI-L1b-RadC-M3C02_G16_s",day.time,sep="")
+              filePathC02 <- paste("GOES_Data2017/",dir(path="GOES_Data2017",pattern=filestrC02),sep="")
+              filePathC03 <- paste("GOES_Data2017/",dir(path="GOES_Data2017",pattern=filestrC03),sep="")
+              if(nchar(filePathC02)>20 & nchar(filePathC03)>20){
+                R2.file <- nc_open(paste("GOES_Data2017/",dir(path="GOES_Data2017",pattern=filestrC02),sep=""))
+                R3.file <- nc_open(paste("GOES_Data2017/",dir(path="GOES_Data2017",pattern=filestrC03),sep=""))
+                R3.DQF <- ncvar_get(R3.file,"DQF")
+                R2.DQF <- ncvar_get(R2.file,"DQF")
+                if(R3.DQF[i3,j3]==0 & R2.DQF[i2,j2]==0 & R2.DQF[i2,j2]==0 & R2.DQF[(i2+1),j2]==0 & R2.DQF[i2,(j2+1)]==0 & R2.DQF[(i2+1),(j2+1)]==0){
+                  NDVI.val <- getSpecificNDVI(Ind2,Ind3,day.time)
+                }
+                else{
+                  NDVI.val <- NA
+                }
+              }
+              else{
+                NDVI.val <- NA
+              }
             }
             else{
               NDVI.val <- NA
@@ -87,15 +97,9 @@ createNDVI_GOES_diurnal <- function(lat,long,siteID,startDay,endDay){
           else{
             NDVI.val <- NA
           }
-        }
-        else{
-          NDVI.val <- NA
+          NDVI.vals <- c(NDVI.vals,NDVI.val)
         }
       }
-      else{
-        NDVI.val <- NA
-      }
-      NDVI.vals <- c(NDVI.vals,NDVI.val)
     }
   }
   
