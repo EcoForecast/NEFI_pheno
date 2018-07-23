@@ -103,7 +103,7 @@ createNDVI_GOES_diurnal <- function(lat,long,siteID,startDay,endDay){
     }
   }
   
-  fileName <- paste("GOES_NDVI_Diurnal",siteID,"_startDay_endDay_kappaDQF.csv",sep="")
+  fileName <- paste("GOES_NDVI_Diurnal",siteID,"_",startDay,"_",endDay,"_kappaDQF.csv",sep="")
   output <- rbind(t(day.time.vals),NDVI.vals)
   write.table(output,file=fileName,sep=",",col.names=FALSE,row.names=FALSE)
 }
@@ -131,21 +131,20 @@ long <- as.numeric(siteData[1,3])
 # timeFrames[10,] <- c(352,365) #Jan 2
 
 timeFrames <- matrix(ncol=2,nrow=5)
-timeFrames[1,] <- c(189,190) #July1
+timeFrames[1,] <- c(189,189) #July1
 #timeFrames[2,] <- c(201,202) #July2
 
-timeFrames[2,] <- c(220,221)
+timeFrames[2,] <- c(220,220)
 #timeFrames[4,] <- c(232,233) #Aug 2
 
-timeFrames[3,] <- c(251,252)
+timeFrames[3,] <- c(251,251)
 #timeFrames[6,] <- c(262,263) #Sept 2
 
-timeFrames[4,] <- c(312,313)
+timeFrames[4,] <- c(312,312)
 #timeFrames[8,] <- c(322,323) #Nov 2
 
-timeFrames[5,] <- c(342,343)
+timeFrames[5,] <- c(342,342)
 #timeFrames[10,] <- c(352,353) #Jan 2
-
 
 output <- foreach(i = 1:5) %dopar% {
   startDay <- timeFrames[i,1]
