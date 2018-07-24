@@ -24,7 +24,7 @@ for(dy in 1:length(days)){
     filestrC03 <- paste("OR_ABI-L1b-RadC-M3C03_G16_s2017",days[dy],hr.seq[hr],sep="")
     C03.files <- dir(path="GOES_Data2017",pattern=filestrC03)
     no.C03 <- c(no.C03,length(C03.files))
-    filestrC02 <- paste("OR_ABI-L1b-RadC-M3C02_G16_s",days[dy],hr.seq[hr],sep="")
+    filestrC02 <- paste("OR_ABI-L1b-RadC-M3C02_G16_s2017",days[dy],hr.seq[hr],sep="")
     C02.files <- dir(path="GOES_Data2017",pattern=filestrC02)
     no.C02 <- c(no.C02,length(C02.files))
     day.time <- c(day.time,day.hr)
