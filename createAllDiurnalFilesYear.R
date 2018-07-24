@@ -13,14 +13,14 @@ n.cores <- 5
 registerDoParallel(cores=n.cores)
 
 
-createNDVI_GOES_diurnal <- function(lat,long,siteID,startDay,endDay){
+createNDVI_GOES_diurnal <- function(lat,long,siteID,startDay,endDay,orbitVersion){
   #load/calcuate GOES NDVI data
   lat.rd <- lat*2*pi/360
   long.rd <- long*2*pi/360
   
-  Ind2 <- getDataIndex(getABI_Index(lat.rd,long.rd,orbitVersion="OLD"),2,orbitVersion="OLD")
-  Ind3 <- getDataIndex(getABI_Index(lat.rd,long.rd,orbitVersion="OLD"),3,orbitVersion="OLD")
-  ACM.ind <- getDataIndex(getABI_Index(lat.rd,long.rd,orbitVersion="OLD"),"ACM",orbitVersion="OLD")
+  Ind2 <- getDataIndex(getABI_Index(lat.rd,long.rd,orbitVersion="OLD"),2,orbitVersion=orbitVersion)
+  Ind3 <- getDataIndex(getABI_Index(lat.rd,long.rd,orbitVersion="OLD"),3,orbitVersion=orbitVersion)
+  ACM.ind <- getDataIndex(getABI_Index(lat.rd,long.rd,orbitVersion="OLD"),"ACM",orbitVersion=orbitVersion)
   
   i2 <- Ind2[1]
   j2 <- Ind2[2]
@@ -42,15 +42,15 @@ createNDVI_GOES_diurnal <- function(lat,long,siteID,startDay,endDay){
     }
   }
   for (i in 1:length(days)){
-    #print(days)
-    #days[i] <- as.numeric(days[i])
-    #if(days[i] < 10){
-    #  days[i] <- paste("00",as.character(days[i]),sep="")
-    #}
-    #else if(days[i] < 100){
-    #  days[i] <- paste("0",as.character(days[i]),sep="")
-    #}
-    #print(days[i])
+    print(days)
+    days[i] <- as.numeric(days[i])
+    if(days[i] < 10){
+     days[i] <- paste("00",as.character(days[i]),sep="")
+    }
+    else if(days[i] < 100){
+     days[i] <- paste("0",as.character(days[i]),sep="")
+    }
+    print(days[i])
     days[i] <- as.character(days[i])
     filestrACM <- paste("OR_ABI-L2-ACMC-M3_G16_s2017",days[i],sep="")
     ACM.files <- dir(path="GOES_Data2017",pattern=filestrACM)
@@ -115,20 +115,20 @@ lat <- as.numeric(siteData[1,2])
 long <- as.numeric(siteData[1,3])
 
 timeFrames <- matrix(ncol=2,nrow=10)
-timeFrames[1,] <- c(189,200) #July1
-timeFrames[2,] <- c(201,212) #July2
+timeFrames[1,] <- c(189,200,"OLD") #July1
+timeFrames[2,] <- c(201,212,"OLD") #July2
 
-timeFrames[3,] <- c(220,231)
-timeFrames[4,] <- c(232,243) #Aug 2
+timeFrames[3,] <- c(220,231,"OLD")
+timeFrames[4,] <- c(232,243,"OLD") #Aug 2
 
-timeFrames[5,] <- c(251,261)
-timeFrames[6,] <- c(262,273) #Sept 2
+timeFrames[5,] <- c(251,261,"OLD")
+timeFrames[6,] <- c(262,273,"OLD") #Sept 2
 
-timeFrames[7,] <- c(312,321)
-timeFrames[8,] <- c(322,334) #Nov 2
+timeFrames[7,] <- c(312,321,"OLD")
+timeFrames[8,] <- c(322,334,"OLD") #Nov 2
 
-timeFrames[9,] <- c(342,351)
-timeFrames[10,] <- c(352,365) #Jan 2
+timeFrames[9,] <- c(342,351,"NEW")
+timeFrames[10,] <- c(352,365,"NEW") #Dec 2
 
 # timeFrames <- matrix(ncol=2,nrow=5)
 # timeFrames[1,] <- c(189,189) #July1
