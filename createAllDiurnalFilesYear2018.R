@@ -114,7 +114,7 @@ siteName <- as.character(siteData[1,1])
 lat <- as.numeric(siteData[1,2])
 long <- as.numeric(siteData[1,3])
 
-timeFrames <- matrix(ncol=2,nrow=13)
+timeFrames <- matrix(ncol=3,nrow=13)
 timeFrames[1,] <- c(8,20,"NEW") #Jan1
 timeFrames[2,] <- c(20,31,"NEW") #Jan2
 
