@@ -52,7 +52,7 @@ createNDVI_GOES_diurnal <- function(lat,long,siteID,startDay,endDay,orbitVersion
     }
     print(days[i])
     days[i] <- as.character(days[i])
-    filestrACM <- paste("OR_ABI-L2-ACMC-M3_G16_s2017",days[i],sep="")
+    filestrACM <- paste("OR_ABI-L2-ACMC-M3_G16_s2018",days[i],sep="")
     ACM.files <- dir(path="GOES_Data2017",pattern=filestrACM)
     print(length(ACM.files))
     if(!dir.exists((paste("GOES_Data2017/",dir(path="GOES_Data2017",pattern=filestrACM),sep="")))){
@@ -114,21 +114,25 @@ siteName <- as.character(siteData[1,1])
 lat <- as.numeric(siteData[1,2])
 long <- as.numeric(siteData[1,3])
 
-timeFrames <- matrix(ncol=2,nrow=10)
-timeFrames[1,] <- c(189,200,"OLD") #July1
-timeFrames[2,] <- c(201,212,"OLD") #July2
+timeFrames <- matrix(ncol=2,nrow=13)
+timeFrames[1,] <- c(8,20,"NEW") #Jan1
+timeFrames[2,] <- c(20,31,"NEW") #Jan2
 
-timeFrames[3,] <- c(220,231,"OLD")
-timeFrames[4,] <- c(232,243,"OLD") #Aug 2
+timeFrames[3,] <- c(39,49,"NEW")
+timeFrames[4,] <- c(50,59,"NEW") #Feb 2
 
-timeFrames[5,] <- c(251,261,"OLD")
-timeFrames[6,] <- c(262,273,"OLD") #Sept 2
+timeFrames[5,] <- c(67,79,"NEW")
+timeFrames[6,] <- c(80,90,"NEW") #March 2
 
-timeFrames[7,] <- c(312,321,"OLD")
-timeFrames[8,] <- c(322,334,"OLD") #Nov 2
+timeFrames[7,] <- c(98,109,"NEW")
+timeFrames[8,] <- c(110,120,"NEW") #April 2
 
-timeFrames[9,] <- c(342,351,"NEW")
-timeFrames[10,] <- c(352,365,"NEW") #Dec 2
+timeFrames[9,] <- c(128,139,"NEW")
+timeFrames[10,] <- c(140,151,"NEW") #May 2
+
+timeFrames[11,] <- c(152,158,"NEW")
+timeFrames[12,] <- c(159,170,"NEW")
+timeFrames[13,] <- c(171,181,"NEW") #June 2
 
 # timeFrames <- matrix(ncol=2,nrow=5)
 # timeFrames[1,] <- c(189,189) #July1
@@ -146,11 +150,11 @@ timeFrames[10,] <- c(352,365,"NEW") #Dec 2
 # timeFrames[5,] <- c(342,342)
 # #timeFrames[10,] <- c(352,353) #Jan 2
 
-output <- foreach(i = 1:10) %dopar% {
+output <- foreach(i = 1:13) %dopar% {
   startDay <- timeFrames[i,1]
   endDay <- timeFrames[i,2]
   orbitVersion <- timeFrames[i,3]
   print(timeFrames[i,])
-  createNDVI_GOES_diurnal(lat=lat, long=long, siteID=siteName,startDay=startDay,endDay=endDay,orbitVersion = orbitVersion)
+  createNDVI_GOES_diurnal(lat=lat, long=long, siteID=siteName,startDay=startDay,endDay=endDay,orbitVersion=orbitVersion)
   print(paste(i, "done",sep=" "))
 }
