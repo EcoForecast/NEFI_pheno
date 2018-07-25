@@ -7,7 +7,7 @@ library(doParallel)
 
 #detect cores.
 #n.cores <- detectCores()
-n.cores <- 5
+n.cores <- 6
 
 #register the cores.
 registerDoParallel(cores=n.cores)
@@ -114,21 +114,34 @@ siteName <- as.character(siteData[1,1])
 lat <- as.numeric(siteData[1,2])
 long <- as.numeric(siteData[1,3])
 
-timeFrames <- matrix(ncol=3,nrow=10)
-timeFrames[1,] <- c(189,200,"OLD") #July1
-timeFrames[2,] <- c(201,212,"OLD") #July2
+timeFrames <- matrix(ncol=3,nrow=6)
+timeFrames[1,] <- c(201,206,"OLD") 
+timeFrames[2,] <- c(207,212,"OLD")
+timeFrames[3,] <- c(251,256,"OLD")
+timeFrames[4,] <- c(257,261,"OLD")
+timeFrames[5,] <- c(312,317,"OLD")
+timeFrames[6,] <- c(318,321,"OLD")
 
-timeFrames[3,] <- c(220,231,"OLD")
-timeFrames[4,] <- c(232,243,"OLD") #Aug 2
+# 
+# timeFrames[9,] <- c(342,351,"NEW")
+# timeFrames[10,] <- c(352,365,"NEW") #Dec 2
 
-timeFrames[5,] <- c(251,261,"OLD")
-timeFrames[6,] <- c(262,273,"OLD") #Sept 2
 
-timeFrames[7,] <- c(312,321,"OLD")
-timeFrames[8,] <- c(322,334,"OLD") #Nov 2
 
-timeFrames[9,] <- c(342,351,"NEW")
-timeFrames[10,] <- c(352,365,"NEW") #Dec 2
+# timeFrames[1,] <- c(189,200,"OLD") #July1
+# timeFrames[2,] <- c(201,212,"OLD") #July2
+# 
+# timeFrames[3,] <- c(220,231,"OLD")
+# timeFrames[4,] <- c(232,243,"OLD") #Aug 2
+# 
+# timeFrames[5,] <- c(251,261,"OLD")
+# timeFrames[6,] <- c(262,273,"OLD") #Sept 2
+# 
+# timeFrames[7,] <- c(312,321,"OLD")
+# timeFrames[8,] <- c(322,334,"OLD") #Nov 2
+# 
+# timeFrames[9,] <- c(342,351,"NEW")
+# timeFrames[10,] <- c(352,365,"NEW") #Dec 2
 
 # timeFrames <- matrix(ncol=2,nrow=5)
 # timeFrames[1,] <- c(189,189) #July1
@@ -146,7 +159,7 @@ timeFrames[10,] <- c(352,365,"NEW") #Dec 2
 # timeFrames[5,] <- c(342,342)
 # #timeFrames[10,] <- c(352,353) #Jan 2
 
-output <- foreach(i = 1:10) %dopar% {
+output <- foreach(i = 1:6) %dopar% {
   startDay <- timeFrames[i,1]
   endDay <- timeFrames[i,2]
   orbitVersion <- timeFrames[i,3]
