@@ -77,4 +77,7 @@ j.model   <- jags.model(file = textConnection(DB_model_DL),
                         inits=inits,
                         n.chains = nchain)
 md.out <- runMCMC_Model(j.model,variableNames=c("TranL","bL","TranR","bR","c","k"))
+print(summary(md.out))
 save(md.out,file="HarvardForest_2017July2_DL_varBurn.RData")
+out.mat <- as.matrix(md.out)
+save(out.mat,file="HarvardForest_2017July2_DL_outMat.RData")
