@@ -84,6 +84,7 @@ y[i] ~ dbeta(alp,bet[i])
 }
 }
 "
+
 j.model   <- jags.model(file = textConnection(DB_model_DL),
                         data = data,
                         inits=inits,
