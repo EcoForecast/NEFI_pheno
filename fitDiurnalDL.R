@@ -20,7 +20,7 @@ for(i in 1:length(data$x)){
   }
 }
 data$y <- as.numeric(dat[2,])
-#plot(data$x,data$y)
+plot(data$x,data$y)
 #xseq <- seq(10,17.5)
 #lines(x <- xseq,y <- pheno.logistic(Tran=11.95,b=-1.5,d=0.3,c=0.48,xseq=xseq),col="red")
 #xseq <- xseq <- seq(17.5,25.2,0.1)
@@ -35,8 +35,8 @@ for(i in 1:nchain){
 #data$mean.d <- 0.3
 #data$p.c <- 1/(0.5**2)
 #data$p.d <- 1/(0.5**2)
-data$alpha.c <- 11
-data$beta.c <- 3
+data$alpha.c <- 37#11
+data$beta.c <- 10#3
 
 data$s1 <- 0.001
 data$s2 <- 0.00001
