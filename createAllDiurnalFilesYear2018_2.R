@@ -53,7 +53,7 @@ createNDVI_GOES_diurnal <- function(lat,long,siteID,startDay,endDay,orbitVersion
      days[i] <- paste("0",as.character(days[i]),sep="")
     }
     print(days[i])
-    days[i] <- as.character(days[i])
+    #days[i] <- as.character(days[i])
     filestrACM <- paste("OR_ABI-L2-ACMC-M3_G16_s2018",days[i],sep="")
     print(filestrACM)
     ACM.files <- dir(path="GOES_Data2017",pattern=filestrACM)
