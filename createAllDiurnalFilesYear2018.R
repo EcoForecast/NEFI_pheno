@@ -34,25 +34,20 @@ createNDVI_GOES_diurnal <- function(lat,long,siteID,startDay,endDay,orbitVersion
   for(i in 1:length(days)){
     #print(days)
     days[i] <- as.numeric(days[i])
+    print(days[i])
     if(as.numeric(days[i]) < 10){
       days[i] <- paste("00",as.character(days[i]),sep="")
     }
     else if(as.numeric(days[i]) < 100){
       days[i] <- paste("0",as.character(days[i]),sep="")
+      print(days[i])
     }
   }
   for (i in 1:length(days)){
-    print(days)
-    days[i] <- as.numeric(days[i])
-    if(days[i] < 10){
-     days[i] <- paste("00",as.character(days[i]),sep="")
-    }
-    else if(days[i] < 100){
-     days[i] <- paste("0",as.character(days[i]),sep="")
-    }
     print(days[i])
-    days[i] <- as.character(days[i])
+    #days[i] <- as.character(days[i])
     filestrACM <- paste("OR_ABI-L2-ACMC-M3_G16_s2018",days[i],sep="")
+    print(filestrACM)
     ACM.files <- dir(path="GOES_Data2017",pattern=filestrACM)
     print(length(ACM.files))
     if(!dir.exists((paste("GOES_Data2017/",dir(path="GOES_Data2017",pattern=filestrACM),sep="")))){
@@ -116,7 +111,7 @@ long <- as.numeric(siteData[1,3])
 
 timeFrames <- matrix(ncol=3,nrow=12)
 timeFrames[1,] <- c(8,13,"NEW") #Jan1
-timeFrames[2,] <- c(4,19,"NEW") #Jan1
+timeFrames[2,] <- c(14,19,"NEW") #Jan1
 timeFrames[3,] <- c(20,25,"NEW") #Jan2
 timeFrames[4,] <- c(26,31,"NEW") #Jan2
 
@@ -129,7 +124,6 @@ timeFrames[9,] <- c(67,72,"NEW")
 timeFrames[10,] <- c(73,79,"NEW")
 timeFrames[11,] <- c(80,84,"NEW") #March 2
 timeFrames[12,] <- c(85,90,"NEW") #March 2
-
 
 
 # timeFrames[1,] <- c(8,20,"NEW") #Jan1
