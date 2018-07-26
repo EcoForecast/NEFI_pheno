@@ -44,14 +44,6 @@ createNDVI_GOES_diurnal <- function(lat,long,siteID,startDay,endDay,orbitVersion
     }
   }
   for (i in 1:length(days)){
-    #print(days)
-    days[i] <- as.numeric(days[i])
-    if(days[i] < 10){
-     days[i] <- paste("00",as.character(days[i]),sep="")
-    }
-    else if(days[i] < 100){
-     days[i] <- paste("0",as.character(days[i]),sep="")
-    }
     print(days[i])
     #days[i] <- as.character(days[i])
     filestrACM <- paste("OR_ABI-L2-ACMC-M3_G16_s2018",days[i],sep="")
