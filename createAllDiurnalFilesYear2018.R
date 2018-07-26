@@ -3,7 +3,7 @@
 library("ncdf4")
 library(plyr)
 library("PhenologyBayesModeling")
-library(doParallel)
+#library(doParallel)
 
 #detect cores.
 #n.cores <- detectCores()
@@ -109,21 +109,21 @@ siteName <- as.character(siteData[1,1])
 lat <- as.numeric(siteData[1,2])
 long <- as.numeric(siteData[1,3])
 
-timeFrames <- matrix(ncol=3,nrow=12)
-timeFrames[1,] <- c(8,13,"NEW") #Jan1
-timeFrames[2,] <- c(14,19,"NEW") #Jan1
-timeFrames[3,] <- c(20,25,"NEW") #Jan2
-timeFrames[4,] <- c(26,31,"NEW") #Jan2
-
-timeFrames[5,] <- c(39,44,"NEW")
-timeFrames[6,] <- c(45,49,"NEW")
-timeFrames[7,] <- c(50,54,"NEW") #Feb 2
-timeFrames[8,] <- c(55,59,"NEW") #Feb 2
-
-timeFrames[9,] <- c(67,72,"NEW")
-timeFrames[10,] <- c(73,79,"NEW")
-timeFrames[11,] <- c(80,84,"NEW") #March 2
-timeFrames[12,] <- c(85,90,"NEW") #March 2
+timeFrames <- matrix(ncol=3,nrow=1)
+timeFrames[1,] <- c(152,158,"NEW") #Jan1
+# timeFrames[2,] <- c(14,19,"NEW") #Jan1
+# timeFrames[3,] <- c(20,25,"NEW") #Jan2
+# timeFrames[4,] <- c(26,31,"NEW") #Jan2
+# 
+# timeFrames[5,] <- c(39,44,"NEW")
+# timeFrames[6,] <- c(45,49,"NEW")
+# timeFrames[7,] <- c(50,54,"NEW") #Feb 2
+# timeFrames[8,] <- c(55,59,"NEW") #Feb 2
+# 
+# timeFrames[9,] <- c(67,72,"NEW")
+# timeFrames[10,] <- c(73,79,"NEW")
+# timeFrames[11,] <- c(80,84,"NEW") #March 2
+# timeFrames[12,] <- c(85,90,"NEW") #March 2
 
 
 # timeFrames[1,] <- c(8,20,"NEW") #Jan1
@@ -161,7 +161,7 @@ timeFrames[12,] <- c(85,90,"NEW") #March 2
 # timeFrames[5,] <- c(342,342)
 # #timeFrames[10,] <- c(352,353) #Jan 2
 
-output <- foreach(i = 1:12) %dopar% {
+output <- foreach(i = 1:1) %dopar% {
   startDay <- timeFrames[i,1]
   endDay <- timeFrames[i,2]
   orbitVersion <- timeFrames[i,3]

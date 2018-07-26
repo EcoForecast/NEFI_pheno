@@ -114,13 +114,13 @@ siteName <- as.character(siteData[1,1])
 lat <- as.numeric(siteData[1,2])
 long <- as.numeric(siteData[1,3])
 
-timeFrames <- matrix(ncol=3,nrow=6)
-timeFrames[1,] <- c(201,206,"OLD") 
-timeFrames[2,] <- c(207,212,"OLD")
-timeFrames[3,] <- c(251,256,"OLD")
-timeFrames[4,] <- c(257,261,"OLD")
-timeFrames[5,] <- c(312,317,"OLD")
-timeFrames[6,] <- c(318,321,"OLD")
+timeFrames <- matrix(ncol=3,nrow=3)
+#timeFrames[1,] <- c(201,206,"OLD") 
+timeFrames[1,] <- c(207,212,"OLD")
+#timeFrames[3,] <- c(251,256,"OLD")
+timeFrames[2,] <- c(257,261,"OLD")
+timeFrames[3,] <- c(312,317,"OLD")
+#timeFrames[6,] <- c(318,321,"OLD")
 
 # 
 # timeFrames[9,] <- c(342,351,"NEW")
@@ -159,7 +159,7 @@ timeFrames[6,] <- c(318,321,"OLD")
 # timeFrames[5,] <- c(342,342)
 # #timeFrames[10,] <- c(352,353) #Jan 2
 
-output <- foreach(i = 1:6) %dopar% {
+output <- foreach(i = 1:3) %dopar% {
   startDay <- timeFrames[i,1]
   endDay <- timeFrames[i,2]
   orbitVersion <- timeFrames[i,3]
