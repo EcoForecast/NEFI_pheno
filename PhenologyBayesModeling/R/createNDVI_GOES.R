@@ -41,9 +41,10 @@ createNDVI_GOES <- function(lat,long,startDay,endDay,fileName,TZ){
       ACM.file <-nc_open(filepath)
 
       print(day.time)
-      clouds <- ncvar_get(ACM.file,"BCM")[ACM.ind[1],ACM.ind[2]]
-      if(!is.na(clouds)){
-        if(clouds == 0){
+      clouds <- ncvar_get(ACM.file,"BCM")[ACM.ind[1],ACM.ind[2]] #BCM= binary cloud mask
+      clouds.DQF <- ncvar_get(ACM.file,"DQF")[ACM.ind[1],ACM.ind[2]]
+      if(!is.na(clouds) && !is.na(clouds.DQF)){
+        if(clouds == 0 && clouds.DQF == 0){
           NDVI.val <- getSpecificNDVI(Ind2,Ind3,day.time)
           print(NDVI.val)
           NDVI.vals <- c(NDVI.vals,NDVI.val)
@@ -73,8 +74,9 @@ createNDVI_GOES <- function(lat,long,startDay,endDay,fileName,TZ){
 
       print(day.time)
       clouds <- ncvar_get(ACM.file,"BCM")[ACM.ind[1],ACM.ind[2]]
-      if(!is.na(clouds)){
-        if(clouds == 0){
+      clouds.DQF <- ncvar_get(ACM.file,"DQF")[ACM.ind[1],ACM.ind[2]]
+      if(!is.na(clouds) && !is.na(clouds.DQF)){
+        if(clouds == 0 && clouds.DQF == 0){
           NDVI.val <- getSpecificNDVI(Ind2,Ind3,day.time)
           NDVI.vals <- c(NDVI.vals,NDVI.val)
         }
@@ -107,8 +109,9 @@ createNDVI_GOES <- function(lat,long,startDay,endDay,fileName,TZ){
     if(file.exists(filepath) && !dir.exists(filepath)){
       ACM.file <-nc_open(filepath)
       clouds <- ncvar_get(ACM.file,"BCM")[ACM.ind[1],ACM.ind[2]]
-      if(!is.na(clouds)){
-        if(clouds == 0){
+      clouds.DQF <- ncvar_get(ACM.file,"DQF")[ACM.ind[1],ACM.ind[2]]
+      if(!is.na(clouds) && !is.na(clouds.DQF)){
+        if(clouds == 0 && clouds.DQF == 0){
           NDVI.val <- getSpecificNDVI(Ind2,Ind3,day.time)
           NDVI.vals <- c(NDVI.vals,NDVI.val)
         }
