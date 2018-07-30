@@ -56,8 +56,8 @@ getSpecificNDVI <- function(ind2,ind3,day.time){
     j2 <- ind2[2]
     i3 <- ind3[1]
     j3 <- ind3[2]
-    print("R3:")
-    print(R3[i3,j3])
+    #print("R3:")
+    #print(R3[i3,j3])
     if(!is.na(R3.DQF[i3,j3]) && !is.na(R2.DQF[i2,j2]) && !is.na(R2.DQF[i2,j2]) && !is.na(R2.DQF[(i2+1),j2]) && !is.na(R2.DQF[i2,(j2+1)]) && !is.na(R2.DQF[(i2+1),(j2+1)])){
       if(R3.DQF[i3,j3]==0 && R2.DQF[i2,j2]==0 && R2.DQF[i2,j2]==0 && R2.DQF[(i2+1),j2]==0 && R2.DQF[i2,(j2+1)]==0 && R2.DQF[(i2+1),(j2+1)]==0){
         R3.val <- R3[i3,j3]
