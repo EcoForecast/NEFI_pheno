@@ -2,7 +2,7 @@ library("PhenologyBayesModeling")
 
 dayData <- read.csv("sampleDiurnalDays.csv",header=TRUE)
 hr.seq <- c("00","01","02","03","04","05","06","07","08","09",as.character(seq(10,23)),"00","01","02","03","04","05","06")
-pdf(file="SingleDiurnalCurves.pdf",width=8,height=8)
+#pdf(file="SingleDiurnalCurves.pdf",width=8,height=8)
 i=1
 for(i in 1:nrow(dayData)){
   siteName <- as.character(dayData[i,]$Site)
@@ -31,7 +31,7 @@ for(i in 1:nrow(dayData)){
     if(weekDat[6,j] %in% day.hr.seq){
       time.vals <- c(time.vals,weekDat[1,j])
       NDVI.vals <- c(NDVI.vals,weekDat[2,j])
-      if(as.numeric(weekDat[4,j])<8){
+      if(as.numeric(weekDat[4,j])<(TZ-1)){
         weekDat[4,j] <- as.numeric(weekDat[4,j])+24
       }
       timeComp <- as.numeric(weekDat[4,j])+(as.numeric(weekDat[5,j])/60)
@@ -39,8 +39,8 @@ for(i in 1:nrow(dayData)){
     }
   }
   outFileName <- paste("GOES_Diurnal_",siteName,"_",yr,mth,dy,".csv",sep="")
-  write.table(rbind(time.vals,NDVI.vals),outFileName,row.names = FALSE,col.names = FALSE,sep=",")
+  write.table(rbind(time.vals,NDVI.vals,timesComp),outFileName,row.names = FALSE,col.names = FALSE,sep=",")
   plot(timesComp,NDVI.vals,ylab="NDVI",xlab="Time",main=paste(siteName,yr,mth,dy,sep=" "),ylim=c(0,1))
 }
-dev.off()
+#dev.off()
 
