@@ -3,9 +3,6 @@ library("runjags")
 library("MODISTools")
 
 createBayesModel.Diurnal <- function(siteName,dat){
-  data$x <- as.numeric(dat[3,])
-  data$y <- as.numeric(dat[2,])
-
   nchain = 5
   inits <- list()
   for(i in 1:nchain){
