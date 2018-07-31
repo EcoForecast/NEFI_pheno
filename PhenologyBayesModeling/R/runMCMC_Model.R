@@ -21,7 +21,7 @@ runMCMC_Model <- function(j.model,variableNames,maxIter=1000000000,baseNum=50000
       GBR.bad <- FALSE
       for(i in 1:nrow(GBR.vals$psrf)){
         for(j in 1:ncol(GBR.vals$psrf)){
-          if(GBR.vals$psrf[i,j]>20){
+          if(GBR.vals$psrf[i,j]>10){
             print(GBR.vals)
             print("GBR values too high")
             return(FALSE)
@@ -55,6 +55,7 @@ runMCMC_Model <- function(j.model,variableNames,maxIter=1000000000,baseNum=50000
   }
   if(continue==TRUE){
     print("Model Did not Converge")
+    var.burn <- FALSE
   }
-  return(var.out)
+  return(var.burn)
 }

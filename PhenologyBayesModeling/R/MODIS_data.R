@@ -1,3 +1,6 @@
+#install.packages("MODISTools",repo="https://cloud.r-project.org/")
+library("MODISTools")
+
 ##' For MODIS EVI data, construct the data object for input into MCMC
 ##'
 ##' @param siteName Site Name
