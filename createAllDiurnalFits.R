@@ -11,17 +11,19 @@ library("doParallel")
 
 #detect cores.
 n.cores <- detectCores()
-n.cores <- 4
+n.cores <- 2
 
 #register the cores.
 registerDoParallel(cores=n.cores)
 
 siteName <- "russellSage"
 #diurnal.files <- dir(path="dailyNDVI_GOES",pattern=paste("GOES_Diurnal_",siteName,sep=""))
-iseq <- c(186,191,198,230,248,250,252,285)
+#iseq <- c(186,191,198,230,248,250,252,285)
+iseq <- c(186,191,198,230)
 
-#output <- foreach(i = iseq) %dopar% {
-for(i in iseq){
+output <- foreach(i = iseq) %dopar% {
+#for(i in iseq){
+#i <- iseq[4]
   fileName <- paste("dailyNDVI_GOES/","GOES_Diurnal_",siteName,"_2017",i,".csv",sep="")
   print(fileName)
   dat <- read.csv(fileName,header=FALSE)
