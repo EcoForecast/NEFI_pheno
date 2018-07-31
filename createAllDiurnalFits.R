@@ -22,7 +22,9 @@ iseq <- c(186,191,198,230,248,250,252,285)
 
 output <- foreach(i = iseq) %dopar% {
   fileName <- paste("dailyNDVI_GOES/","GOES_Diurnal_",siteName,"_2017",i,".csv",sep="")
+  print(fileName)
   dat <- read.csv(fileName,header=FALSE)
+  print(dat[2,])
   data <- list()
   data$x <- as.numeric(dat[3,])
   data$y <- as.numeric(dat[2,])
