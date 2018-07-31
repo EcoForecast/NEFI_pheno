@@ -2,7 +2,7 @@ library("rjags")
 library("runjags")
 library("MODISTools")
 
-createBayesModel.Diurnal <- function(siteName,data){
+createBayesModel.Diurnal <- function(siteName,dat){
   data$x <- as.numeric(dat[3,])
   data$y <- as.numeric(dat[2,])
 
