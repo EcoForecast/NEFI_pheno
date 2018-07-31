@@ -26,9 +26,11 @@ output <- foreach(i = iseq) %dopar% {
   print(fileName)
   dat <- read.csv(fileName,header=FALSE)
   data <- list()
+  print(dim(dat))
   data$x <- as.numeric(dat[3,])
   data$y <- as.numeric(dat[2,])
   j.model <- createBayesModel.Diurnal(siteName=siteName,data)
+  
   var.burn <- runMCMC_Model(j.model = j.model,variableNames=c("TranL","bL","TranR","bR","c","k","prec","p.cloud"))
   counter <- 1
   while(counter < 5){
