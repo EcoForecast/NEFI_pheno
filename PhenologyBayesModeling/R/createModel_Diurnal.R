@@ -5,9 +5,9 @@ library("MODISTools")
 createBayesModel.Diurnal <- function(siteName,dat){
   print("entered model")
   nchain = 5
-  inits <- list()
+  init.vls <- list()
   for(i in 1:nchain){
-    inits[[i]] <- list(TranL=rnorm(1,11.95,0.1),bL=rnorm(1,-1.5,0.3),TranR=rnorm(1,24,0.1),bR=rnorm(1,1.8,0.2),c=rnorm(1,0.8,0.05),k=rnorm(1,17.5,1))
+    inits.vls[[i]] <- list(TranL=rnorm(1,11.95,0.1),bL=rnorm(1,-1.5,0.3),TranR=rnorm(1,24,0.1),bR=rnorm(1,1.8,0.2),c=rnorm(1,0.8,0.05),k=rnorm(1,17.5,1))
   }
   "Finished inits"
   data$mean.c <- 0.48
@@ -56,7 +56,7 @@ createBayesModel.Diurnal <- function(siteName,dat){
 
   j.model   <- jags.model(file = textConnection(DB_model_MM),
                           data = data,
-                          inits=inits,
+                          inits=inits.vls,
                           n.chains=nchain)
   return(j.model)
 
