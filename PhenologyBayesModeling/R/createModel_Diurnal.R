@@ -13,7 +13,7 @@ createBayesModel.Diurnal <- function(siteName,dat){
     init.vls[[i]] <- list(TranL=rnorm(1,11.95,0.1),bL=rnorm(1,-1.5,0.3),TranR=rnorm(1,24,0.1),bR=rnorm(1,1.8,0.2),c=rnorm(1,0.8,0.05),k=rnorm(1,17.5,1))
     print(i)
   }
-  "Finished inits"
+  print("Finished inits")
   data$mean.c <- 0.48
   data$p.c <- 1/(0.5**2)
 
