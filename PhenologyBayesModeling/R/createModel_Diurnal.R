@@ -3,7 +3,7 @@ library("runjags")
 library("MODISTools")
 #library("doParallel")
 
-createBayesModel.Diurnal <- function(siteName,dat){
+createBayesModel.Diurnal <- function(siteName,data){
   print("entered model")
   nchain <-  5
   init.vls <- list()
