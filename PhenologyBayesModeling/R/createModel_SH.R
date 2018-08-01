@@ -17,10 +17,20 @@ createBayesModel.SH <- function(dataSource,siteName="",URL="",startDay,endDay,la
   if(dataSource=="PC.GCC"){
     data <- PC_data(siteName=siteName,URL=URL,startDay=startDay,endDay=endDay)
     inits.mu <- createInits(data=data,PFT="SH")
-    for(i in 1:nchain){
-      inits[[i]] <- list(Tran=rnorm(1,150,10),b=rnorm(1,0.11,0.05),c=rnorm(1,inits.mu$c,0.02),d=rnorm(1,inits.mu$d,0.02),r=rnorm(1,-0.02,0.002),k=rnorm(1,inits.mu$k,5))
-      #inits[[i]] <- list(Tran=rnorm(1,204,3),b=rnorm(1,-0.156,0.02),c=rnorm(1,0.07,0.02),d=rnorm(1,0.32,0.02),r=rnorm(1,-0.0156,0.002),k=rnorm(1,211,5))
-      #inits[[i]] <- list(Tran=rnorm(1,220,3),b=rnorm(1,-0.13,0.02),c=rnorm(1,0.018,0.01),d=rnorm(1,0.3195,0.02),r=rnorm(1,-0.03,0.002),k=rnorm(1,240,5))
+    if(siteName=="luckyHills"){
+      for(i in 1:nchain){
+        inits[[i]] <- list(Tran=rnorm(1,204,3),b=rnorm(1,-0.156,0.02),c=rnorm(1,0.07,0.02),d=rnorm(1,0.32,0.02),r=rnorm(1,-0.0156,0.002),k=rnorm(1,211,5))
+        }
+    }
+    else if(siteName=="burns"){
+      for(i in 1:nchain){
+        inits[[i]] <- list(Tran=rnorm(1,150,10),b=rnorm(1,0.11,0.05),c=rnorm(1,inits.mu$c,0.02),d=rnorm(1,inits.mu$d,0.02),r=rnorm(1,-0.02,0.002),k=rnorm(1,inits.mu$k,5))
+      }
+    }
+    else{
+      for(i in 1:nchain){
+        inits[[i]] <- list(Tran=rnorm(1,220,3),b=rnorm(1,-0.13,0.02),c=rnorm(1,0.018,0.01),d=rnorm(1,0.3195,0.02),r=rnorm(1,-0.03,0.002),k=rnorm(1,240,5))
+      }
     }
     print(inits)
     data$mean.d <- 0.3
@@ -29,8 +39,20 @@ createBayesModel.SH <- function(dataSource,siteName="",URL="",startDay,endDay,la
   else if(dataSource == "MODIS.NDVI"){
     data = MODIS_data(siteName=siteName,lat=lat,long=long,startDay = startDay,endDay = endDay,metric="NDVI")
     inits.mu <- createInits(data=data,PFT="SH")
-    for(i in 1:(nchain)){
-      inits[[i]] <- list(Tran=rnorm(1,150,10),b=rnorm(1,-0.11,0.05),c=rnorm(1,inits.mu$c,0.02),d=rnorm(1,inits.mu$d,0.02),r=rnorm(1,-0.02,0.002),k=rnorm(1,inits.mu$k,5))
+    if(siteName=="luckyHills"){
+      for(i in 1:nchain){
+        inits[[i]] <- list(Tran=rnorm(1,204,3),b=rnorm(1,-0.156,0.02),c=rnorm(1,inits.mu$c,0.02),d=rnorm(1,inits.mu$d,0.02),r=rnorm(1,-0.0156,0.002),k=rnorm(1,211,5))
+      }
+    }
+    else if(siteName=="burns"){
+      for(i in 1:nchain){
+        inits[[i]] <- list(Tran=rnorm(1,150,10),b=rnorm(1,-0.11,0.05),c=rnorm(1,inits.mu$c,0.02),d=rnorm(1,inits.mu$d,0.02),r=rnorm(1,-0.02,0.002),k=rnorm(1,inits.mu$k,5))
+      }
+    }
+    else{
+      for(i in 1:nchain){
+        inits[[i]] <- list(Tran=rnorm(1,220,3),b=rnorm(1,-0.13,0.02),c=rnorm(1,inits.mu$c,0.01),d=rnorm(1,inits.mu$d,0.02),r=rnorm(1,-0.03,0.002),k=rnorm(1,240,5))
+      }
     }
     data$mean.c <- 0.25
     data$mean.d <- 0.15
@@ -38,8 +60,20 @@ createBayesModel.SH <- function(dataSource,siteName="",URL="",startDay,endDay,la
   else if(dataSource == "MODIS.EVI"){
     data = MODIS_data(siteName=siteName,lat=lat,long=long,startDay = startDay,endDay = endDay,metric="EVI")
     inits.mu <- createInits(data=data,PFT="SH")
-    for(i in 1:(nchain)){
-      inits[[i]] <- list(Tran=rnorm(1,150,10),b=rnorm(1,-0.11,0.05),c=rnorm(1,inits.mu$c,0.02),d=rnorm(1,inits.mu$d,0.02),r=rnorm(1,-0.02,0.002),k=rnorm(1,inits.mu$k,5))
+    if(siteName=="luckyHills"){
+      for(i in 1:nchain){
+        inits[[i]] <- list(Tran=rnorm(1,204,3),b=rnorm(1,-0.156,0.02),c=rnorm(1,inits.mu$c,0.02),d=rnorm(1,inits.mu$d,0.02),r=rnorm(1,-0.0156,0.002),k=rnorm(1,211,5))
+      }
+    }
+    else if(siteName=="burns"){
+      for(i in 1:nchain){
+        inits[[i]] <- list(Tran=rnorm(1,150,10),b=rnorm(1,-0.11,0.05),c=rnorm(1,inits.mu$c,0.02),d=rnorm(1,inits.mu$d,0.02),r=rnorm(1,-0.02,0.002),k=rnorm(1,inits.mu$k,5))
+      }
+    }
+    else{
+      for(i in 1:nchain){
+        inits[[i]] <- list(Tran=rnorm(1,220,3),b=rnorm(1,-0.13,0.02),c=rnorm(1,inits.mu$c,0.01),d=rnorm(1,inits.mu$d,0.02),r=rnorm(1,-0.03,0.002),k=rnorm(1,240,5))
+      }
     }
     data$mean.c <- 0.25
     data$mean.d <- 0.15
@@ -47,9 +81,20 @@ createBayesModel.SH <- function(dataSource,siteName="",URL="",startDay,endDay,la
   else if(dataSource=="GOES.NDVI"){
     data = GOES_data(siteName,startDay = startDay,endDay = endDay,lat=lat,long=long,TZ=TZ)
     inits.mu <- createInits(data=data,PFT="SH")
-    for(i in 1:(nchain)){
-      inits[[i]] <- list(Tran=rnorm(1,150,1),b=rnorm(1,-0.14,0.01),c=rnorm(1,inits.mu$c,0.02),d=rnorm(1,inits.mu$d,0.001),r=rnorm(1,-0.02,0.002),k=rnorm(1,inits.mu$k,5))
-      #inits[[i]] <- list(Tran=rnorm(1,215,3),b=rnorm(1,-0.13,0.02),c=rnorm(1,inits.mu$c,0.02),d=rnorm(1,inits.mu$d,0.001),r=rnorm(1,-0.02,0.002),k=rnorm(1,inits.mu$k,5))
+    if(siteName=="luckyHills"){
+      for(i in 1:nchain){
+        inits[[i]] <- list(Tran=rnorm(1,204,3),b=rnorm(1,-0.156,0.02),c=rnorm(1,inits.mu$c,0.02),d=rnorm(1,inits.mu$d,0.02),r=rnorm(1,-0.0156,0.002),k=rnorm(1,211,5))
+      }
+    }
+    else if(siteName=="burns"){
+      for(i in 1:nchain){
+        inits[[i]] <- list(Tran=rnorm(1,150,1),b=rnorm(1,-0.14,0.01),c=rnorm(1,inits.mu$c,0.02),d=rnorm(1,inits.mu$d,0.001),r=rnorm(1,-0.02,0.002),k=rnorm(1,inits.mu$k,5))
+      }
+    }
+    else{
+      for(i in 1:nchain){
+        inits[[i]] <- list(Tran=rnorm(1,220,3),b=rnorm(1,-0.13,0.02),c=rnorm(1,inits.mu$c,0.01),d=rnorm(1,inits.mu$d,0.02),r=rnorm(1,-0.03,0.002),k=rnorm(1,240,5))
+      }
     }
     data$mean.c <- 0.25
     data$mean.d <- 0.15
@@ -71,19 +116,19 @@ createBayesModel.SH <- function(dataSource,siteName="",URL="",startDay,endDay,la
   SH_model <- "
   model{
   ##priors
-  Tran ~ dnorm(mean.Tran,p.Tran)
-  b ~ dnorm(mean.b,p.b)
-  c ~ dnorm(mean.c,p.c)
-  d ~ dnorm(mean.d,p.d)
-  r ~ dnorm(mean.r,p.r)
+  Tran ~ dnorm(mean.Tran,p.Tran) ##Spring 50% transition date
+  b ~ dnorm(mean.b,p.b) ##Fitting parameter for green up
+  c ~ dnorm(mean.c,p.c) ##maximum-minimum
+  d ~ dnorm(mean.d,p.d) ##minimum
+  r ~ dnorm(mean.r,p.r) ##green down rate constant
   prec ~ dgamma(s1,s2)
-  k ~ dnorm(mean.k,p.k)
+  k ~ dnorm(mean.k,p.k) ##change point
 
   for(i in 1:n){
   mu1[i] <- c/(1+exp(b*(x[i]-Tran)))+d   	## process model for green up (logistic) (prebreak)
   mu2[i] <- c*exp(r*(x[i]-k))+d  ##process model for green down (exponential) (postbreak)
   mu[i] <- ifelse(x[i]>k,mu2[i],mu1[i])   #process model
-  y[i]  ~ dnorm(mu[i],prec)		## data model (will need to change to beta eventually)
+  y[i]  ~ dnorm(mu[i],prec)		## data model
   }
   }
   "
