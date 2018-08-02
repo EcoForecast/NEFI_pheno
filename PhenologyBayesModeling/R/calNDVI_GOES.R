@@ -77,5 +77,7 @@ getSpecificNDVI <- function(ind2,ind3,day.time){
   else{
     output <- NA
   }
+  print("Inside function NDVI:")
+  print(output)
   return(output)
 }
