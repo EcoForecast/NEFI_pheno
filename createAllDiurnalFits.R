@@ -18,20 +18,21 @@ registerDoParallel(cores=n.cores)
 
 siteName <- "russellSage"
 #diurnal.files <- dir(path="dailyNDVI_GOES",pattern=paste("GOES_Diurnal_",siteName,sep=""))
-#iseq <- c(186,191,198,230,248,250,252,285)
-iseq <- c(186,191,198,230)
-
+iseq <- c(186,191,198,230,248,250,252,285)
+#iseq <- c(186,191,198,230)
+#iseq <-c(186)
 output <- foreach(i = iseq) %dopar% {
 #for(i in iseq){
 #i <- iseq[4]
   fileName <- paste("dailyNDVI_GOES/","GOES_Diurnal_",siteName,"_2017",i,".csv",sep="")
   print(fileName)
   dat <- read.csv(fileName,header=FALSE)
-  data <- list()
+  data.v <- list()
   print(dim(dat))
-  data$x <- as.numeric(dat[3,])
-  data$y <- as.numeric(dat[2,])
-  j.model <- createBayesModel.Diurnal(siteName=siteName,data)
+  data.v$x <- as.numeric(dat[3,])
+  data.v$y <- as.numeric(dat[2,])
+  print("j.model")
+  j.model <- createBayesModel.Diurnal(siteName=siteName,data.v)
   
   var.burn <- runMCMC_Model(j.model = j.model,variableNames=c("TranL","bL","TranR","bR","c","k","prec","p.cloud"))
   counter <- 1
@@ -43,7 +44,7 @@ output <- foreach(i = iseq) %dopar% {
     counter <- counter + 1
   }
   if(typeof(var.burn)!=typeof(FALSE)){
-    outFileName <- paste(siteName,substr(diurnal.files[i],28,34),"_varBurn.RData",sep="")
+    outFileName <- paste(siteName,"_",as.character(i),"_varBurn.RData",sep="")
     save(var.burn,file=outFileName)
   }
 }
