@@ -21,7 +21,7 @@ runMCMC_Model <- function(j.model,variableNames,maxIter=1000000000,baseNum=50000
       GBR.bad <- FALSE
       for(i in 1:nrow(GBR.vals$psrf)){
         for(j in 1:ncol(GBR.vals$psrf)){
-          if(GBR.vals$psrf[i,j]>10){
+          if(GBR.vals$psrf[i,j]>40){
             print(GBR.vals)
             print("GBR values too high")
             return(FALSE)
