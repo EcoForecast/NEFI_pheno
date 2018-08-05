@@ -46,8 +46,8 @@ createBayesModel.Diurnal <- function(siteName,data){
   p.cloud ~ dunif(0,1)
 
   for(i in 1:n){
-  muL[i] <- -a * exp(-1 * (x[i]-k))+c
-  muR[i] <- -a * exp((x[i]-k)) + c
+  muL[i] <- -a * exp(-1 * (x[i]-k)) + c + a
+  muR[i] <- -a * exp((x[i]-k)) + c + a
 
   f[i] <- ifelse(x[i]>k,muR[i],muL[i])   #change point process model
 
