@@ -1,5 +1,8 @@
 #!/usr/bin/env Rscript
 
+install.packages("devtools")
+library("devtools")
+install_github("EcoForecast/ecoforecastR")
 library("ecoforecastR")
 library("rjags")
 
