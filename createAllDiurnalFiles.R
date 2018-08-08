@@ -1,5 +1,5 @@
-install.packaes("suncalc",repo="https://cloud.r-project.org/")
-install.packaes("lubridate",repo="https://cloud.r-project.org/")
+install.packages("suncalc",repo="https://cloud.r-project.org/")
+install.packages("lubridate",repo="https://cloud.r-project.org/")
 library("suncalc")
 library("lubridate")
 
