@@ -44,7 +44,7 @@ output <- foreach(i = iseq) %dopar% {
      while(counter < 5){
        if(typeof(var.burn)==typeof(FALSE)){
          j.model <- createBayesModel.Diurnal(siteName=siteName,data)
-         var.burn <- runMCMC_Model(j.model = j.model,variableNames=c("a","c","k","prec"))
+         var.burn <- runMCMC_Model(j.model = j.model,variableNames=c("a","c","k","prec"),maxIter = 1000000)
        }
        counter <- counter + 1
      }
