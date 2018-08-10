@@ -109,6 +109,7 @@ num <- 2
 siteName <- as.character(siteData[num,1])
 lat <- as.numeric(siteData[num,2])
 long <- as.numeric(siteData[num,3])
+TZ <- as.character(siteData[num,6])
 
 timeFrames <- matrix(ncol=3,nrow=12)
 
@@ -131,7 +132,6 @@ output <- foreach(i = 1:nrow(timeFrames)) %dopar% {
   endDay <- timeFrames[i,2]
   orbitVersion <- timeFrames[i,3]
   print(timeFrames[i,])
-  TZ <- timeFrames[i,6]
   createNDVI_GOES_midday(lat=lat, long=long, siteID=siteName,startDay=startDay,endDay=endDay,orbitVersion = orbitVersion,TZ=TZ)
   print(paste(i, "done",sep=" "))
 }
