@@ -109,7 +109,7 @@ num <- 2
 siteName <- as.character(siteData[num,1])
 lat <- as.numeric(siteData[num,2])
 long <- as.numeric(siteData[num,3])
-TZ <- as.character(siteData[num,6])
+TZ <- as.numeric(siteData[num,6])
 
 timeFrames <- matrix(ncol=3,nrow=12)
 
