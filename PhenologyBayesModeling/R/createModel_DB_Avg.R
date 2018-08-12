@@ -13,7 +13,7 @@ library("runjags")
 ##' @param startDay the day of year since 2017-01-01 to start the model
 ##' @param endDay the day of year since 2017-01-01 to end the model
 ##' @param niter the maximum number of iterations you want to give the model to converge within
-createBayesModel.DB_Avg <- function(dataSource,siteName="",URL="",niter=100000,startDay,endDay,lat,long,TZ=5) {
+createBayesModel.DB_Avg <- function(dataSource="GOES.NDVI",siteName="",URL="",niter=100000,startDay,endDay,lat,long,TZ=5) {
   nchain = 5
   inits <- list()
   # if(dataSource=="PC.GCC"){
@@ -51,7 +51,7 @@ createBayesModel.DB_Avg <- function(dataSource,siteName="",URL="",niter=100000,s
   # }
   if(dataSource=="GOES.NDVI"){
     data = GOES_data(siteName,startDay = startDay,endDay = endDay,lat=lat,long=long,TZ=TZ,window=TRUE)
-    inits.mu <- createInits(data=data,PFT=PFT)
+    inits.mu <- createInits(data=data,PFT="DB")
     for(i in 1:(nchain)){
       inits[[i]] <- list(TranS=rnorm(1,480,10),bS=rnorm(1,-0.09,0.05),TranF=rnorm(1,280,10),bF=rnorm(1,0.11,0.05),c=rnorm(1,inits.mu$c,0.02),d=rnorm(1,inits.mu$d,0.001),k=rnorm(1,365,10))
     }
@@ -70,6 +70,7 @@ createBayesModel.DB_Avg <- function(dataSource,siteName="",URL="",niter=100000,s
   data$mean.bS <- -0.10
   data$mean.k <- 365
   data$p.k <- 1/(30**2)
+  #print(data$n)
 
   DB_model <- "
   model{
@@ -89,7 +90,7 @@ createBayesModel.DB_Avg <- function(dataSource,siteName="",URL="",niter=100000,s
   mu[i] <- ifelse(x[i]>k,muS[i],muF[i])   #change point process model
 
   y[i] ~ dnorm(mu[i],prec)
-  w[i] ~ obs.prec[i] * size[i]
+  w[i] <- obs.prec[i] * size[i]
   yobs[i] ~ dnorm(y[i],w[i])
   }
   }
