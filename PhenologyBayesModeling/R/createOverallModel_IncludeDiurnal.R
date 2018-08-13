@@ -35,7 +35,7 @@ createBayesModel.DB_Overall <- function(data,niter=100000) {
   data$mean.bS <- -0.10
   data$mean.k <- 365
   data$p.k <- 1/(30**2)
-  #print(data$n)
+  print(data$n)
 
   DB_model <- "
   model{

@@ -33,17 +33,19 @@ runMCMC_Model <- function(j.model,variableNames,maxIter=1000000000,baseNum=80000
         }
       }
       print(GBR.vals)
-    }
 
+    p
     if(!continue){
       if(burnin==0){
         GBR <- gelman.plot(var.out)
         burnin <- GBR$last.iter[tail(which(apply(GBR$shrink[,,2]>1.05,1,any)),1)+1]
         if(length(burnin) == 0) burnin = 1
       }
+      print("About to remove burnin")
       var.burn <- window(var.out,start=burnin)
-      var.burn <- var.out
+      #var.burn <- var.out
       effsize <- effectiveSize(var.burn)
+      print("Through effsize")
       for(i in 1:length(effsize)){
         if(effsize[i]<5000){
           continue = TRUE
