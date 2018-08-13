@@ -45,7 +45,7 @@ if(!file.exists(outDataFile)){
   data$x <- as.numeric(days)
   data$y <- as.numeric(c.vals)
   data$obs.prec <- as.numeric(prec.vals)
-  data$n <- length(dy)
+  data$n <- length(data$x)
   data$size <- as.numeric(counts)
   print(dim(data$x))
   print(dim(data$y))
