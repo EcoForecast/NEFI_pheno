@@ -33,8 +33,7 @@ runMCMC_Model <- function(j.model,variableNames,maxIter=1000000000,baseNum=80000
         }
       }
       print(GBR.vals)
-
-    p
+    }
     if(!continue){
       if(burnin==0){
         GBR <- gelman.plot(var.out)
