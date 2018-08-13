@@ -56,6 +56,6 @@ if(!file.exists(outDataFile)){
 load(outDataFile)
 j.model <- createBayesModel.DB_Overall(data=data)
 var.burn <- runMCMC_Model(j.model=j.model,variableNames = c("TranS","bS","TranF","bF","d","c","k","prec"))
-save(var.burn,file=paste(siteName,"_overall_varBurn.RData"),sep="")
+save(var.burn,file=paste(siteName,"_overall_varBurn.RData",sep=""))
 
 
