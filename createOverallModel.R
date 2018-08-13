@@ -27,9 +27,10 @@ data <- list()
 data$x <- as.numeric(dy)
 data$y <- as.numeric(c.vals)
 data$obs.prec <- as.numeric(prec.vals)
-
-j.model <- createBayesModel.DB_Overall(data=data)
+data$n <- length(dy)
 save(data,file=outDataFile)
+print("Done with creating Data")
+j.model <- createBayesModel.DB_Overall(data=data)
 var.burn <- runMCMC_Model(j.model=j.model,variableNames = c("TranS","bS","TranF","bF","d","c","k","prec"))
 save(var.burn,file=paste(siteName,"_overall_varBurn.RData"))
 
