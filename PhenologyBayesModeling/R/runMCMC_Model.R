@@ -50,7 +50,9 @@ runMCMC_Model <- function(j.model,variableNames,maxIter=1000000000,baseNum=80000
           continue = TRUE
         }
       }
+      print("Through for loop")
       print(effsize)
+      print("Through printing effsize")
     }
     numb <- numb+iterSize
   }
