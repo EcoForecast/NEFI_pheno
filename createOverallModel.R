@@ -16,18 +16,27 @@ for(i in 1:length(diurnalFits)){
   print(diurnalFits[i])
   load(paste("diurnalFits/",diurnalFits[i],sep=""))
   out.mat <- as.matrix(var.burn)
-  c <- out.mat[,2]
-  prec <- out.mat[,4]
+  c <- mean(out.mat[,2])
+  prec <- as.numeric(quantile(out.mat[,2],0.975))-as.numeric(quantile(out.mat[,2],0.025))
   c.vals <- c(c.vals,c)
   prec.vals <- c(prec.vals,prec)
   dy <- strsplit(diurnalFits[i],"_")[[1]][2]
   days <- c(days,dy)
 }
 data <- list()
-data$x <- as.numeric(dy)
+for(i in 1:length(days)){
+  if(days[i]<182){
+    days[i] <- days[i] + 365
+  }
+}
+
+data$x <- as.numeric(days)
 data$y <- as.numeric(c.vals)
 data$obs.prec <- as.numeric(prec.vals)
 data$n <- length(dy)
+print(dim(data$x))
+print(dim(data$y))
+print(data$x)
 save(data,file=outDataFile)
 print("Done with creating Data")
 j.model <- createBayesModel.DB_Overall(data=data)
