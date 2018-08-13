@@ -6,11 +6,13 @@ library(doParallel)
 library("rjags")
 library("runjags")
 
+
 siteName <- "russellSage"
 diurnalFits <- dir(path="diurnalFits",pattern=siteName)
 c.vals <- numeric()
 prec.vals <- numeric()
 days <- numeric()
+counts <- numeric()
 outDataFile <- paste(siteName,"diurnalFitData.RData",sep="")
 if(!file.exists(outDataFile)){
   for(i in 1:length(diurnalFits)){
@@ -22,6 +24,9 @@ if(!file.exists(outDataFile)){
     c.vals <- c(c.vals,c)
     prec.vals <- c(prec.vals,prec)
     dy <- strsplit(diurnalFits[i],"_")[[1]][2]
+    dayDataFile <- intersect(dir(path="dailyNDVI_GOES",pattern=paste(dy,".csv",sep="")),dir(path="dailyNDVI_GOES",pattern=siteName))
+    dayData <- read.csv(paste("dailyNDVI_GOES/",dayDataFile,sep=""),header=FALSE)
+    counts <- c(counts,length(dayData[2,][!is.na(dayData[2,])]))
     days <- c(days,dy)
   }
   data <- list()
@@ -34,6 +39,7 @@ if(!file.exists(outDataFile)){
   data$y <- as.numeric(c.vals)
   data$obs.prec <- as.numeric(prec.vals)
   data$n <- length(dy)
+  data$size <- as.numeric(counts)
   print(dim(data$x))
   print(dim(data$y))
   print(data$x)

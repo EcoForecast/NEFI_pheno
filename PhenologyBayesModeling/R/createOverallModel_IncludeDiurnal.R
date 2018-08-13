@@ -55,7 +55,8 @@ createBayesModel.DB_Overall <- function(data,niter=100000) {
   mu[i] <- ifelse(x[i]>k,muS[i],muF[i])   #change point process model
 
   y[i] ~ dnorm(mu[i],prec)
-  yobs[i] ~ dnorm(y[i],obs.prec[i])
+  w[i] <- obs.prec[i] * size[i]
+  yobs[i] ~ dnorm(y[i],w[i])
   }
   }
   "
