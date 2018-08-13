@@ -7,7 +7,7 @@ library("rjags")
 library("runjags")
 
 siteName <- "russellSage"
-diurnalFits <- dir(path="diurnalFits",pattern=russellSage)
+diurnalFits <- dir(path="diurnalFits",pattern=siteName)
 c.vals <- numeric()
 prec.vals <- numeric()
 days <- numeric()
