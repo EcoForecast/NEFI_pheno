@@ -20,18 +20,21 @@ if(!file.exists(outDataFile)){
   for(i in 1:length(diurnalFits)){
     print(diurnalFits[i])
     load(paste("diurnalFits/",diurnalFits[i],sep=""))
-    out.mat <- as.matrix(var.burn)
-    c <- mean(out.mat[,2])
-    prec <- as.numeric(quantile(out.mat[,2],0.975))-as.numeric(quantile(out.mat[,2],0.025))
-    c.vals <- c(c.vals,c)
-    prec.vals <- c(prec.vals,prec)
-    dy <- strsplit(diurnalFits[i],"_")[[1]][2]
-    dayDataFile <- intersect(dir(path="dailyNDVI_GOES",pattern=paste(dy,".csv",sep="")),dir(path="dailyNDVI_GOES",pattern=siteName))
-    print(dayDataFile)
-    dayData <- read.csv(paste("dailyNDVI_GOES/",dayDataFile,sep=""),header=FALSE)
-    counts <- c(counts,length(dayData[2,][!is.na(dayData[2,])]))
-    print(length(dayData[2,][!is.na(dayData[2,])]))
-    days <- c(days,dy)
+    if(typeof(var.burn)!=typeof(FALSE)){
+      out.mat <- as.matrix(var.burn)
+      print(colnames(out.mat))
+      c <- mean(out.mat[,2])
+      prec <- as.numeric(quantile(out.mat[,2],0.975))-as.numeric(quantile(out.mat[,2],0.025))
+      c.vals <- c(c.vals,c)
+      prec.vals <- c(prec.vals,prec)
+      dy <- strsplit(diurnalFits[i],"_")[[1]][2]
+      dayDataFile <- intersect(dir(path="dailyNDVI_GOES",pattern=paste(dy,".csv",sep="")),dir(path="dailyNDVI_GOES",pattern=siteName))
+      print(dayDataFile)
+      dayData <- read.csv(paste("dailyNDVI_GOES/",dayDataFile,sep=""),header=FALSE)
+      counts <- c(counts,length(dayData[2,][!is.na(dayData[2,])]))
+      print(length(dayData[2,][!is.na(dayData[2,])]))
+      days <- c(days,dy)
+    }
   }
   data <- list()
   for(i in 1:length(days)){
