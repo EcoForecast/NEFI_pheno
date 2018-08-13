@@ -13,6 +13,7 @@ prec.vals <- numeric()
 days <- numeric()
 outDataFile <- paste(siteName,"diurnalFitData.RData",sep="")
 for(i in 1:length(diurnalFits)){
+  print(diurnalFits[i])
   load(paste("diurnalFits/",diurnalFits[i],sep=""))
   out.mat <- as.matrix(var.Burn)
   c <- out.mat[,2]
