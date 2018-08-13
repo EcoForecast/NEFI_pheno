@@ -15,7 +15,7 @@ outDataFile <- paste(siteName,"diurnalFitData.RData",sep="")
 for(i in 1:length(diurnalFits)){
   print(diurnalFits[i])
   load(paste("diurnalFits/",diurnalFits[i],sep=""))
-  out.mat <- as.matrix(var.Burn)
+  out.mat <- as.matrix(varBurn)
   c <- out.mat[,2]
   prec <- out.mat[,4]
   c.vals <- c(c.vals,c)
@@ -30,7 +30,7 @@ data$obs.prec <- as.numeric(prec.vals)
 
 j.model <- createBayesModel.DB_Overall(data=data)
 save(data,file=outDataFile)
-var.Burn <- runMCMC_Model(j.model=j.model,variableNames = c("TranS","bS","TranF","bF","d","c","k","prec"))
+varBurn <- runMCMC_Model(j.model=j.model,variableNames = c("TranS","bS","TranF","bF","d","c","k","prec"))
 save(var.Burn,file=paste(siteName,"_overall_varBurn.RData"))
 
 
