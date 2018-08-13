@@ -5,6 +5,7 @@ library("lubridate")
 
 ##Combine Files into one file
 #NDVI.files <- dir(pattern="GOES_NDVI_DiurnalrussellSage_")
+NDVI.files <- dir(pattern="GOES_NDVI_DiurnalHarvard")
 #lat <- 32.457
 #long <- -91.9743
 lat <- 45.2128
@@ -20,7 +21,7 @@ dat <- dat[,order(dat[1,])]
 #write.table(dat,file="GOES_NDVI_DiurnalHarvardForestALL.csv",row.names=FALSE,col.names=FALSE,sep=",")
 
 ##Need update based on the timezone difference
-TZ=6
+TZ=5
 hr.seq <- c("00","01","02","03","04","05","06","07","08","09",as.character(seq(10,23)),"00","01","02","03","04","05","06")
 weekDat <- rbind(as.matrix(dat),matrix(nrow=4,ncol=dim(dat)[2]))
 rownames(weekDat) <- c("day.time","NDVI","day","hour","minutes","dayhr")
@@ -74,7 +75,7 @@ for(q in 1:ncol(correctedDat)){
 
 #pdf(file="SingleDailyNDVI_HarvardForest_OLD.pdf",width=30,height=45)
 #pdf(file="SingleDailyNDVI_russellSage.pdf",width=30,height=45)
-pdf(file="SingleDailyNDVI_howland.pdf",width=30,height=45)
+pdf(file="SingleDailyNDVI_HarvardForest.pdf",width=30,height=45)
 
 par(mfrow=c(10,10))
 current.dy <- "181"
@@ -109,9 +110,9 @@ for(i in 1:ncol(correctedDat)){
         }
     }
     #outFileName <- paste("dailyNDVI_GOES/GOES_Diurnal_russellSage_",current.yr.dy,".csv",sep="")
-    outFileName <- paste("dailyNDVI_GOES/GOES_Diurnal_howland_",current.yr.dy,".csv",sep="")
+    outFileName <- paste("dailyNDVI_GOES/GOES_Diurnal_HarvardForest_",current.yr.dy,".csv",sep="")
     write.table(dayData,outFileName,row.names = FALSE,col.names = FALSE,sep=",")
-    plot(dayData[3,],dayData[2,],ylab="NDVI",xlab="Time",main=paste("Howland",current.yr.dy,sep=" "),ylim=c(0,1),xlim=c(0,24))
+    plot(dayData[3,],dayData[2,],ylab="NDVI",xlab="Time",main=paste("Harvard Forest",current.yr.dy,sep=" "),ylim=c(0,1),xlim=c(0,24))
     abline(v=dawnTime,col="green")
     abline(v=duskTime,col="green")
     #print(current.yr.dy)
@@ -138,9 +139,9 @@ for(d in 1:ncol(dayData)){
   }
 }
 #outFileName <- paste("dailyNDVI_GOES/GOES_Diurnal_russellSage_",current.yr.dy,".csv",sep="")
-outFileName <- paste("dailyNDVI_GOES/GOES_Diurnal_howland_",current.yr.dy,".csv",sep="")
+outFileName <- paste("dailyNDVI_GOES/GOES_Diurnal_HarvardForest_",current.yr.dy,".csv",sep="")
 write.table(dayData,outFileName,row.names = FALSE,col.names = FALSE,sep=",")
-plot(dayData[3,],dayData[2,],ylab="NDVI",xlab="Time",main=paste("Howland",current.yr.dy,sep=" "),ylim=c(0,1),xlim=c(0,24))
+plot(dayData[3,],dayData[2,],ylab="NDVI",xlab="Time",main=paste("Harvard Forest",current.yr.dy,sep=" "),ylim=c(0,1),xlim=c(0,24))
 abline(v=dawnTime,col="green")
 abline(v=duskTime,col="green")
 
