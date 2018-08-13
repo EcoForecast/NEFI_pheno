@@ -1,3 +1,5 @@
+#!/usr/bin/env Rscript
+
 install.packages("suncalc",repo="https://cloud.r-project.org/")
 install.packages("lubridate",repo="https://cloud.r-project.org/")
 library("suncalc")

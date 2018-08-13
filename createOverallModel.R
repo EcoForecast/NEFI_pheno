@@ -1,3 +1,5 @@
+#!/usr/bin/env Rscript
+
 install.packages("/projectnb/dietzelab/kiwheel/NEFI_pheno/PhenologyBayesModeling",repo=NULL)
 library("ncdf4")
 library(plyr)
@@ -28,7 +30,7 @@ if(!file.exists(outDataFile)){
     print(dayDataFile)
     dayData <- read.csv(paste("dailyNDVI_GOES/",dayDataFile,sep=""),header=FALSE)
     counts <- c(counts,length(dayData[2,][!is.na(dayData[2,])]))
-    print(counts)
+    print(length(dayData[2,][!is.na(dayData[2,])]))
     days <- c(days,dy)
   }
   data <- list()
