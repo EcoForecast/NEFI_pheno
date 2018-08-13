@@ -26,7 +26,7 @@ for(i in 1:length(diurnalFits)){
 data <- list()
 for(i in 1:length(days)){
   if(days[i]<182){
-    days[i] <- days[i] + 365
+    days[i] <- as.numeric(days[i]) + 365
   }
 }
 
