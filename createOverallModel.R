@@ -13,7 +13,7 @@ c.vals <- numeric()
 prec.vals <- numeric()
 days <- numeric()
 counts <- numeric()
-outDataFile <- paste(siteName,"diurnalFitData.RData",sep="")
+outDataFile <- paste(siteName,"_diurnalFitData.RData",sep="")
 if(!file.exists(outDataFile)){
   for(i in 1:length(diurnalFits)){
     print(diurnalFits[i])
