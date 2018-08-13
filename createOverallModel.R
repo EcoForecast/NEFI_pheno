@@ -25,8 +25,10 @@ if(!file.exists(outDataFile)){
     prec.vals <- c(prec.vals,prec)
     dy <- strsplit(diurnalFits[i],"_")[[1]][2]
     dayDataFile <- intersect(dir(path="dailyNDVI_GOES",pattern=paste(dy,".csv",sep="")),dir(path="dailyNDVI_GOES",pattern=siteName))
+    print(dayDataFile)
     dayData <- read.csv(paste("dailyNDVI_GOES/",dayDataFile,sep=""),header=FALSE)
     counts <- c(counts,length(dayData[2,][!is.na(dayData[2,])]))
+    print(counts)
     days <- c(days,dy)
   }
   data <- list()
