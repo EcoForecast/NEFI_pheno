@@ -10,8 +10,10 @@ library("lubridate")
 NDVI.files <- dir(pattern="GOES_NDVI_DiurnalHarvard")
 #lat <- 32.457
 #long <- -91.9743
-lat <- 45.2128
-long <- -68.7418
+#lat <- 45.2128
+#long <- -68.7418
+lat <- 42.5378
+long <- -72.1715
 
 #length(NDVI.files)
 dat <- read.csv(NDVI.files[1],header=FALSE)
