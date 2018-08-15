@@ -52,7 +52,7 @@ p <- PC.data$y
 x <- PC.data$x
 
 MODISfileName <- paste("PhenologyForecast/",siteName,"_",metric,"_MOD13Q1_",startDate,"_",endDate,".csv",sep="")
-if(!file.exists(MOSISfileName)){
+if(!file.exists(MODISfileName)){
   print("Downloading MODIS File")
   directory="/Users/Kathryn/Documents/PhD_Research/NEFI_pheno/PhenologyForecast"
   mt_subset(product = "MOD13Q1",lat=lat,lon=long,band=paste("250m_16_days_",metric,sep=""),start=startDate,end=endDate,site_name = paste(siteName,"_",metric,sep=""),out_dir = directory,internal=FALSE)
