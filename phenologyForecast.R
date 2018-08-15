@@ -58,7 +58,7 @@ if(!file.exists(MODISfileName)){
   mt_subset(product = "MOD13Q1",lat=lat,lon=long,band=paste("250m_16_days_",metric,sep=""),start=startDate,end=endDate,site_name = paste(siteName,"_",metric,sep=""),out_dir = directory,internal=FALSE)
 }
 print("MODIS File Downloaded")
-dat <- read.csv(fileName,header=TRUE,skip=15)
+dat <- read.csv(MODISfileName,header=TRUE,skip=15)
 MODIS.x <- as.Date(dat$calendar_date)
 MODIS.y <- as.numeric(dat$data)/10000
 m <- rep(NA,length(p))
