@@ -45,6 +45,7 @@ if(!file.exists(PCfileName)){
   PC.data <- list()
   PC.data$x <- x
   PC.data$y <- p
+  PC.data$g_std <- phenoData$g_std
   save(PC.data,file=PCfileName)
 }
 load(PCfileName)
@@ -71,7 +72,7 @@ data$m <- m
 data$x <- x
 data$n <- length(x)
 data$x_ic <- p[1]
-data$tau_ic <- 1/(phenoData$g_std[1]**2)
+data$tau_ic <- 1/(PC.data$g_std[1]**2)
 data$s1.PC <- 0.5
 data$s2.PC <- 0.2
 data$s1.MN <- 0.5
