@@ -36,6 +36,10 @@ createBayesModel.DB_Overall <- function(data,niter=100000) {
   data$mean.k <- 365
   data$p.k <- 1/(30**2)
   print(data$n)
+  print(data$x)
+  print(data$y)
+  print(data$obs.prec)
+  print(data$size)
 
   DB_model <- "
   model{
