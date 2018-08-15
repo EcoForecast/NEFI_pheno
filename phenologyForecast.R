@@ -34,7 +34,7 @@ lat <- as.numeric(siteData[1,2])
 long <- as.numeric(siteData[1,3])
 metric <- "NDVI"
 startDate <- as.Date("2008-04-04")
-endDate <- as.Date("2018-08-13")
+endDate <- as.Date("2018-08-14")
 PCfileName <- paste(siteName,"_",startDate,"_",endDate,"PC.RData",sep="")
 if(!file.exists(PCfileName)){
   phenoData <- download.phenocam(URL)
@@ -54,7 +54,7 @@ x <- PC.data$x
 MODISfileName <- paste(siteName,"_",metric,"_MOD13Q1_",startDate,"_",endDate,".csv",sep="")
 if(!file.exists(MODISfileName)){
   print("Downloading MODIS File")
-  directory="/Users/Kathryn/Documents/PhD_Research/NEFI_pheno/PhenologyForecast"
+  directory="/Users/Kathryn/Documents/PhD_Research/NEFI_pheno/"
   mt_subset(product = "MOD13Q1",lat=lat,lon=long,band=paste("250m_16_days_",metric,sep=""),start=startDate,end=endDate,site_name = paste(siteName,"_",metric,sep=""),out_dir = directory,internal=FALSE)
 }
 print("MODIS File Downloaded")
