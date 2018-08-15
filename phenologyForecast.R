@@ -51,7 +51,7 @@ load(PCfileName)
 p <- PC.data$y
 x <- PC.data$x
 
-MODISfileName <- paste("PhenologyForecast/",siteName,"_",metric,"_MOD13Q1_",startDate,"_",endDate,".csv",sep="")
+MODISfileName <- paste(siteName,"_",metric,"_MOD13Q1_",startDate,"_",endDate,".csv",sep="")
 if(!file.exists(MODISfileName)){
   print("Downloading MODIS File")
   directory="/Users/Kathryn/Documents/PhD_Research/NEFI_pheno/PhenologyForecast"
