@@ -25,15 +25,16 @@ if(!file.exists(outDataFile)){
       print(colnames(out.mat))
       c <- mean(out.mat[,2])
       prec <- as.numeric(quantile(out.mat[,2],0.975))-as.numeric(quantile(out.mat[,2],0.025))
-      if(prec<100){
+      dy <- strsplit(diurnalFits[i],"_")[[1]][2]
+      dayDataFile <- intersect(dir(path="dailyNDVI_GOES",pattern=paste(dy,".csv",sep="")),dir(path="dailyNDVI_GOES",pattern=siteName))
+      print(dayDataFile)
+      dayData <- read.csv(paste("dailyNDVI_GOES/",dayDataFile,sep=""),header=FALSE)
+      ct <- length(dayData[2,][!is.na(dayData[2,])])
+      
+      if(prec<100 && ct>0){
         c.vals <- c(c.vals,c)
         prec.vals <- c(prec.vals,prec)
-        dy <- strsplit(diurnalFits[i],"_")[[1]][2]
-        dayDataFile <- intersect(dir(path="dailyNDVI_GOES",pattern=paste(dy,".csv",sep="")),dir(path="dailyNDVI_GOES",pattern=siteName))
-        print(dayDataFile)
-        dayData <- read.csv(paste("dailyNDVI_GOES/",dayDataFile,sep=""),header=FALSE)
-        counts <- c(counts,length(dayData[2,][!is.na(dayData[2,])]))
-        print(length(dayData[2,][!is.na(dayData[2,])]))
+        counts <- c(counts,ct)
         days <- c(days,dy)
       }
     }
