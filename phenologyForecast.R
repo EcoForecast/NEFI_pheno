@@ -34,7 +34,7 @@ lat <- as.numeric(siteData[1,2])
 long <- as.numeric(siteData[1,3])
 metric <- "NDVI"
 startDate <- as.Date("2008-04-04")
-endDate <- as.Date("2018-08-14")
+endDate <- as.Date("2018-08-13")
 PCfileName <- paste(siteName,"_",startDate,"_",endDate,"PC.RData",sep="")
 if(!file.exists(PCfileName)){
   phenoData <- download.phenocam(URL)
