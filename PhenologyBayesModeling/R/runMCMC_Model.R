@@ -1,7 +1,7 @@
 library("rjags")
 library("runjags")
 
-runMCMC_Model <- function(j.model,variableNames,maxIter=1000000000,baseNum=80000,iterSize =40000,maxGBR=10){
+runMCMC_Model <- function(j.model,variableNames,maxIter=1000000000,baseNum=80000,iterSize =40000,maxGBR=10,ID=""){
   var.out   <- coda.samples (model = j.model,
                              variable.names = variableNames,
                              n.iter = baseNum)
@@ -23,7 +23,7 @@ runMCMC_Model <- function(j.model,variableNames,maxIter=1000000000,baseNum=80000
         for(j in 1:ncol(GBR.vals$psrf)){
           if(GBR.vals$psrf[i,j]>maxGBR){
             print(GBR.vals)
-            print("GBR values too high")
+            print(c("GBR values too high:",ID))
             return(FALSE)
           }
           if(GBR.vals$psrf[i,j]>1.04){
