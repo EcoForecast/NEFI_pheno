@@ -37,7 +37,7 @@ createBayesModel.Diurnal <- function(siteName,data){
   #bL ~ dnorm(mean.bL,p.b)
   #TranR ~ dnorm(mean.TranR,p.Tran)  ##F for fall/autumn
   #bR ~ dnorm(mean.bR,p.b)
-  a ~ dnorm(mean.a,p.a)
+  a ~ dnorm(mean.a,p.a);T(0,1)
   c ~ dbeta(alpha.c,beta.c)
   k ~ dnorm(mean.k,p.k)
   prec ~ dgamma(s1,s2)
