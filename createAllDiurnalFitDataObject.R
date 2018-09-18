@@ -20,7 +20,8 @@ outDataFile <- paste(siteName,"_diurnalFitData.RData",sep="")
 if(!file.exists(outDataFile)){
   for(i in 1:length(diurnalFits)){
     print(diurnalFits[i])
-    load(paste("diurnalFits/",diurnalFits[i],sep=""))
+    #load(paste("diurnalFits/",diurnalFits[i],sep=""))
+    load(diurnalFits[i])
     if(typeof(var.burn)!=typeof(FALSE)){
       out.mat <- as.matrix(var.burn)
       print(colnames(out.mat))
