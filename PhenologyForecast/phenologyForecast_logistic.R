@@ -1,4 +1,5 @@
-setwd(paste(getwd(),"/PhenologyForecast",sep=""))
+#!/usr/bin/env Rscript
+#setwd(paste(getwd(),"/PhenologyForecast",sep=""))
 
 library("MODISTools")
 library("ecoforecastR")
