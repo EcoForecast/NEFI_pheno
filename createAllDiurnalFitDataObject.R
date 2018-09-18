@@ -13,7 +13,9 @@ siteName <- "russellSage"
 #diurnalFits <- dir(path="diurnalFits",pattern=siteName)
 diurnalFits <- intersect(dir(pattern="varBurn2.RData"),dir(pattern=siteName))
 c.vals <- numeric()
-prec.vals <- numeric()
+Q1.vals <- numeric()
+Q2.vals <- numeric()
+Q3.vals <- numeric()
 days <- numeric()
 counts <- numeric()
 outDataFile <- paste(siteName,"_diurnalFitData.RData",sep="")
@@ -26,19 +28,24 @@ if(!file.exists(outDataFile)){
       out.mat <- as.matrix(var.burn)
       print(colnames(out.mat))
       c <- mean(out.mat[,2])
-      prec <- as.numeric(quantile(out.mat[,2],0.975))-as.numeric(quantile(out.mat[,2],0.025))
+      Q1 <- as.numeric(quantile(out.mat[,2]),0.025)
+      Q2 <- as.numeric(quantile(out.mat[,2]),0.5)
+      Q3 <- as.numeric(quantile(out.mat[,2]),0.975)
+      #prec <- as.numeric(quantile(out.mat[,2],0.975))-as.numeric(quantile(out.mat[,2],0.025))
       dy <- strsplit(diurnalFits[i],"_")[[1]][2]
       dayDataFile <- intersect(dir(path="dailyNDVI_GOES",pattern=paste(dy,".csv",sep="")),dir(path="dailyNDVI_GOES",pattern=siteName))
       print(dayDataFile)
       dayData <- read.csv(paste("dailyNDVI_GOES/",dayDataFile,sep=""),header=FALSE)
       ct <- length(dayData[2,][!is.na(dayData[2,])])
+
+      c.vals <- c(c.vals,c)
+      Q1.vals <- c(Q1.vals,Q1)
+      Q2.vals <- c(Q2.vals,Q2)
+      Q3.vals <- c(Q1.vals,Q3)
+      #prec.vals <- c(prec.vals,prec)
+      counts <- c(counts,ct)
+      days <- c(days,dy)
       
-      if(prec<100 && ct>0){
-        c.vals <- c(c.vals,c)
-        prec.vals <- c(prec.vals,prec)
-        counts <- c(counts,ct)
-        days <- c(days,dy)
-      }
     }
   }
   data <- list()
@@ -49,7 +56,9 @@ if(!file.exists(outDataFile)){
   }
   data$x <- as.numeric(days)
   data$y <- as.numeric(c.vals)
-  data$obs.prec <- as.numeric(prec.vals)
+  data$Q1<- as.numeric(Q1.vals)
+  data$Q2<- as.numeric(Q2.vals)
+  data$Q3<- as.numeric(Q3.vals)
   data$n <- length(data$x)
   data$size <- as.numeric(counts)
   print(dim(data$x))
