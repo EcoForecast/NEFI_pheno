@@ -10,7 +10,8 @@ library("runjags")
 
 
 siteName <- "russellSage"
-diurnalFits <- dir(path="diurnalFits",pattern=siteName)
+#diurnalFits <- dir(path="diurnalFits",pattern=siteName)
+diurnalFits <- intersect(dir(pattern="varBurn2.RData"),dir(pattern=siteName))
 c.vals <- numeric()
 prec.vals <- numeric()
 days <- numeric()
