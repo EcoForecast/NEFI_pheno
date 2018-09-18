@@ -82,12 +82,12 @@ phenologyForecast <- function(siteName,URL,forecastLength=0,startDate=FALSE,endD
   GOES.data <- read.csv(paste("dataFiles/GOES_NDVI_",siteName,"_2017-07-01_2018-06-30_noon.csv",sep=""),header=FALSE)
   GOES.x <- as.Date(rep(NA,ncol(GOES.data)))
   for(d in 1:ncol(GOES.data)){
-    print(as.numeric(GOES.data[1,d]))
+    #print(as.numeric(GOES.data[1,d]))
     if(GOES.data[1,d]<182){
       GOES.data[1,d] <- GOES.data[1,d]+365
     }
     GOES.x[d] <- as.Date(GOES.data[1,d],origin="2016-12-31")
-    print(GOES.x[d])
+    #print(GOES.x[d])
   }
   GOES.y <- GOES.data[2,]
   g <- rep(NA,length(p))
