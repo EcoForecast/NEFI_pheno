@@ -28,9 +28,9 @@ if(!file.exists(outDataFile)){
       out.mat <- as.matrix(var.burn)
       print(colnames(out.mat))
       c <- mean(out.mat[,2])
-      Q1 <- as.numeric(quantile(out.mat[,2]),0.025)
-      Q2 <- as.numeric(quantile(out.mat[,2]),0.5)
-      Q3 <- as.numeric(quantile(out.mat[,2]),0.975)
+      Q1 <- as.numeric(quantile(out.mat[,2],0.025))
+      Q2 <- as.numeric(quantile(out.mat[,2],0.5))
+      Q3 <- as.numeric(quantile(out.mat[,2],0.975))
       #prec <- as.numeric(quantile(out.mat[,2],0.975))-as.numeric(quantile(out.mat[,2],0.025))
       dy <- strsplit(diurnalFits[i],"_")[[1]][2]
       dayDataFile <- intersect(dir(path="dailyNDVI_GOES",pattern=paste(dy,".csv",sep="")),dir(path="dailyNDVI_GOES",pattern=siteName))
