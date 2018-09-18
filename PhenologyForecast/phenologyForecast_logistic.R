@@ -121,6 +121,7 @@ phenologyForecast <- function(siteName,URL,forecastLength=0,startDate=FALSE,endD
   data$p.c.M <- 0.02
   data$mean.d.M <- 1.5
   data$p.d.M <- 0.2
+  print("Done constructing Data Object")
 
   
   #data <- list(p=y,n=length(y),x_ic=y[1],tau_ic=1/(phenoData$g_std[1]**2),a_obs=0.5,r_obs=0.2,a_add=0.5,r_add=0.2)
@@ -185,6 +186,7 @@ phenologyForecast <- function(siteName,URL,forecastLength=0,startDate=FALSE,endD
   j.model   <- jags.model (file = textConnection(LogisticModel),
                            data = data,
                            n.chains = nchain)
+  print("Done creating model")
   jags.out   <- coda.samples (model = j.model,
                               variable.names = c("p.proc","p.PC","c.P","d.P","x","r","d.G","c.G","d.M","c.M"),
                               n.iter = 50000)
