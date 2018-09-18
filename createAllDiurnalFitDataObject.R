@@ -41,7 +41,7 @@ if(!file.exists(outDataFile)){
       c.vals <- c(c.vals,c)
       Q1.vals <- c(Q1.vals,Q1)
       Q2.vals <- c(Q2.vals,Q2)
-      Q3.vals <- c(Q1.vals,Q3)
+      Q3.vals <- c(Q3.vals,Q3)
       #prec.vals <- c(prec.vals,prec)
       counts <- c(counts,ct)
       days <- c(days,dy)
