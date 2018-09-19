@@ -27,7 +27,7 @@ xseq <- seq(0,25,0.1)
 
 outputFileName <- paste(siteName,"_diurnalExamples2.pdf",sep="")
 pdf(file=outputFileName,width=5,height=5)
-par(mfrow=c(3,3),mai=c(0.4,0.6,0.4,0.1))
+par(mfrow=c(3,3),mai=c(0.3,0.3,0.4,0.05))
 #day.seq <- c("186","189","201","212","231","245","251","278","290","012","013","030","074","091","167","168")
 day.seq <- c("189","201","231","245","251","012","013","030","169")
 #day.seq <- c("186","201","245","251","278","030","012","013","290")
@@ -55,7 +55,7 @@ for(dy in day.seq){
   }
   ci <- apply(ycred,2,quantile,c(0.025,0.5, 0.975), na.rm= TRUE)
   date <- as.Date(as.numeric(dy),origin=as.Date(paste(as.character(as.numeric(yr)-1),"-12-31",sep="")))
-  plot(x=list(),y=list(),main=date,ylim=c(0,1),xlim=c(0,25),ylab="NDVI",xlab="Hour",cex=2.5)
+  plot(x=list(),y=list(),main=date,ylim=c(0,1),xlim=c(0,24),ylab="",xlab="",cex=2.5)
   polygon(x=c(10,14,14,10),y=c(-1,-1,1.2,1.2),col="lightgray",border=NA)
   ciEnvelope(xseq,ci[1,],ci[3,],col="lightBlue")
   lines(xseq,ci[2,],col="black")
