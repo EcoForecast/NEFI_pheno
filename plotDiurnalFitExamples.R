@@ -26,9 +26,10 @@ siteName <- "russellSage"
 xseq <- seq(0,25,0.1)
 
 outputFileName <- paste(siteName,"_diurnalExamples2.pdf",sep="")
-pdf(file=outputFileName,width=10,height=5)
-par(mfrow=c(3,3))
-day.seq <- c("186","201","245","251","278","030","012","013","290")
+pdf(file=outputFileName,width=8,height=10)
+par(mfrow=c(3,3),mai=c(0.5,0.5,0.5,0.5))
+day.seq <- c("186","201","245","251","278","290","012","013","030")
+#day.seq <- c("186","201","245","251","278","030","012","013","290")
 #dy="030"
 for(dy in day.seq){
   #fileName <- dir(path="dailyNDVI_GOES",pattern=paste(dy,"_varBurn.RData",sep=""))
@@ -54,9 +55,11 @@ for(dy in day.seq){
   ci <- apply(ycred,2,quantile,c(0.025,0.5, 0.975), na.rm= TRUE)
   date <- as.Date(as.numeric(dy),origin=as.Date(paste(as.character(as.numeric(yr)-1),"-12-31",sep="")))
   plot(x=list(),y=list(),main=date,ylim=c(0,1),xlim=c(0,25),ylab="NDVI",xlab="Hour",cex=2.5)
+  polygon(x=c(10,14,14,10),y=c(-1,-1,1.2,1.2),col="lightgray",border=NA)
   ciEnvelope(xseq,ci[1,],ci[3,],col="lightBlue")
   lines(xseq,ci[2,],col="black")
   points(as.numeric(dat[3,]),as.numeric(dat[2,]),pch=".")
   abline(v=12,col="red")
+ 
 }
 dev.off()
