@@ -109,19 +109,19 @@ phenologyForecast <- function(siteName,URL,forecastLength=0,startDate=FALSE,endD
   data$s1 <- 0.5
   data$s2 <- 0.2
   data$g <- g
-  data$mean.c.P <- -3.5
-  data$p.c.P <- 0.2
-  data$mean.d.P <- 10
-  data$p.d.P <- 1
-  data$mean.c.G <- -0.8
-  data$p.c.G <- 0.1
-  data$mean.d.G <- 2.2
-  data$p.d.G <- 0.2
-  data$mean.c.M <- -0.4
-  data$p.c.M <- 0.02
-  data$mean.d.M <- 1.5
-  data$p.d.M <- 0.2
-  print("Done constructing Data Object")
+  #data$mean.c.P <- -3.5
+  #data$p.c.P <- 0.2
+  #data$mean.d.P <- 10
+  #data$p.d.P <- 1
+  #data$mean.c.G <- -0.8
+  #data$p.c.G <- 0.1
+  #data$mean.d.G <- 2.2
+  #data$p.d.G <- 0.2
+  #data$mean.c.M <- -0.4
+  #data$p.c.M <- 0.02
+  #data$mean.d.M <- 1.5
+  #data$p.d.M <- 0.2
+  #print("Done constructing Data Object")
 
   
   #data <- list(p=y,n=length(y),x_ic=y[1],tau_ic=1/(phenoData$g_std[1]**2),a_obs=0.5,r_obs=0.2,a_add=0.5,r_add=0.2)
@@ -129,7 +129,7 @@ phenologyForecast <- function(siteName,URL,forecastLength=0,startDate=FALSE,endD
   inits <- list() #list of initial values
   for(i in 1:nchain){
     pheno.samp = sample(p,length(p),replace=TRUE)
-    inits[[i]] <- list(p.proc=1/var(diff(pheno.samp)),p.PC=5/var(pheno.samp),c.P=rnorm(1,-3.5,0.01),d.P=rnorm(1,10,0.5),c.G=rnorm(1,-0.8,2.2),d.G=rnorm(1,2.2,0.1),c.M=rnorm(1,-0.4,0.02),d.M=rnorm(1,1.5,0.1))
+    inits[[i]] <- list(p.proc=1/var(diff(pheno.samp)),p.PC=5/var(pheno.samp))#,c.P=rnorm(1,-3.5,0.01),d.P=rnorm(1,10,0.5),c.G=rnorm(1,-0.8,2.2),d.G=rnorm(1,2.2,0.1),c.M=rnorm(1,-0.4,0.02),d.M=rnorm(1,1.5,0.1))
   }
   
   ##JAGS code
@@ -137,21 +137,23 @@ phenologyForecast <- function(siteName,URL,forecastLength=0,startDate=FALSE,endD
   model{
   #### Data Model: PhenoCam
   for(i in 1:n){
-  ##x.P[i] <- (x[i]-d.P)/c.P+1
-  x.P[i] <- c.P+d.P*x[i]
-  p[i] ~ dnorm(x.P[i],p.PC)
+    #x.P[i] <- c.P+d.P*x[i]
+    #p[i] ~ dnorm(x.P[i],p.PC)
+    p[i] ~ dnorm(x[i],p.PC)
   }
   
   #### Data Model: MODIS NDVI
   for(i in 1:n){
-  x.M[i] <- c.M+d.M*x[i]
-  m[i] ~ dnorm(x.M[i],p.MN)
+    #x.M[i] <- c.M+d.M*x[i]
+    #m[i] ~ dnorm(x.M[i],p.MN)
+    m[i] ~ dnorm(x[i],p.MN)
   }
 
   #### Data Model: GOES NDVI
   for(i in 1:n){
-    x.G[i] <- c.G + d.G*x[i]
-    g[i] ~ dnorm(x.G[i],p.G)
+    #x.G[i] <- c.G + d.G*x[i]
+    #g[i] ~ dnorm(x.G[i],p.G)
+    g[i] ~ dnorm(x[i],p.G)
   }
   
   #### Process Model
@@ -169,12 +171,12 @@ phenologyForecast <- function(siteName,URL,forecastLength=0,startDate=FALSE,endD
   p.PC ~ dgamma(s1,s2)
   p.G ~ dgamma(s1,s2)
   p.MN ~ dgamma(s2,s2)
-  c.P ~ dnorm(mean.c.P,p.c.P)
-  d.P ~ dnorm(mean.d.P,p.d.P)
-  c.G ~ dnorm(mean.c.G,p.c.G)
-  d.G ~ dnorm(mean.d.G,p.d.G)
-  c.M ~ dnorm(mean.c.M,p.c.M)
-  d.M ~ dnorm(mean.d.M,p.d.M)
+  # c.P ~ dnorm(mean.c.P,p.c.P)
+  # d.P ~ dnorm(mean.d.P,p.d.P)
+  # c.G ~ dnorm(mean.c.G,p.c.G)
+  # d.G ~ dnorm(mean.d.G,p.d.G)
+  # c.M ~ dnorm(mean.c.M,p.c.M)
+  # d.M ~ dnorm(mean.d.M,p.d.M)
   
   p.proc ~ dgamma(s1,s2)
   r ~ dexp(0.148) # Exp is the maximum entropy distribution for constraints of positive with givn mean
@@ -185,23 +187,24 @@ phenologyForecast <- function(siteName,URL,forecastLength=0,startDate=FALSE,endD
   maxIter <- 10**9 #The maximum number of iterations to wait for convergence (This number could change)
   j.model   <- jags.model (file = textConnection(LogisticModel),
                            data = data,
+                           inits = inits,
                            n.chains = nchain)
   print("Done creating model")
   jags.out   <- coda.samples (model = j.model,
-                              variable.names = c("p.proc","p.PC","c.P","d.P","x","r","d.G","c.G","d.M","c.M"),
-                              n.iter = 50000)
-  #variable.names = c("p.proc","p.PC","p.G","p.MN","x"),
+                              variable.names = c("p.proc","p.PC","p.G","p.MN","x","r"),
+                              n.iter = 1000)
+  #c("p.proc","p.PC","c.P","d.P","x","r","d.G","c.G","d.M","c.M")
   ###Check for Model Convergence and keep adding to MCMC chains if it hasn't converged and/or effective sample size is not large enough
-  numb <- 50000 #The current number of iterations at this step
+  numb <- 1000 #The current number of iterations at this step
   continue <- TRUE #Flag that signals that the coda.samples should be rerun to produce more iterations because the model hasn't converged yet/doesnt have a large enough sample size
   GBR.bad <- TRUE #Flag that signals that it hasn't converged yet
   burnin <- 0
   while(continue & numb<maxIter){
     print(numb) #Just done to keep track of the number of iterations that have been performed
     new.out   <- coda.samples (model = j.model,
-                               variable.names = c("p.proc","p.PC","c.P","d.P","x","r","d.G","c.G","d.M","c.M"),
-                               n.iter = 30000)
-    numb <- numb + 30000
+                               variable.names = c("p.proc","p.PC","p.G","p.MN","x","r"),
+                               n.iter = 2000)
+    numb <- numb + 2000
     jags.out <- combine.mcmc(mcmc.objects=list(jags.out,new.out),collapse.chains = FALSE)
     continue <- FALSE
     if(GBR.bad){
@@ -247,7 +250,7 @@ phenologyForecast <- function(siteName,URL,forecastLength=0,startDate=FALSE,endD
     out.burn$predict = ecoforecastR::mat2mcmc.list(mfit[,c(chain.col,pred.cols)])
     
     ###Visualize Output
-    #ci <- apply(as.matrix(out.burn$predict),2,quantile,c(0.025,0.5,0.975)) #Computes the 95% credible interval (CI)
+    
     return(out.burn$predict)
     #plot(x,ci[2,],type='n',xlab="Time",ylab="Mean GCC",main=siteName,cex.lab=1.5,cex.main=2,ylim=c(0.2,0.7))
     #ciEnvelope(timeForecast,ci[1,],ci[3,],col="lightBlue")
@@ -269,35 +272,15 @@ siteData <- read.csv("phenologyForecastSites.csv",header=TRUE)
 #lat=as.numeric(siteData[1,2])
 #long=as.numeric(siteData[1,3])
 
-ci <- phenologyForecast(siteName=as.character(siteData[1,1]),URL=as.character(siteData[1,4]),forecastLength = 500,lat=as.numeric(siteData[1,2]),long=as.numeric(siteData[1,3]),startDate=as.Date("2008-04-04"),endDate=as.Date("2018-09-13"))
-save(ci,file="phenologyForecastvarBurn.RData")
-# URL <- as.character(siteData[1,4])
-# phenoData <- download.phenocam(URL)
-# p <- phenoData$gcc_mean
-# x <-  as.Date(phenoData$date)
-# plot(x,p,ylim=c(-0.2,5))
-# lines(x,-3.5+10*p,col="red")
-# GOES.x <- GOES.data[1,]
-# GOES.x2 <- numeric()
-# GOES.y2 <- numeric()
-# 
-# for(i in 1:length(GOES.x)){
-#   if(!is.na(GOES.y[i])){
-#     GOES.x2 <- c(GOES.x2,as.numeric(GOES.x[i]))
-#     GOES.y2 <- c(GOES.y2,as.numeric(GOES.y[i]))
-#   }
-# }
-# 
-# plot(GOES.x2,GOES.y2,ylim=c(-0.2,1.2))
-# points(GOES.x2,-0.8+2.2*GOES.y2,col="red",pch=20)
-# #lines(x,(p-0.45)/0.1+1,col="red")
-# plot(MODIS.x,MODIS.y,ylim=c(-0.2,1.2))
-# points(MODIS.x,-0.4+1.5*MODIS.y,col="red",pch=20)
-# 
-# 
-# plot(x=list(),y=list(),xlim=range(x),ylim=c(-0.2,1.2))
-# ciEnvelope(x,ci[1,],ci[3,],col="lightblue")
-# lines(x,ci[2,],col="red")
-# points(x,data$g)
-# points(x,data$m)
-# 
+out.burn <- phenologyForecast(siteName=as.character(siteData[1,1]),URL=as.character(siteData[1,4]),forecastLength = 500,lat=as.numeric(siteData[1,2]),long=as.numeric(siteData[1,3]),startDate=as.Date("2008-04-04"),endDate=as.Date("2018-09-13"))
+URL <- as.character(siteData[1,4])
+phenoData <- download.phenocam(URL)
+p <- phenoData$gcc_mean
+x <-  as.Date(phenoData$date)
+x <- c(x,seq.Date(from=x[length(x)],by="day",length.out=500))
+p <- c(p,rep(x=NA,times=forecastLength)) #Padded with NA's to forecast for one month into the future
+ci <- apply(as.matrix(out.burn),2,quantile,c(0.025,0.5,0.975)) #Computes the 95% credible interval (CI)
+plot(x=x,y=p,xlim=range(x),ylim=c(-0.2,1.2),ylab="Greenness",xlab="Time",pch=20)
+ciEnvelope(x,ci[1,],ci[3,],col="lightblue")
+lines(x,ci[2,],col="red")
+
