@@ -17,7 +17,7 @@ day.seq <- c("186","201","245","251","278","030","012","013","290")
 #dy="030"
 for(dy in day.seq){
   #fileName <- dir(path="dailyNDVI_GOES",pattern=paste(dy,"_varBurn.RData",sep=""))
-  fileName <- dir(pattern=paste(dy,"_varBurn2.RData",sep=""))
+  fileName <- intersect(dir(pattern=paste(dy,"_varBurn2.RData",sep="")),dir(pattern=siteName))
   print(fileName)
   load(fileName)
   if(as.numeric(dy)<182){
