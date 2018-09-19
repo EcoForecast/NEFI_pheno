@@ -7,7 +7,7 @@ library("PhenologyBayesModeling")
 library("rjags")
 library("runjags")
 siteName <- "russellSage"
-fileName <- "GOES_Diurnal_russellSage_2017186.csv"
+fileName <- "dailyNDVI_GOES/GOES_Diurnal_russellSage_2017186.csv"
 dat <- read.csv(fileName,header=FALSE)
 data <- list()
 print(dim(dat))
