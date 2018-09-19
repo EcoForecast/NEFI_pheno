@@ -7,6 +7,21 @@ library("PhenologyBayesModeling")
 library("rjags")
 library("runjags")
 
+library("ecoforecastR")
+
+
+diurnalExp <- function(a,c,k,xseq){
+  k <- round(k,digits=1)
+  #print(k)
+  bk <- which(round(xseq,digits=1)==k)
+  #print(bk)
+  left <- -a*exp(-1*(xseq[1:bk]-k))+c
+  right.xseq <- xseq[(bk+1):length(xseq)]
+  right <- -a*exp((right.xseq-k))+c
+  #print(length(c(left,right)))
+  return(c(left,right))
+}
+
 siteName <- "russellSage"
 xseq <- seq(0,25,0.1)
 
