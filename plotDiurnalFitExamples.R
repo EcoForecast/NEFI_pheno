@@ -10,15 +10,16 @@ library("runjags")
 siteName <- "russellSage"
 xseq <- seq(0,25,0.1)
 
-outputFileName <- paste(siteName,"_diurnalExamples.pdf",sep="")
+outputFileName <- paste(siteName,"_diurnalExamples2.pdf",sep="")
 pdf(file=outputFileName,width=10,height=5)
 par(mfrow=c(3,3))
 day.seq <- c("186","201","245","251","278","030","012","013","290")
 #dy="030"
 for(dy in day.seq){
-  fileName <- dir(path="dailyNDVI_GOES",pattern=paste(dy,"_varBurn.RData",sep=""))
+  #fileName <- dir(path="dailyNDVI_GOES",pattern=paste(dy,"_varBurn.RData",sep=""))
+  fileName <- dir(pattern=paste(dy,"_varBurn2.RData",sep=""))
   print(fileName)
-  load(paste("dailyNDVI_GOES/",fileName,sep=""))
+  load(fileName)
   if(as.numeric(dy)<182){
     yr <- "2018"
   }
