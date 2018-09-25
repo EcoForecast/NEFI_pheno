@@ -39,6 +39,10 @@ plot(h,freq=FALSE,main="Posterior Density of a",xlab="",ylab="",cex.axis=1.5,cex
 qnts <- quantile(a,c(0.025,0.975))
 polygon(c(qnts[1],qnts[1],qnts[2],qnts[2]),c(0,1,1,0),border=NA,col=rgb(0,0,1,0.3))
 abline(v=mean(a),col="red",lwd=2)
+print("a")
+print(qnts)
+print(mean(a))
+
 
 h = hist(c,plot=FALSE)
 h$density = h$counts/sum(h$counts)
@@ -46,6 +50,9 @@ plot(h,freq=FALSE,main="Posterior Density of c",xlab="",ylab="",cex.axis=1.5,cex
 qnts <- quantile(c,c(0.025,0.975))
 polygon(c(qnts[1],qnts[1],qnts[2],qnts[2]),c(0,1,1,0),border=NA,col=rgb(0,0,1,0.3))
 abline(v=mean(c),col="red",lwd=2)
+print("c")
+print(qnts)
+print(mean(c))
 
 h = hist(k,plot=FALSE)
 h$density = h$counts/sum(h$counts)
@@ -53,6 +60,9 @@ plot(h,freq=FALSE,main="Posterior Density of k",xlab="",ylab="",cex.axis=1.5,cex
 qnts <- quantile(k,c(0.025,0.975))
 polygon(c(qnts[1],qnts[1],qnts[2],qnts[2]),c(0,1,1,0),border=NA,col=rgb(0,0,1,0.3))
 abline(v=mean(k),col="red",lwd=2)
+print("k")
+print(qnts)
+print(mean(k))
 
 h = hist(prec,plot=FALSE)
 h$density = h$counts/sum(h$counts)
@@ -60,6 +70,9 @@ plot(h,freq=FALSE,main="Posterior Density of prec",xlab="",ylab="",cex.axis=1.5,
 qnts <- quantile(prec,c(0.025,0.975))
 polygon(c(qnts[1],qnts[1],qnts[2],qnts[2]),c(0,1,1,0),border=NA,col=rgb(0,0,1,0.3))
 abline(v=mean(prec),col="red",lwd=2)
+print("prec")
+print(qnts)
+print(mean(prec))
 
 h = hist(alp,plot=FALSE)
 h$density = h$counts/sum(h$counts)
@@ -67,6 +80,9 @@ plot(h,freq=FALSE,main="Posterior Density of alp",xlab="",ylab="",cex.axis=1.5,c
 qnts <- quantile(alp,c(0.025,0.975))
 polygon(c(qnts[1],qnts[1],qnts[2],qnts[2]),c(0,1,1,0),border=NA,col=rgb(0,0,1,0.3))
 abline(v=mean(alp),col="red",lwd=2)
+print("alp")
+print(qnts)
+print(mean(alp))
 
 h = hist(bet,plot=FALSE)
 h$density = h$counts/sum(h$counts)
@@ -74,6 +90,9 @@ plot(h,freq=FALSE,main="Posterior Density of bet",xlab="",ylab="",cex.axis=1.5,c
 qnts <- quantile(bet,c(0.025,0.975))
 polygon(c(qnts[1],qnts[1],qnts[2],qnts[2]),c(0,1,1,0),border=NA,col=rgb(0,0,1,0.3))
 abline(v=mean(bet),col="red",lwd=2)
+print("bet")
+print(qnts)
+print(mean(bet))
 
 h = hist(p.cloud,plot=FALSE)
 h$density = h$counts/sum(h$counts)
@@ -81,5 +100,8 @@ plot(h,freq=FALSE,main="Posterior Density of p.cloud",xlab="",ylab="",cex.axis=1
 qnts <- quantile(p.cloud,c(0.025,0.975))
 polygon(c(qnts[1],qnts[1],qnts[2],qnts[2]),c(0,1,1,0),border=NA,col=rgb(0,0,1,0.3))
 abline(v=mean(p.cloud),col="red",lwd=2)
+print("p.cloud")
+print(qnts)
+print(mean(p.cloud))
 
 dev.off()
