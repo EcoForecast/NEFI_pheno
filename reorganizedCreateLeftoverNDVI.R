@@ -175,16 +175,17 @@ createNDVI_GOES_LeftoverMAIN <- function(day,siteData,orbitVersion,year,TZ){
         day.time <- substr(ACM.files[j],24,34)
         day.time.vals <- c(day.time.vals,day.time)
         NDVI <- createNDVI_sub(siteData=siteData,orbitVersion=orbitVersion,day.time=day.time) 
-        print(NDVI)
+        #print(NDVI)
         NDVI.vals <- rbind(NDVI.vals,NDVI)
-        print(NDVI.vals)
+        #print(NDVI.vals)
       }
       print(dim(NDVI.vals))
       for(i in 1:nrow(siteData)){
         siteName <- as.character(siteData[i,1])
         fileName <- paste("GOES_NDVI_Leftover",siteName,"_",day,"_",day,"_kappaDQF.csv",sep="")
         print(NDVI.vals[,i])
-        output <- rbind(day.time.vals,NDVI.vals[i,])
+        print(dim(NDVI.vals[,i]))
+        output <- rbind(day.time.vals,t(NDVI.vals[i,]))
         write.table(output,file=fileName,sep=",",col.names=FALSE,row.names=FALSE)
       }
     }
