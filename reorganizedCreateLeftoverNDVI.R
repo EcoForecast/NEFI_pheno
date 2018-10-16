@@ -129,8 +129,8 @@ createMissingFilesList <- function(siteName){
   }
   #sort(days)
   all.days <- c(seq(1,320,1),seq(348,365,1))
-  all.days <- c(seq(182,320,1),seq(348,365,1))
-  all.days <- seq(1,181,1)
+  #all.days <- c(seq(182,320,1),seq(348,365,1))
+  #all.days <- seq(1,181,1)
   missingDays <- numeric()
   for(j in 1:length(all.days)){
     if((!all.days[j] %in% days)){
