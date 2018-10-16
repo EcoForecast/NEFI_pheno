@@ -76,6 +76,7 @@ createNDVI_sub <- function(siteData,orbitVersion,day.time){
       else{
         output <- NA
       }
+      print(paste("NDVI:",output))
       NDVI <- c(NDVI,output)
     }
     }
@@ -108,7 +109,7 @@ checkFileExists <- function(siteName,day){
 }
 
 createMissingFilesList <- function(siteName){
-  diurnal.files <- dir(pattern=paste("GOES_NDVI_Leftover",siteName,sep=""))
+  diurnal.files <- dir(pattern=paste("GOES_NDVI_LeftoverTEST",siteName,sep=""))
   days <- numeric()
   for(i in 1:length(diurnal.files)){
     #print(diurnal.files[i])
@@ -167,7 +168,7 @@ createNDVI_GOES_LeftoverMAIN <- function(day,siteData,orbitVersion,year,TZ){
       }
       for(i in 1:nrow(siteData)){
         siteName <- as.character(siteData[i,1])
-        fileName <- paste("GOES_NDVI_Leftover",siteName,"_",day,"_",day,"_kappaDQF.csv",sep="")
+        fileName <- paste("GOES_NDVI_LeftoverTEST",siteName,"_",day,"_",day,"_kappaDQF.csv",sep="")
         output <- rbind(day.time.vals,NDVI.vals[i])
         write.table(output,file=fileName,sep=",",col.names=FALSE,row.names=FALSE)
       }
