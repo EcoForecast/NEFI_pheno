@@ -166,8 +166,8 @@ createNDVI_GOES_LeftoverMAIN <- function(day,siteData,orbitVersion,year,TZ){
   
   if(!dir.exists((paste("GOES_Data2017/",dir(path="GOES_Data2017",pattern=filestrACM),sep="")))){
     if(length(ACM.files>1)){
-      NDVI.vals <- numeric()
       day.time.vals <- character()
+      NDVI.vals <- matrix(ncol=nrow(siteData),nrow=0)
       for(j in 1:length(ACM.files)){
         ##Open Files
         day.time <- substr(ACM.files[j],24,34)
