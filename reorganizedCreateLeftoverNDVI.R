@@ -24,7 +24,7 @@ createNDVI_sub <- function(siteData,orbitVersion,day.time,year){
   filestrC02 <- paste("OR_ABI-L1b-RadC-M3C02_G16_s",day.time,sep="")
   filePathC02 <- paste("GOES_Data2017/",dir(path="GOES_Data2017",pattern=filestrC02),sep="")
   filePathC03 <- paste("GOES_Data2017/",dir(path="GOES_Data2017",pattern=filestrC03),sep="")
-  NDVI <- numeric()
+  NDVIs <- numeric()
   #print(ACM.path)
   #print(filePathC02)
   #print(filePathC03)
@@ -34,58 +34,58 @@ createNDVI_sub <- function(siteData,orbitVersion,day.time,year){
   #print(paste("filePathC03:",filePathC03))
   if(nchar(filePathC02)>20 && nchar(filePathC03)>20){
     if(file.exists(filePathC02) && file.exists(filePathC03) && !dir.exists(filePathC02) && !dir.exists(filePathC03)){
-    ACM.file <-nc_open(ACM.path)
-    R2.file <- nc_open(filePathC02)
-    R3.file <- nc_open(filePathC03)
-    
-    ##Extract Data
-    R3 <- ncvar_get(R3.file,"Rad")
-    R2 <- ncvar_get(R2.file,"Rad") #the full R2 dataset
-    R3.kappa0 <- ncvar_get(R3.file,"kappa0")
-    R2.kappa0 <- ncvar_get(R2.file,"kappa0")
-    R3.DQF <- ncvar_get(R3.file,"DQF") #Data Quality Flags
-    R2.DQF <- ncvar_get(R2.file,"DQF")
-    R3 <- R3 * R3.kappa0 #done to covert radiance to reflectance
-    R2 <- R2 * R2.kappa0
-    clouds <- ncvar_get(ACM.file,"BCM")
-    clouds.DQF <- ncvar_get(ACM.file,"DQF")
-    
-    for(i in 1:nrow(siteData)){
-      ##General Site Data
-      siteName <- as.character(siteData[i,1])
-      lat <- as.numeric(siteData[i,2])
-      long <- as.numeric(siteData[i,3])
-      TZ <- as.numeric(siteData[i,6])
+      ACM.file <-nc_open(ACM.path)
+      R2.file <- nc_open(filePathC02)
+      R3.file <- nc_open(filePathC03)
       
-      ##Determine index values
-      lat.rd <- lat*2*pi/360
-      long.rd <- long*2*pi/360
+      ##Extract Data
+      R3 <- ncvar_get(R3.file,"Rad")
+      R2 <- ncvar_get(R2.file,"Rad") #the full R2 dataset
+      R3.kappa0 <- ncvar_get(R3.file,"kappa0")
+      R2.kappa0 <- ncvar_get(R2.file,"kappa0")
+      R3.DQF <- ncvar_get(R3.file,"DQF") #Data Quality Flags
+      R2.DQF <- ncvar_get(R2.file,"DQF")
+      R3 <- R3 * R3.kappa0 #done to covert radiance to reflectance
+      R2 <- R2 * R2.kappa0
+      clouds <- ncvar_get(ACM.file,"BCM")
+      clouds.DQF <- ncvar_get(ACM.file,"DQF")
       
-      Ind2 <- getDataIndex(getABI_Index(lat.rd,long.rd,orbitVersion=orbitVersion),2,orbitVersion=orbitVersion)
-      Ind3 <- getDataIndex(getABI_Index(lat.rd,long.rd,orbitVersion=orbitVersion),3,orbitVersion=orbitVersion)
-      ACM.ind <- getDataIndex(getABI_Index(lat.rd,long.rd,orbitVersion=orbitVersion),"ACM",orbitVersion=orbitVersion)
-      
-      i2 <- Ind2[1]
-      j2 <- Ind2[2]
-      i3 <- Ind3[1]
-      j3 <- Ind3[2]
-
-      if(!is.na(R3.DQF[i3,j3]) && !is.na(R2.DQF[i2,j2]) && !is.na(R2.DQF[i2,j2]) && !is.na(R2.DQF[(i2+1),j2]) && !is.na(R2.DQF[i2,(j2+1)]) && !is.na(R2.DQF[(i2+1),(j2+1)]) && !is.na(clouds[ACM.ind[1],ACM.ind[2]]) && !is.na(clouds.DQF[ACM.ind[1],ACM.ind[2]])){
-        if(R3.DQF[i3,j3]==0 && R2.DQF[i2,j2]==0 && R2.DQF[i2,j2]==0 && R2.DQF[(i2+1),j2]==0 && R2.DQF[i2,(j2+1)]==0 && R2.DQF[(i2+1),(j2+1)]==0 && clouds[ACM.ind[1],ACM.ind[2]] == 0 && clouds.DQF[ACM.ind[1],ACM.ind[2]] == 0){
-          R3.val <- R3[i3,j3]
-          R2.val <- mean(R2[i2,j2],R2[(i2+1),j2],R2[i2,(j2+1)],R2[(i2+1),(j2+1)])
-          output <- calNDVI(R2.val,R3.val)
+      for(i in 1:nrow(siteData)){
+        ##General Site Data
+        siteName <- as.character(siteData[i,1])
+        lat <- as.numeric(siteData[i,2])
+        long <- as.numeric(siteData[i,3])
+        TZ <- as.numeric(siteData[i,6])
+        
+        ##Determine index values
+        lat.rd <- lat*2*pi/360
+        long.rd <- long*2*pi/360
+        
+        Ind2 <- getDataIndex(getABI_Index(lat.rd,long.rd,orbitVersion=orbitVersion),2,orbitVersion=orbitVersion)
+        Ind3 <- getDataIndex(getABI_Index(lat.rd,long.rd,orbitVersion=orbitVersion),3,orbitVersion=orbitVersion)
+        ACM.ind <- getDataIndex(getABI_Index(lat.rd,long.rd,orbitVersion=orbitVersion),"ACM",orbitVersion=orbitVersion)
+        
+        i2 <- Ind2[1]
+        j2 <- Ind2[2]
+        i3 <- Ind3[1]
+        j3 <- Ind3[2]
+        
+        if(!is.na(R3.DQF[i3,j3]) && !is.na(R2.DQF[i2,j2]) && !is.na(R2.DQF[i2,j2]) && !is.na(R2.DQF[(i2+1),j2]) && !is.na(R2.DQF[i2,(j2+1)]) && !is.na(R2.DQF[(i2+1),(j2+1)]) && !is.na(clouds[ACM.ind[1],ACM.ind[2]]) && !is.na(clouds.DQF[ACM.ind[1],ACM.ind[2]])){
+          if(R3.DQF[i3,j3]==0 && R2.DQF[i2,j2]==0 && R2.DQF[i2,j2]==0 && R2.DQF[(i2+1),j2]==0 && R2.DQF[i2,(j2+1)]==0 && R2.DQF[(i2+1),(j2+1)]==0 && clouds[ACM.ind[1],ACM.ind[2]] == 0 && clouds.DQF[ACM.ind[1],ACM.ind[2]] == 0){
+            R3.val <- R3[i3,j3]
+            R2.val <- mean(R2[i2,j2],R2[(i2+1),j2],R2[i2,(j2+1)],R2[(i2+1),(j2+1)])
+            output <- calNDVI(R2.val,R3.val)
+          }
+          else{
+            output <- NA
+          }
         }
         else{
           output <- NA
         }
+        print(paste("NDVI:",output))
+        NDVIs <- c(NDVIs,output)
       }
-      else{
-        output <- NA
-      }
-      print(paste("NDVI:",output))
-      NDVI <- c(NDVI,output)
-    }
     }
     else{
       return(rep(NA,nrow(siteData)))
@@ -94,6 +94,7 @@ createNDVI_sub <- function(siteData,orbitVersion,day.time,year){
   else{
     return(rep(NA,nrow(siteData)))
   }
+  return(NDVIs)
 }
 
 createEmptyFiles <- function(siteData,day,year){
