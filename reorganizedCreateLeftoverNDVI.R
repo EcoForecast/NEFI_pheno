@@ -26,10 +26,10 @@ createNDVI_sub <- function(siteData,orbitVersion,day.time,year){
   NDVI <- list()
   
   ##Open Files
-  print(paste("filePathC02:",filePathC02))
-  print(paste("filePathC03:",filePathC03))
+  #print(paste("filePathC02:",filePathC02))
+  #print(paste("filePathC03:",filePathC03))
   if(nchar(filePathC02)>20 && nchar(filePathC03)>20){
-    if(file.exists(filepathC02) && file.exists(filepathC03) && !dir.exists(filepathC02) && !dir.exists(filepathC03)){
+    if(file.exists(filePathC02) && file.exists(filePathC03) && !dir.exists(filePathC02) && !dir.exists(filePathC03)){
     ACM.file <-nc_open(ACM.path)
     R2.file <- nc_open(filePathC02)
     R3.file <- nc_open(filePathC03)
@@ -159,7 +159,7 @@ createNDVI_GOES_LeftoverMAIN <- function(day,siteData,orbitVersion,year,TZ){
     newFiles <- intersect(dir(path="GOES_Data2017",pattern=filestrACM),dir(path="GOES_Data2017",pattern=paste("s",year,day,hrs[q],sep="")))
     ACM.files <- c(ACM.files,newFiles)
   }
-  print(ACM.files)
+  #print(ACM.files)
   
   #if(!dir.exists((paste("GOES_Data2017/",dir(path="GOES_Data2017",pattern=filestrACM),sep="")))){
     if(length(ACM.files>1)){
