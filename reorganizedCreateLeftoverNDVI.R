@@ -26,6 +26,8 @@ createNDVI_sub <- function(siteData,orbitVersion,day.time){
   NDVI <- list()
   
   ##Open Files
+  print(paste("filePathC02:",filePathC02))
+  print(paste("filePathC03:",filePathC03))
   if(nchar(filePathC02)>20 && nchar(filePathC03)>20){
     if(file.exists(filepathC02) && file.exists(filepathC03) && !dir.exists(filepathC02) && !dir.exists(filepathC03)){
     ACM.file <-nc_open(ACM.path)
