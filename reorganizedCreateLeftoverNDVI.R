@@ -30,9 +30,9 @@ createNDVI_sub <- function(siteData,orbitVersion,day.time,year){
   #print(paste("filePathC03:",filePathC03))
   if(nchar(filePathC02)>20 && nchar(filePathC03)>20){
     if(file.exists(filePathC02) && file.exists(filePathC03) && !dir.exists(filePathC02) && !dir.exists(filePathC03)){
-    ACM.file <-nc_open(paste("GOES_Data2017/",dir(path="GOES_Data2017/",pattern=ACM.path)))
-    R2.file <- nc_open(paste("GOES_Data2017/",dir(path="GOES_Data2017/",pattern=filePathC02)))
-    R3.file <- nc_open(paste("GOES_Data2017/",dir(path="GOES_Data2017/",pattern=filePathC03)))
+    ACM.file <-nc_open(paste("GOES_Data2017/",dir(path="GOES_Data2017/",pattern=ACM.path),sep=""))
+    R2.file <- nc_open(paste("GOES_Data2017/",dir(path="GOES_Data2017/",pattern=filePathC02),sep=""))
+    R3.file <- nc_open(paste("GOES_Data2017/",dir(path="GOES_Data2017/",pattern=filePathC03),sep=""))
     
     ##Extract Data
     R3 <- ncvar_get(R3.file,"Rad")
