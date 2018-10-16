@@ -111,7 +111,7 @@ createMissingFilesList <- function(siteName){
   diurnal.files <- dir(pattern=paste("GOES_NDVI_Leftover",siteName,sep=""))
   days <- numeric()
   for(i in 1:length(diurnal.files)){
-    print(diurnal.files[i])
+    #print(diurnal.files[i])
     start <- as.numeric(strsplit(diurnal.files[i],"_")[[1]][4])
     end <- as.numeric(strsplit(diurnal.files[i],"_")[[1]][5])
     #print(start)
@@ -130,7 +130,7 @@ createMissingFilesList <- function(siteName){
     }
   }
   #missingDays
-  print(length(missingDays))
+  #print(length(missingDays))
   if(length(missingDays)==0){
     missingDays <- c(missingDays,0)
   }
@@ -149,7 +149,7 @@ createNDVI_GOES_LeftoverMAIN <- function(day,siteData,orbitVersion,year,TZ){
     if(hrs[q]<10){
       hrs[q] <- paste("0",hrs[q],sep="")
     }
-    print(c("hrs[q]",hrs[q]))
+    #print(c("hrs[q]",hrs[q]))
     newFiles <- intersect(dir(path="GOES_Data2017",pattern=filestrACM),dir(path="GOES_Data2017",pattern=paste("s2018",day,hrs[q],sep="")))
     ACM.files <- c(ACM.files,newFiles)
   }
@@ -188,14 +188,16 @@ createNDVI_GOES_LeftoverMAIN <- function(day,siteData,orbitVersion,year,TZ){
 siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[c(2,3,4),]
 for(s in 1:nrow(siteData)){
   siteName <- as.character(siteData[s,1])
-  print(siteName)
+  #print(siteName)
   createMissingFilesList(siteName)
 }
+print("Done creating missing day files")
 #all.days <- c(seq(1,320,1),seq(348,365,1))
 all.days <- c(seq(182,320,1),seq(348,365,1))
 year <- 2017
 #foreach (d = 1:length(all.days)) %dopar% {
 for(d in 1:length(all.days)){
+  print(paste("Starting Day:",d,sep=" "))
   iseq <- numeric()
   for(s in 1:nrow(siteData)){
     siteName <- as.character(siteData[s,1])
