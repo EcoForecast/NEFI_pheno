@@ -20,19 +20,23 @@ createNDVI_sub <- function(siteData,orbitVersion,day.time,year){
   ##Create File Paths
   ACM.path <- paste("GOES_Data2017/","OR_ABI-L2-ACMC-M3_G16_s",day.time,sep="")
   filestrC03 <- paste("OR_ABI-L1b-RadC-M3C03_G16_s",day.time,sep="")
+  print(filestrC03)
   filestrC02 <- paste("OR_ABI-L1b-RadC-M3C02_G16_s",day.time,sep="")
   filePathC02 <- paste("GOES_Data2017/",dir(path="GOES_Data2017",pattern=filestrC02),sep="")
   filePathC03 <- paste("GOES_Data2017/",dir(path="GOES_Data2017",pattern=filestrC03),sep="")
   NDVI <- list()
+  print(ACM.path)
+  print(filePathC02)
+  print(filePathC03)
   
   ##Open Files
   #print(paste("filePathC02:",filePathC02))
   #print(paste("filePathC03:",filePathC03))
   if(nchar(filePathC02)>20 && nchar(filePathC03)>20){
     if(file.exists(filePathC02) && file.exists(filePathC03) && !dir.exists(filePathC02) && !dir.exists(filePathC03)){
-    ACM.file <-nc_open(paste("GOES_Data2017/",dir(path="GOES_Data2017/",pattern=ACM.path),sep=""))
-    R2.file <- nc_open(paste("GOES_Data2017/",dir(path="GOES_Data2017/",pattern=filePathC02),sep=""))
-    R3.file <- nc_open(paste("GOES_Data2017/",dir(path="GOES_Data2017/",pattern=filePathC03),sep=""))
+    ACM.file <-nc_open(ACM.path)
+    R2.file <- nc_open(filePathC02)
+    R3.file <- nc_open(filePathC03)
     
     ##Extract Data
     R3 <- ncvar_get(R3.file,"Rad")
