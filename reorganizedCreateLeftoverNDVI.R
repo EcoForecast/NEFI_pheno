@@ -63,8 +63,9 @@ createNDVI_sub <- function(siteData,orbitVersion,day.time){
       j2 <- Ind2[2]
       i3 <- Ind3[1]
       j3 <- Ind3[2]
+
       if(!is.na(R3.DQF[i3,j3]) && !is.na(R2.DQF[i2,j2]) && !is.na(R2.DQF[i2,j2]) && !is.na(R2.DQF[(i2+1),j2]) && !is.na(R2.DQF[i2,(j2+1)]) && !is.na(R2.DQF[(i2+1),(j2+1)]) && !is.na(clouds[ACM.ind[1],ACM.ind[2]]) && !is.na(clouds.DQF[ACM.ind[1],ACM.ind[2]])){
-        if(R3.DQF[i3,j3]==0 && R2.DQF[i2,j2]==0 && R2.DQF[i2,j2]==0 && R2.DQF[(i2+1),j2]==0 && R2.DQF[i2,(j2+1)]==0 && R2.DQF[(i2+1),(j2+1)]==0 && clouds == 0 && clouds.DQF == 0){
+        if(R3.DQF[i3,j3]==0 && R2.DQF[i2,j2]==0 && R2.DQF[i2,j2]==0 && R2.DQF[(i2+1),j2]==0 && R2.DQF[i2,(j2+1)]==0 && R2.DQF[(i2+1),(j2+1)]==0 && clouds[ACM.ind[1],ACM.ind[2]] == 0 && clouds.DQF[ACM.ind[1],ACM.ind[2]] == 0){
           R3.val <- R3[i3,j3]
           R2.val <- mean(R2[i2,j2],R2[(i2+1),j2],R2[i2,(j2+1)],R2[(i2+1),(j2+1)])
           output <- calNDVI(R2.val,R3.val)
