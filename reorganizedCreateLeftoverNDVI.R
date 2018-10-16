@@ -10,7 +10,7 @@ library(doParallel)
 n.cores <- 4
 
 #register the cores.
-#registerDoParallel(cores=n.cores)
+registerDoParallel(cores=n.cores)
 
 ##Can only do for same TZ
 
@@ -212,8 +212,8 @@ print("Done creating missing day files")
 #all.days <- c(seq(1,320,1),seq(348,365,1))
 all.days <- c(seq(182,320,1),seq(348,365,1))
 year <- 2017
-#foreach (d = 1:length(all.days)) %dopar% {
-for(d in 1:length(all.days)){
+foreach (d = 1:length(all.days)) %dopar% {
+#for(d in 1:length(all.days)){
   print(paste("Starting Day:",all.days[d],sep=" "))
   iseq <- numeric()
   for(s in 1:nrow(siteData)){
