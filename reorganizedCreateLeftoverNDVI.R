@@ -20,14 +20,14 @@ createNDVI_sub <- function(siteData,orbitVersion,day.time,year){
   ##Create File Paths
   ACM.path <- paste("GOES_Data2017/",dir(path="GOES_Data2017",pattern=paste("OR_ABI-L2-ACMC-M3_G16_s",day.time,sep="")),sep="")
   filestrC03 <- paste("OR_ABI-L1b-RadC-M3C03_G16_s",day.time,sep="")
-  print(filestrC03)
+  #print(filestrC03)
   filestrC02 <- paste("OR_ABI-L1b-RadC-M3C02_G16_s",day.time,sep="")
   filePathC02 <- paste("GOES_Data2017/",dir(path="GOES_Data2017",pattern=filestrC02),sep="")
   filePathC03 <- paste("GOES_Data2017/",dir(path="GOES_Data2017",pattern=filestrC03),sep="")
   NDVI <- list()
-  print(ACM.path)
-  print(filePathC02)
-  print(filePathC03)
+  #print(ACM.path)
+  #print(filePathC02)
+  #print(filePathC03)
   
   ##Open Files
   #print(paste("filePathC02:",filePathC02))
@@ -148,7 +148,7 @@ createMissingFilesList <- function(siteName){
 
 
 createNDVI_GOES_LeftoverMAIN <- function(day,siteData,orbitVersion,year,TZ){
-  print("Inside Main")
+  #print("Inside Main")
   ##hours for leftover calculations
   hrs <- as.character(c(seq((4+TZ),(9+TZ),1),seq((15+TZ),(17+TZ),1))) 
   
