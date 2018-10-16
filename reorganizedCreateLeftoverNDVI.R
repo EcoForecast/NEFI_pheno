@@ -109,32 +109,33 @@ checkFileExists <- function(siteName,day){
 }
 
 createMissingFilesList <- function(siteName){
-  diurnal.files <- dir(pattern=paste("GOES_NDVI_LeftoverTEST",siteName,sep=""))
-  days <- numeric()
-  for(i in 1:length(diurnal.files)){
-    #print(diurnal.files[i])
-    start <- as.numeric(strsplit(diurnal.files[i],"_")[[1]][4])
-    end <- as.numeric(strsplit(diurnal.files[i],"_")[[1]][5])
-    #print(start)
-    #print(end)
-    dys <- seq(start,end,1)
-    days <- c(days,dys)
-  }
-  #sort(days)
+  # diurnal.files <- dir(pattern=paste("GOES_NDVI_LeftoverTEST",siteName,sep=""))
+  # days <- numeric()
+  # for(i in 1:length(diurnal.files)){
+  #   #print(diurnal.files[i])
+  #   start <- as.numeric(strsplit(diurnal.files[i],"_")[[1]][4])
+  #   end <- as.numeric(strsplit(diurnal.files[i],"_")[[1]][5])
+  #   #print(start)
+  #   #print(end)
+  #   dys <- seq(start,end,1)
+  #   days <- c(days,dys)
+  # }
+  # #sort(days)
   all.days <- c(seq(1,320,1),seq(348,365,1))
   #all.days <- c(seq(182,320,1),seq(348,365,1))
   #all.days <- seq(1,181,1)
-  missingDays <- numeric()
-  for(j in 1:length(all.days)){
-    if((!all.days[j] %in% days)){
-      missingDays <- c(missingDays,all.days[j])
-    }
-  }
-  #missingDays
-  #print(length(missingDays))
-  if(length(missingDays)==0){
-    missingDays <- c(missingDays,0)
-  }
+  # missingDays <- numeric()
+  # for(j in 1:length(all.days)){
+  #   if((!all.days[j] %in% days)){
+  #     missingDays <- c(missingDays,all.days[j])
+  #   }
+  # }
+  # #missingDays
+  # #print(length(missingDays))
+  # if(length(missingDays)==0){
+  #   missingDays <- c(missingDays,0)
+  # }
+  missingDays <- all.days
   write.table(missingDays,file=paste(siteName,"_missing_NDVI_Days.csv",sep=""),sep=",",col.names=FALSE,row.names=FALSE)
 }
 
