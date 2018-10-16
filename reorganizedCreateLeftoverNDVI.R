@@ -24,7 +24,7 @@ createNDVI_sub <- function(siteData,orbitVersion,day.time,year){
   filestrC02 <- paste("OR_ABI-L1b-RadC-M3C02_G16_s",day.time,sep="")
   filePathC02 <- paste("GOES_Data2017/",dir(path="GOES_Data2017",pattern=filestrC02),sep="")
   filePathC03 <- paste("GOES_Data2017/",dir(path="GOES_Data2017",pattern=filestrC03),sep="")
-  NDVI <- list()
+  NDVI <- numeric()
   #print(ACM.path)
   #print(filePathC02)
   #print(filePathC03)
@@ -168,6 +168,7 @@ createNDVI_GOES_LeftoverMAIN <- function(day,siteData,orbitVersion,year,TZ){
     if(length(ACM.files>1)){
       day.time.vals <- character()
       NDVI.vals <- matrix(ncol=nrow(siteData),nrow=0)
+      print(dim(NDVI.vals))
       for(j in 1:length(ACM.files)){
         ##Open Files
         day.time <- substr(ACM.files[j],24,34)
