@@ -78,13 +78,13 @@ createNDVI_sub <- function(siteData,orbitVersion,day.time){
       }
       NDVI <- c(NDVI,output)
     }
+    }
     else{
       return(rep(NA,nrow(siteData)))
     }
   }
   else{
     return(rep(NA,nrow(siteData)))
-  }
   }
 }
 
