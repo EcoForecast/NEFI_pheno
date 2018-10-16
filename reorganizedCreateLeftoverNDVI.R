@@ -7,10 +7,10 @@ library("PhenologyBayesModeling")
 library(doParallel)
 
 #detect cores.
-n.cores <- 2
+n.cores <- 4
 
 #register the cores.
-registerDoParallel(cores=n.cores)
+#registerDoParallel(cores=n.cores)
 
 ##Can only do for same TZ
 
@@ -178,7 +178,8 @@ createNDVI_GOES_LeftoverMAIN <- function(day,siteData,orbitVersion,year,TZ){
       for(i in 1:nrow(siteData)){
         siteName <- as.character(siteData[i,1])
         fileName <- paste("GOES_NDVI_Leftover",siteName,"_",day,"_",day,"_kappaDQF.csv",sep="")
-        output <- rbind(day.time.vals,NDVI.vals[i])
+        print(NDVI.vals[i,])
+        output <- rbind(day.time.vals,NDVI.vals[i,])
         write.table(output,file=fileName,sep=",",col.names=FALSE,row.names=FALSE)
       }
     }
@@ -205,8 +206,8 @@ print("Done creating missing day files")
 #all.days <- c(seq(1,320,1),seq(348,365,1))
 all.days <- c(seq(182,320,1),seq(348,365,1))
 year <- 2017
-foreach (d = 1:length(all.days)) %dopar% {
-#for(d in 1:length(all.days)){
+#foreach (d = 1:length(all.days)) %dopar% {
+for(d in 1:length(all.days)){
   print(paste("Starting Day:",all.days[d],sep=" "))
   iseq <- numeric()
   for(s in 1:nrow(siteData)){
