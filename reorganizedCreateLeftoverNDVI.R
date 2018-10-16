@@ -18,7 +18,7 @@ createNDVI_sub <- function(siteData,orbitVersion,day.time,year){
   ##Will need to return a vector of the NDVI values
   
   ##Create File Paths
-  ACM.path <- paste("GOES_Data2017/",dir(path="GOES_Data2017",pattern=paste("OR_ABI-L2-ACMC-M3_G16_s",day.time,sep="")))
+  ACM.path <- paste("GOES_Data2017/",dir(path="GOES_Data2017",pattern=paste("OR_ABI-L2-ACMC-M3_G16_s",day.time,sep="")),sep="")
   filestrC03 <- paste("OR_ABI-L1b-RadC-M3C03_G16_s",day.time,sep="")
   print(filestrC03)
   filestrC02 <- paste("OR_ABI-L1b-RadC-M3C02_G16_s",day.time,sep="")
