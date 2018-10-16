@@ -173,7 +173,9 @@ createNDVI_GOES_LeftoverMAIN <- function(day,siteData,orbitVersion,year,TZ){
         day.time <- substr(ACM.files[j],24,34)
         day.time.vals <- c(day.time.vals,day.time)
         NDVI <- createNDVI_sub(siteData=siteData,orbitVersion=orbitVersion,day.time=day.time) 
+        print(NDVI)
         NDVI.vals <- rbind(NDVI.vals,NDVI)
+        print(NDVI.vals)
       }
       print(dim(NDVI.vals))
       for(i in 1:nrow(siteData)){
