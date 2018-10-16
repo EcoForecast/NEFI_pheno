@@ -206,6 +206,7 @@ for(d in 1:length(all.days)){
       iseq <- c(iseq,s)
     }
   }
+  print(iseq)
   if(all.days[d]<321 && all.days[d]>181){
     orbitVersion <- "OLD"
   }
