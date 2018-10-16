@@ -161,7 +161,7 @@ createNDVI_GOES_LeftoverMAIN <- function(day,siteData,orbitVersion,year,TZ){
   }
   #print(ACM.files)
   
-  #if(!dir.exists((paste("GOES_Data2017/",dir(path="GOES_Data2017",pattern=filestrACM),sep="")))){
+  if(!dir.exists((paste("GOES_Data2017/",dir(path="GOES_Data2017",pattern=filestrACM),sep="")))){
     if(length(ACM.files>1)){
       NDVI.vals <- numeric()
       day.time.vals <- character()
@@ -182,10 +182,10 @@ createNDVI_GOES_LeftoverMAIN <- function(day,siteData,orbitVersion,year,TZ){
     else{
       createEmptyFiles(siteData=siteData,day=day)
     }
-  # }
-  # else{
-  #   createEmptyFiles(siteData=siteData,day=day)
-  # }
+  }
+  else{
+    createEmptyFiles(siteData=siteData,day=day)
+  }
 }
 
 #########
