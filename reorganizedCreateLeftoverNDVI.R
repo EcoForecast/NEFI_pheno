@@ -223,6 +223,8 @@ for(d in 1:length(all.days)){
   else{
     orbitversion <- "NEW"
   }
-  createNDVI_GOES_LeftoverMAIN(day=all.days[d],siteData=siteData[iseq,],orbitVersion = orbitVersion,year = year,TZ = 5)
+  if(length(iseq)>0){
+    createNDVI_GOES_LeftoverMAIN(day=all.days[d],siteData=siteData[iseq,],orbitVersion = orbitVersion,year = year,TZ = 5)
+  }
 }
 
