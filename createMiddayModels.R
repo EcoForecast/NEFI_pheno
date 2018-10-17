@@ -29,7 +29,7 @@ for(i in iseq){
   lat <- as.numeric(siteData[i,2])
   long <- as.numeric(siteData[i,3])
   j.model <- createBayesModel.DB_Avg(siteName=siteName,startDay = startDay,endDay=endDay,lat=lat,long=long,TZ=TZ)
-  var.Burn <- runMCMC_Model(j.model = j.model, variableNames = c("TranS","bS","TranF","bF","d","c","k","prec"))
+  var.Burn <- runMCMC_Model(j.model = j.model, variableNames = c("TranS","bS","TranF","bF","d","c","k","prec"),baseNum = 20000,iterSize = 5000)
   outFileName <- paste(siteName,"_Midday_varBurn.RData",sep="")
   save(var.Burn,file=outFileName)
 }
