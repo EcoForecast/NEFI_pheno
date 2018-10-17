@@ -7,11 +7,21 @@ library("PhenologyBayesModeling")
 library("rjags")
 library("runjags")
 
+##' Create the credible interval envelope for plotting
+##' 
+##' @param x time range
+##' @param ylo the bottom credible interval values
+##' @param yhi the top credible interval values
+ciEnvelope <- function(x,ylo,yhi,...){
+  polygon(cbind(c(x, rev(x), x[1]), c(ylo, rev(yhi),
+                                      ylo[1])), border = NA,...) 
+}
+
 startDay <- 182
 endDay <- 181+365
 siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)
-iseq <- c(9,11)
-i=11
+iseq <- c(4,5,10,16,18)
+#i=8
 for(i in iseq){
   siteName <- as.character(siteData[i,1])
   print(siteName)
