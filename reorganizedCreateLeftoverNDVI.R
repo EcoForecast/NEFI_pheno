@@ -202,7 +202,7 @@ createNDVI_GOES_LeftoverMAIN <- function(day,siteData,orbitVersion,year,TZ){
 
 ##For TZ == 5 
 #siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[c(2,3,4,5,8,16,17,19,20),] ##TZ 5 sites
-siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[c(8,16,17),]#[c(2,3,4),]
+siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[c(19,20),]#[c(2,3,4),]
 #siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[c(5,8,16,17,19,20),]
 #siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[c(6,10,15),] ##TZ 6 sites
 for(s in 1:nrow(siteData)){
