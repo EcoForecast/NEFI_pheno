@@ -10,7 +10,7 @@ library(doParallel)
 n.cores <- 4
 
 #register the cores.
-registerDoParallel(cores=n.cores)
+#registerDoParallel(cores=n.cores)
 
 ##Can only do for same TZ
 
@@ -202,9 +202,9 @@ createNDVI_GOES_LeftoverMAIN <- function(day,siteData,orbitVersion,year,TZ){
 
 ##For TZ == 5 
 #siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[c(2,3,4,5,8,16,17,19,20),] ##TZ 5 sites
-#siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[c(2,3,4),]
+siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[c(2,3,4),]
 #siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[c(5,8,16,17,19,20),]
-siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[c(6,10,15),] ##TZ 6 sites
+#siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[c(6,10,15),] ##TZ 6 sites
 for(s in 1:nrow(siteData)){
   siteName <- as.character(siteData[s,1])
   #print(siteName)
@@ -214,8 +214,8 @@ print("Done creating missing day files")
 all.days <- c(seq(1,320,1),seq(348,365,1))
 #all.days <- c(seq(182,320,1),seq(348,365,1))
 #year <- 2017
-foreach (d = 1:length(all.days)) %dopar% {
-#for(d in 1:length(all.days)){
+#foreach (d = 1:length(all.days)) %dopar% {
+for(d in 1:length(all.days)){
   print(paste("Starting Day:",all.days[d],sep=" "))
   iseq <- numeric()
   if(all.days[d]<182){
@@ -239,7 +239,7 @@ foreach (d = 1:length(all.days)) %dopar% {
     orbitVersion <- "NEW"
   }
   if(length(iseq)>0){
-    createNDVI_GOES_LeftoverMAIN(day=all.days[d],siteData=siteData[iseq,],orbitVersion = orbitVersion,year = year,TZ = 6)
+    createNDVI_GOES_LeftoverMAIN(day=all.days[d],siteData=siteData[iseq,],orbitVersion = orbitVersion,year = year,TZ = 5)
   }
 }
 
