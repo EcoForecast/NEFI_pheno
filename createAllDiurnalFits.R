@@ -25,7 +25,8 @@ siteName <- "HubbardBrook"
 #howland:iseq <- c(seq(182,193),seq(195,203),seq(206,208),211,213,seq(215,217),224,230,231,seq(233,236),seq(244,254),seq(256,260),seq(262,258),seq(271,274),seq(277,291),seq(296,299),seq(301,304),seq(313,315),318,355,363)
 #iseq <- c(seq(183,187),189,190,191,192,196,197,198,199,200,202,207,210,211,212,213,214,218,222,225,228,229,233,234,235,236,237,238,239,240,242,243,244,245,247,250,251,252,253,254,255,256,259,260,seq(266,272),seq(274,278),280,283,285,286,287,290,291,292,293,294,295,300,301,303,304,308,311,312,313,314,315,316,319,321,355)
 
-iseq <- as.character(seq(1,181))
+iseq <- as.character(c(seq(1,320,1),seq(348,364,1)))
+
 for(i in 1:length(iseq)){
   if(as.numeric(iseq[i])<10){
     iseq[i] <- paste("00",iseq[i],sep="")
@@ -38,8 +39,13 @@ for(i in 1:length(iseq)){
 output <- foreach(i = iseq) %dopar% {
 #for(i in iseq){
 #i <- iseq[4]
-
-  fileName <- paste("dailyNDVI_GOES/","GOES_Diurnal_",siteName,"_2018",i,".csv",sep="")
+  if(as.numeric(iseq[i])<182){
+    year <- 2018
+  }
+  else{
+    year <- 2017
+  }
+  fileName <- paste("dailyNDVI_GOES/","GOES_Diurnal_",siteName,"_",year,i,".csv",sep="")
   print(fileName)
   dat <- read.csv(fileName,header=FALSE)
   data <- list()
