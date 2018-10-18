@@ -20,7 +20,7 @@ ciEnvelope <- function(x,ylo,yhi,...){
 startDay <- 182
 endDay <- 181+365
 siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)
-iseq <- c(19)
+iseq <- c(18)
 #i=8
 for(i in iseq){
   siteName <- as.character(siteData[i,1])
