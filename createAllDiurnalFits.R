@@ -16,7 +16,7 @@ n.cores <- 6
 #register the cores.
 registerDoParallel(cores=n.cores)
 
-siteName <- "Shenandoah"
+siteName <- "howland"
 #diurnal.files <- dir(path="dailyNDVI_GOES",pattern=paste("GOES_Diurnal_",siteName,sep=""))
 #iseq <- c(186,191,198,230,248,250,252,285)
 #iseq <- c(seq(186,193),seq(195,201),206,207,211,217,230,231,seq(233,236),seq(244,254),258,259,seq(277,287),seq(297,299),seq(301,304),seq(313,315))
