@@ -41,7 +41,7 @@ output <- foreach(i = iseq) %dopar% {
   outFileName <- paste(siteName,"_",as.character(i),"_varBurn2.RData",sep="")
   if(!file.exists(outFileName)){
     j.model <- createBayesModel.Diurnal(siteName=siteName,data)
-    var.burn <- runMCMC_Model(j.model = j.model,variableNames=c("a","c","k","prec"),iterSize = 20000,iterSize=5000,maxGBR=3,maxIter=100000)#,baseNum = 1000000,iterSize = 70000)
+    var.burn <- runMCMC_Model(j.model = j.model,variableNames=c("a","c","k","prec"),baseNum = 20000,iterSize=5000,maxGBR=3,maxIter=100000)#,baseNum = 1000000,iterSize = 70000)
     save(var.burn,file=outFileName)
   }
 }
