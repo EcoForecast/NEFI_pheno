@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-install.packages("/projectnb/dietzelab/kiwheel/NEFI_pheno/PhenologyBayesModeling",repo=NULL)
+#install.packages("/projectnb/dietzelab/kiwheel/NEFI_pheno/PhenologyBayesModeling",repo=NULL)
 #install.packages("MODISTools",repo="https://cloud.r-project.org/")
 #install.packages("doParallel",repo="https://cloud.r-project.org/")
 library("PhenologyBayesModeling")
@@ -16,7 +16,7 @@ n.cores <- 6
 #register the cores.
 registerDoParallel(cores=n.cores)
 
-siteName <- "Shenandoah"
+siteName <- "shenandoah"
 #diurnal.files <- dir(path="dailyNDVI_GOES",pattern=paste("GOES_Diurnal_",siteName,sep=""))
 #iseq <- c(186,191,198,230,248,250,252,285)
 #iseq <- c(seq(186,193),seq(195,201),206,207,211,217,230,231,seq(233,236),seq(244,254),258,259,seq(277,287),seq(297,299),seq(301,304),seq(313,315))
@@ -41,16 +41,7 @@ output <- foreach(i = iseq) %dopar% {
   outFileName <- paste(siteName,"_",as.character(i),"_varBurn2.RData",sep="")
   if(!file.exists(outFileName)){
     j.model <- createBayesModel.Diurnal(siteName=siteName,data)
-  
-    var.burn <- runMCMC_Model(j.model = j.model,variableNames=c("a","c","k","prec"),iterSize = 50000)#,baseNum = 1000000,iterSize = 70000)
-    counter <- 1
-    while(counter < 5){
-      if(typeof(var.burn)==typeof(FALSE)){
-        j.model <- createBayesModel.Diurnal(siteName=siteName,data)
-        var.burn <- runMCMC_Model(j.model = j.model,variableNames=c("a","c","k","prec"),maxIter = 1000000)
-      }
-      counter <- counter + 1
-    }
+    var.burn <- runMCMC_Model(j.model = j.model,variableNames=c("a","c","k","prec"),iterSize = 20000,iterSize=5000,maxGBR=3,maxIter=100000)#,baseNum = 1000000,iterSize = 70000)
     save(var.burn,file=outFileName)
   }
 }
