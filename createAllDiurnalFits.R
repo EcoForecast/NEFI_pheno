@@ -39,7 +39,7 @@ for(i in 1:length(iseq)){
 output <- foreach(i = iseq) %dopar% {
 #for(i in iseq){
 #i <- iseq[4]
-  if(as.numeric(iseq[i])<182){
+  if(as.numeric(i)<182){
     year <- 2018
   }
   else{
