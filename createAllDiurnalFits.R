@@ -39,7 +39,7 @@ output <- foreach(i = iseq) %dopar% {
 #for(i in iseq){
 #i <- iseq[4]
 
-  fileName <- paste("dailyNDVI_GOES/","GOES_Diurnal_",siteName,"_2017",i,".csv",sep="")
+  fileName <- paste("dailyNDVI_GOES/","GOES_Diurnal_",siteName,"_2018",i,".csv",sep="")
   print(fileName)
   dat <- read.csv(fileName,header=FALSE)
   data <- list()
