@@ -201,8 +201,8 @@ createNDVI_GOES_LeftoverMAIN <- function(day,siteData,orbitVersion,year,TZ){
 #########
 
 ##For TZ == 5 
-#siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[c(2,3,4,5,8,16,17,19,20),] ##TZ 5 sites
-siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[2,]#[c(2,3,4),]
+siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[c(2,3,4,5,8,16,17,19,20),] ##TZ 5 sites
+#siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[2,]#[c(2,3,4),]
 #siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[c(5,8,16,17,19,20),]
 #siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[c(6,10,15),] ##TZ 6 sites
 for(s in 1:nrow(siteData)){
@@ -211,7 +211,7 @@ for(s in 1:nrow(siteData)){
   createMissingFilesList(siteName)
 }
 print("Done creating missing day files")
-all.days <- c(seq(1,320,1),seq(348,365,1))
+all.days <- c(seq(182,320,1),seq(348,365,1))
 #all.days <- c(seq(182,320,1),seq(348,365,1))
 #year <- 2017
 foreach (d = 1:length(all.days)) %dopar% {
