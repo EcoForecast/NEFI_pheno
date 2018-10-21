@@ -7,6 +7,9 @@
 #' @param iterSize The number of iterations to run before checking the Gelman-Brooks-Rubin value again
 #' @param maxGBR The maximum allowable Gelman-Brooks-Rubin value after the base number of iterations have been run. This can be set low (i.e. 3) if you only want to fit days that converge quickly.
 #' @param ID Identification information to print out if the model does not converge
+#' @export
+#' @import rjags
+#' @import runjags
 runMCMC_Model <- function(j.model,variableNames=c("a","c","k","prec"),maxIter=1000000000,baseNum=80000,iterSize =40000,maxGBR=10,ID=""){
   var.out   <- coda.samples (model = j.model,
                              variable.names = variableNames,

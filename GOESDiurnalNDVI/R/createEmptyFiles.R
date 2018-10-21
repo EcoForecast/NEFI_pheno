@@ -3,6 +3,7 @@
 #' @param siteData matrix of site data where the sites are in individual rows and the columns are siteName, latitude, longitude, timezone
 #' @param year The desired year
 #' @param day The desired day of year
+#' @export
 createEmptyFiles <- function(siteData,year,day){
   for(i in 1:length(siteData)){
     siteName <- as.character(siteData[i,1])
