@@ -5,6 +5,7 @@
 #' @param year The desired year
 #' @param TZ The timezone of the sites in siteData (e.g. eastern US sites have a TZ value of 5).
 #' @param dataPath The directory where all of the GOES data is located
+#' @export
 calculateNDVI_GOES_MAIN <- function(day,siteData,year,TZ,dataPath){
   if(year==2017 && day < 321){
     orbitVersion <- "OLD"

@@ -3,6 +3,7 @@
 #' @param lat Latitude in decimal degrees
 #' @param long Longitude in decimal degrees
 #' @param orbitVersion NEW or OLD depending on the position of the satellite (only days before 17 November 2017 are OLD). Default value is NEW
+#' @export
 getABI_Index <- function(lat,long,orbitVersion=NEW){
   #Function to determine the index of the ABI fixed grid that corresponds to a geodetic (normal) latitude and longitude.
   #lat and long should be in radians not degrees

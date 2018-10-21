@@ -2,6 +2,9 @@
 #'
 #' @param siteName The site name used for file naming
 #' @param data List that includes the data to be fitted (e.g. data$x and data$y) where x is the vector of hours of the day (minutes and seconds included in the decimal) y is the vector of NDVI values
+#' @export
+#' @import rjags
+#' @import runjags
 createDiurnalModel <- function(siteName,data){
   print("entered model")
   nchain <-  5
@@ -11,18 +14,12 @@ createDiurnalModel <- function(siteName,data){
   # for(i in 1:5){
   #   inits[[i]] <- list(a=rnorm(1,0.0009,0.0003),c=rnorm(1,mean(sort(data$y,decreasing = TRUE)[1:2]),0.05),k=rnorm(1,12,0.3))
   # }
-  #data$mean.c <- 0.75
-  #data$p.c <- 1/(0.05**2)
+
   data$alpha.c <- 2
   data$beta.c <- 1.5
-  data$s1 <- 0.001 #0.7
-  data$s2 <- 0.00001 #0.08
-  #data$p.Tran <- 1/(1**2)
-  #data$p.b <- 1/(1**2)
-  #data$mean.TranL <- 0# 7.5
-  #data$mean.bL <- -1.5
-  #data$mean.TranR <- 25#17.5
-  #data$mean.bR <- 1.8
+  data$s1 <- 0.001
+  data$s2 <- 0.00001
+
   data$mean.a <- 0.0009
   data$p.a <- 0.0003
   data$mean.k <- 12

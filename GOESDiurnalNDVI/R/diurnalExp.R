@@ -4,6 +4,7 @@
 #' @param c One value for the c (midday NDVI) parameter
 #' @param k One value for the k (changepoint) parameter
 #' @param xseq Vector of x values to calculate y values for
+#' @export
 diurnalExp <- function(a,c,k,xseq){
   k <- round(k,digits=1)
   #print(k)

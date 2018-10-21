@@ -3,6 +3,7 @@
 #' @param siteName The site name used for file naming
 #' @param year The desired year
 #' @param day The desired day of year
+#' @export
 plotCI <- function(siteName,year,day){
   ci <- calculateMiddayCI(siteName=siteName,year=year,day=day)
   date <- as.Date(as.numeric(dy),origin=as.Date(paste(as.character(as.numeric(yr)-1),"-12-31",sep="")))

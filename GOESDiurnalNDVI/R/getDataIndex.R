@@ -5,6 +5,7 @@
 #' @param orbitVersion NEW or OLD depending on the position of the satellite (only days before 17 November 2017 are OLD). Default value is NEW.
 #' @return Vector of the i,j index for the product matrices
 #' @source Based on PUG_L1b-vol3 pg 15
+#' @export
 getDataIndex <- function(vals,ch,orbitVersion=NEW){
   if(orbitVersion=="OLD"){
     if(ch==3){

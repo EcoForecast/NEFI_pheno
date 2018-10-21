@@ -3,6 +3,9 @@
 #' @param siteName The site name used for file naming
 #' @param year The desired year
 #' @param day The desired day of year
+#' @export
+#' @import rjags
+#' @import runjags
 calculateMiddayCI <- function(siteName,year,day){
   fileName <- paste(siteName,"_",year,day,"_varBurn.RData",sep="")
   load(fileName)
