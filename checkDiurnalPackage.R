@@ -11,4 +11,4 @@ print("Testing calculateNDVI MAIN")
 siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)
 siteData <- siteData[9,c(1,2,3,6)]
 
-calculateNDVI_GOES_MAIN(day=251,siteData=siteData,TZ=5,dataPath="GOES_Data2017")
+calculateNDVI_GOES_MAIN(day=101,siteData=siteData,TZ=5,dataPath="GOES_Data2017")
