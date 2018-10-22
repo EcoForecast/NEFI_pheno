@@ -15,4 +15,4 @@ calculateNDVI_GOES_MAIN(day=101,siteData=siteData,TZ=5,dataPath="GOES_Data2017",
 #303
 #print("Testing modelMiddayNDVI")
 #modelMiddayNDVI(siteData=siteData,year=2017,day=303)
-#library("rjags")
+

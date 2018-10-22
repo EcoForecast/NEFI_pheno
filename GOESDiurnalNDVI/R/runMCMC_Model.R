@@ -10,6 +10,7 @@
 #' @export
 #' @import rjags
 #' @import runjags
+#' @import coda
 runMCMC_Model <- function(j.model,variableNames=c("a","c","k","prec"),maxIter=1000000000,baseNum=80000,iterSize =40000,maxGBR=10,ID=""){
   var.out   <- coda.samples (model = j.model,
                              variable.names = variableNames,
@@ -26,7 +27,7 @@ runMCMC_Model <- function(j.model,variableNames=c("a","c","k","prec"),maxIter=10
     var.out <- combine.mcmc(mcmc.objects=list(var.out,new.out),collapse.chains = FALSE)
     continue <- FALSE
     if(GBR.bad){
-      GBR.vals <- rjags::gelman.diag(var.out)
+      GBR.vals <- coda::gelman.diag(var.out)
       GBR.bad <- FALSE
       for(i in 1:nrow(GBR.vals$psrf)){
         for(j in 1:ncol(GBR.vals$psrf)){
@@ -45,13 +46,13 @@ runMCMC_Model <- function(j.model,variableNames=c("a","c","k","prec"),maxIter=10
     }
     if(!continue){
       if(burnin==0){
-        GBR <- rjags::gelman.plot(var.out)
+        GBR <- coda::gelman.plot(var.out)
         burnin <- GBR$last.iter[tail(which(apply(GBR$shrink[,,2]>1.05,1,any)),1)+1]
         if(length(burnin) == 0) burnin = 1
       }
       var.burn <- window(var.out,start=burnin)
       #var.burn <- var.out
-      effsize <- effectiveSize(var.burn)
+      effsize <- coda::effectiveSize(var.burn)
       for(i in 1:length(effsize)){
         if(effsize[i]<5000){
           continue = TRUE

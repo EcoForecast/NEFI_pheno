@@ -6,6 +6,7 @@
 #' @export
 #' @import rjags
 #' @import runjags
+#' @import coda
 modelMiddayNDVI <- function(siteData,year,day){
   for(i in 1:nrow(siteData)){
     siteName <- siteData[i,1]
@@ -19,7 +20,7 @@ modelMiddayNDVI <- function(siteData,year,day){
     outFileName <- paste(siteName,"_",year,day,"_varBurn.RData",sep="")
     if(!file.exists(outFileName)){
       j.model <- createDiurnalModel(siteName=siteName,data)
-      var.burn <- runMCMC_Model(j.model = j.model,variableNames=c("a","c","k","prec"),iterSize = 50000)
+      var.burn <- runMCMC_Model(j.model = j.model,variableNames=c("a","c","k","prec"),iterSize = 2000,baseNum=5000)
       save(var.burn,file=outFileName)
     }
   }
