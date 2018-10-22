@@ -20,7 +20,7 @@ modelMiddayNDVI <- function(siteData,year,day){
     outFileName <- paste(siteName,"_",year,day,"_varBurn.RData",sep="")
     if(!file.exists(outFileName)){
       j.model <- createDiurnalModel(siteName=siteName,data)
-      var.burn <- runMCMC_Model(j.model = j.model,variableNames=c("a","c","k","prec"),iterSize = 2000,baseNum=5000)
+      var.burn <- runMCMC_Model(j.model = j.model,variableNames=c("a","c","k","prec"),iterSize = 50000,baseNum=20000)
       save(var.burn,file=outFileName)
     }
   }
