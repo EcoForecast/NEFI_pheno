@@ -11,7 +11,7 @@ runMCMC_Model <- function(j.model,variableNames,maxIter=1000000000,baseNum=80000
   burnin <- 0
   while(continue & numb<maxIter){
     print(numb)
-    new.out   <- coda.samples (model = j.model,
+    new.out   <- coda.samples(model = j.model,
                                variable.names = variableNames,
                                n.iter = iterSize)
     var.out <- combine.mcmc(mcmc.objects=list(var.out,new.out),collapse.chains = FALSE)
