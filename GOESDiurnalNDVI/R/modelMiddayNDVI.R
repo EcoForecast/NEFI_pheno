@@ -10,7 +10,9 @@ modelMiddayNDVI <- function(siteData,year,day){
   for(i in 1:nrow(siteData)){
     siteName <- siteData[i,1]
     fileName <- paste("GOES_NDVI_Diurnal",siteName,"_",year,day,".csv",sep="")
+    print(fileName)
     dat <- read.csv(fileName,header=FALSE)
+    print(dim(dat))
     data$x <- as.numeric(dat[3,])
     data$y <- as.numeric(dat[2,])
     outFileName <- paste(siteName,"_",year,day,"_varBurn.RData",sep="")
