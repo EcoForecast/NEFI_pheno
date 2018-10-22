@@ -5,6 +5,7 @@
 #' @export
 #' @import rjags
 #' @import runjags
+#' @import coda
 createDiurnalModel <- function(siteName,data){
   print("entered model")
   nchain <-  5
