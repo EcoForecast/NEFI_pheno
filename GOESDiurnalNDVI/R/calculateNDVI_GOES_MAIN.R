@@ -25,9 +25,10 @@ calculateNDVI_GOES_MAIN <- function(day,siteData,year,TZ,dataPath){
       for(j in 1:length(ACM.files)){
         day.time <- substr(ACM.files[j],24,34)
         day.time.vals <- c(day.time.vals,day.time)
-        hr <- substr(day.time,8,9)
+        hr <- as.numeric(substr(day.time,8,9)-TZ)
         mt <- substr(day.time,10,11)
         times <- c(times,(as.numeric(hr)+as.numeric(mt)/60))
+        print((as.numeric(hr)+as.numeric(mt)/60))
         NDVI.vals <- rbind(NDVI.vals,createNDVI_sub(siteData=siteData,orbitVersion=orbitVersion,day.time=day.time,dataPath=dataPath))
       }
       for(i in 1:nrow(siteData)){
