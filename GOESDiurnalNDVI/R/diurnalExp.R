@@ -6,9 +6,9 @@
 #' @param xseq Vector of x values to calculate y values for
 #' @export
 diurnalExp <- function(a,c,k,xseq){
-  k <- round(k,digits=1)
+  k <- round(k,digits=3)
   #print(k)
-  bk <- which(round(xseq,digits=1)==k)
+  bk <- which(round(xseq,digits=3)==k)
   #print(bk)
   left <- -a*exp(-1*(xseq[1:bk]-k))+c
   right.xseq <- xseq[(bk+1):length(xseq)]
