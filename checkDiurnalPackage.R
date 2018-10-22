@@ -11,8 +11,14 @@ print("Testing calculateNDVI MAIN")
 siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)
 siteData <- siteData[9,c(1,2,3,6)]
 
-calculateNDVI_GOES_MAIN(day=101,siteData=siteData,TZ=5,dataPath="GOES_Data2017",year=2018)
+#calculateNDVI_GOES_MAIN(day=101,siteData=siteData,TZ=5,dataPath="GOES_Data2017",year=2018)
 #303
-#print("Testing modelMiddayNDVI")
-#modelMiddayNDVI(siteData=siteData,year=2017,day=303)
-
+print("Testing modelMiddayNDVI")
+modelMiddayNDVI(siteData=siteData,year=2017,day=303)
+#library("rjags")
+#install.packages("rjags")
+print("Checking Plotting")
+pdf(file="SamplePlot.pdf",width=5,height=5)
+plotCI(siteName="russellSage",year=2017,day=303)
+dev.off()
+print("Done plotting")
