@@ -20,13 +20,13 @@ runMCMC_Model <- function(j.model,variableNames=c("a","c","k","prec"),maxIter=10
   burnin <- 0
   while(continue & numb<maxIter){
     print(numb)
-    new.out   <- coda.samples (model = j.model,
+    new.out   <- coda.samples(model = j.model,
                                variable.names = variableNames,
                                n.iter = iterSize)
     var.out <- combine.mcmc(mcmc.objects=list(var.out,new.out),collapse.chains = FALSE)
     continue <- FALSE
     if(GBR.bad){
-      GBR.vals <- gelman.diag(var.out)
+      GBR.vals <- rjags::gelman.diag(var.out)
       GBR.bad <- FALSE
       for(i in 1:nrow(GBR.vals$psrf)){
         for(j in 1:ncol(GBR.vals$psrf)){
@@ -45,7 +45,7 @@ runMCMC_Model <- function(j.model,variableNames=c("a","c","k","prec"),maxIter=10
     }
     if(!continue){
       if(burnin==0){
-        GBR <- gelman.plot(var.out)
+        GBR <- rjags::gelman.plot(var.out)
         burnin <- GBR$last.iter[tail(which(apply(GBR$shrink[,,2]>1.05,1,any)),1)+1]
         if(length(burnin) == 0) burnin = 1
       }
