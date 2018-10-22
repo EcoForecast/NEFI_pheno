@@ -9,7 +9,9 @@
 calculateMiddayCI <- function(siteName,year,day){
   fileName <- paste(siteName,"_",year,day,"_varBurn.RData",sep="")
   load(fileName)
-  dat <- read.csv(paste("GOES_NDVI_Diurnal",siteName,"_",year,day,".csv",sep=""))
+  dat <- read.csv(paste("GOES_NDVI_Diurnal",siteName,"_",year,day,".csv",sep=""),header=FALSE)
+  #print(dim(dat))
+  xseq <- seq(dat[3,1],dat[3,ncol(dat)],0.001)
   out.mat <- as.matrix(var.burn)
   a <- out.mat[,1]
   c <- out.mat[,2]
