@@ -53,7 +53,7 @@ for(i in 1:length(diurnalFiles)){
     ci <- apply(ycred,2,quantile,c(0.025,0.5, 0.975), na.rm= TRUE)
     ciEnvelope(xseq,ci[1,],ci[3,],col="lightBlue")
     lines(xseq,ci[2,],col="black")
-    points(as.numeric(dat[3,]),as.numeric(dat[2,]))
+    points(as.numeric(dayData[3,]),as.numeric(dayData[2,]))
     abline(v=12,col="red")
   }
 }
