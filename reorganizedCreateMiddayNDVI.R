@@ -150,7 +150,7 @@ createMissingFilesList <- function(siteName){
 createNDVI_GOES_LeftoverMAIN <- function(day,siteData,orbitVersion,year,TZ){
   #print("Inside Main")
   ##hours for leftover calculations
-  hrs <- as.character(c(seq((4+TZ),(9+TZ),1),seq((15+TZ),(17+TZ),1))) 
+  hrs <- as.character(seq(10+TZ),seq(14+TZ),1)
   
   ##
   filestrACM <- paste("OR_ABI-L2-ACMC-M3_G16_s",year,day,sep="")
@@ -202,9 +202,9 @@ createNDVI_GOES_LeftoverMAIN <- function(day,siteData,orbitVersion,year,TZ){
 
 ##For TZ == 5 
 #siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[c(2,3,4,5,8,16,17,19,20),] ##TZ 5 sites
-siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[c(1,2,3,4,5),]#[c(2,3,4),]
+#siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[2,]#[c(2,3,4),]
 #siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[c(5,8,16,17,19,20),]
-#siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[c(6,10,15),] ##TZ 6 sites
+siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[c(6,10,15),] ##TZ 6 sites
 for(s in 1:nrow(siteData)){
   siteName <- as.character(siteData[s,1])
   #print(siteName)
@@ -215,7 +215,7 @@ all.days <- c(seq(182,333,1),seq(348,365,1))
 #all.days <- c(seq(182,320,1),seq(348,365,1))
 #year <- 2017
 foreach (d = 1:length(all.days)) %dopar% {
-#for(d in 1:length(all.days)){
+  #for(d in 1:length(all.days)){
   print(paste("Starting Day:",all.days[d],sep=" "))
   iseq <- numeric()
   if(all.days[d]<182){
@@ -239,7 +239,7 @@ foreach (d = 1:length(all.days)) %dopar% {
     orbitVersion <- "NEW"
   }
   if(length(iseq)>0){
-    createNDVI_GOES_LeftoverMAIN(day=all.days[d],siteData=siteData[iseq,],orbitVersion = orbitVersion,year = year,TZ = 5)
+    createNDVI_GOES_LeftoverMAIN(day=all.days[d],siteData=siteData[iseq,],orbitVersion = orbitVersion,year = year,TZ = 6)
   }
 }
 
