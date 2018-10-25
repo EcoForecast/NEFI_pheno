@@ -22,6 +22,7 @@ SH.vars <- c("Tran","b","c","d","k","r","prec")
 #n.cores <- detectCores()
 n.cores <- 4
 
+
 #register the cores.
 registerDoParallel(cores=n.cores)
 i <- 15
