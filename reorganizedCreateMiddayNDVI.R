@@ -100,14 +100,14 @@ createNDVI_sub <- function(siteData,orbitVersion,day.time,year){
 createEmptyFiles <- function(siteData,day,year){
   for(i in 1:length(siteData)){
     siteName <- as.character(siteData[i,1])
-    fileName <- paste("GOES_NDVI_Leftover",siteName,"_",day,"_",day,"_kappaDQF.csv",sep="")
+    fileName <- paste("GOES_NDVI_Midday",siteName,"_",day,"_",day,"_kappaDQF.csv",sep="")
     write.table(NA,file=fileName,sep=",",col.names=FALSE,row.names=FALSE)
   }
 }
 
 checkFileExists <- function(siteName,day){
   ##Returns True if the file exists
-  dat <- read.csv(file=paste(siteName,"_missing_NDVI_Days.csv",sep=""),header=FALSE)
+  dat <- read.csv(file=paste(siteName,"_missingMidday_NDVI_Days.csv",sep=""),header=FALSE)
   for(i in 1:nrow(dat)){
     if(as.numeric(dat[i,1])==as.numeric(day)){
       return(FALSE)
@@ -117,8 +117,9 @@ checkFileExists <- function(siteName,day){
 }
 
 createMissingFilesList <- function(siteName){
-  diurnal.files <- dir(pattern=paste("GOES_NDVI_Leftover",siteName,sep=""))
+  diurnal.files <- dir(pattern=paste("GOES_NDVIMidday",siteName,sep=""))
   days <- numeric()
+  if(length(diurnal.files)!= 0){
   for(i in 1:length(diurnal.files)){
     #print(diurnal.files[i])
     start <- as.numeric(strsplit(diurnal.files[i],"_")[[1]][4])
@@ -127,6 +128,7 @@ createMissingFilesList <- function(siteName){
     #print(end)
     dys <- seq(start,end,1)
     days <- c(days,dys)
+  }
   }
   #sort(days)
   all.days <- c(seq(1,333,1),seq(348,365,1))
@@ -143,7 +145,7 @@ createMissingFilesList <- function(siteName){
   if(length(missingDays)==0){
     missingDays <- c(missingDays,0)
   }
-  write.table(missingDays,file=paste(siteName,"_missing_NDVI_Days.csv",sep=""),sep=",",col.names=FALSE,row.names=FALSE)
+  write.table(missingDays,file=paste(siteName,"_missingMidday_NDVI_Days.csv",sep=""),sep=",",col.names=FALSE,row.names=FALSE)
 }
 
 
@@ -181,7 +183,7 @@ createNDVI_GOES_LeftoverMAIN <- function(day,siteData,orbitVersion,year,TZ){
       print(dim(NDVI.vals))
       for(i in 1:nrow(siteData)){
         siteName <- as.character(siteData[i,1])
-        fileName <- paste("GOES_NDVI_Leftover",siteName,"_",day,"_",day,"_kappaDQF.csv",sep="")
+        fileName <- paste("GOES_NDVI_Midday",siteName,"_",day,"_",day,"_kappaDQF.csv",sep="")
         print("Printing NDVI.vals[,i]:")
         print(NDVI.vals[,i])
         print(dim(NDVI.vals[,i]))
@@ -239,7 +241,7 @@ foreach (d = 1:length(all.days)) %dopar% {
     orbitVersion <- "NEW"
   }
   if(length(iseq)>0){
-    createNDVI_GOES_LeftoverMAIN(day=all.days[d],siteData=siteData[iseq,],orbitVersion = orbitVersion,year = year,TZ = 5)
+    createNDVI_GOES_LeftoverMAIN(day=all.days[d],siteData=siteData[iseq,],orbitVersion = orbitVersion,year = year,TZ = 6)
   }
 }
 
