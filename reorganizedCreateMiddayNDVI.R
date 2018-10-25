@@ -241,7 +241,8 @@ foreach (d = 1:length(all.days)) %dopar% {
     orbitVersion <- "NEW"
   }
   if(length(iseq)>0){
-    createNDVI_GOES_LeftoverMAIN(day=all.days[d],siteData=siteData[iseq,],orbitVersion = orbitVersion,year = year,TZ = 6)
+    createNDVI_GOES_LeftoverMAIN(day=all.days[d],siteData=siteData[iseq,],orbitVersion = orbitVersion,year = year,TZ = 5)
   }
+  
 }
 
