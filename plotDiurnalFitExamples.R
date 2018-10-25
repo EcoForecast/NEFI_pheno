@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-install.packages("/projectnb/dietzelab/kiwheel/NEFI_pheno/PhenologyBayesModeling",repo=NULL)
+#install.packages("/projectnb/dietzelab/kiwheel/NEFI_pheno/PhenologyBayesModeling",repo=NULL)
 #install.packages("MODISTools",repo="https://cloud.r-project.org/")
 #install.packages("doParallel",repo="https://cloud.r-project.org/")
 library("PhenologyBayesModeling")
@@ -29,7 +29,7 @@ outputFileName <- paste(siteName,"_diurnalExamples2.pdf",sep="")
 pdf(file=outputFileName,width=10,height=5)
 par(mfrow=c(2,4),mai=c(0.3,0.3,0.4,0.05))
 #day.seq <- c("186","189","201","212","231","245","251","278","290","012","013","030","074","091","167","168")
-day.seq <- c("189","201","231","245","251","012","013","030")
+day.seq <- c("189","201","234","245","251","012","013","030")
 #day.seq <- c("186","201","245","251","278","030","012","013","290")
 #dy="030"
 for(dy in day.seq){
