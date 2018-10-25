@@ -119,6 +119,7 @@ checkFileExists <- function(siteName,day){
 createMissingFilesList <- function(siteName){
   diurnal.files <- dir(pattern=paste("GOES_NDVI_Leftover",siteName,sep=""))
   days <- numeric()
+  if(length(diurnal.files)!= 0){
   for(i in 1:length(diurnal.files)){
     #print(diurnal.files[i])
     start <- as.numeric(strsplit(diurnal.files[i],"_")[[1]][4])
@@ -127,6 +128,7 @@ createMissingFilesList <- function(siteName){
     #print(end)
     dys <- seq(start,end,1)
     days <- c(days,dys)
+  }
   }
   #sort(days)
   all.days <- c(seq(1,333,1),seq(348,365,1))
