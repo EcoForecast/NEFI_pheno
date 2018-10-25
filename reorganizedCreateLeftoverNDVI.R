@@ -129,7 +129,7 @@ createMissingFilesList <- function(siteName){
     days <- c(days,dys)
   }
   #sort(days)
-  all.days <- c(seq(1,320,1),seq(348,365,1))
+  all.days <- c(seq(1,333,1),seq(348,365,1))
   #all.days <- c(seq(182,320,1),seq(348,365,1))
   #all.days <- seq(1,181,1)
   missingDays <- numeric()
@@ -211,7 +211,7 @@ for(s in 1:nrow(siteData)){
   createMissingFilesList(siteName)
 }
 print("Done creating missing day files")
-all.days <- c(seq(182,320,1),seq(348,365,1))
+all.days <- c(seq(182,333,1),seq(348,365,1))
 #all.days <- c(seq(182,320,1),seq(348,365,1))
 #year <- 2017
 foreach (d = 1:length(all.days)) %dopar% {
@@ -232,7 +232,7 @@ foreach (d = 1:length(all.days)) %dopar% {
     }
   }
   print(iseq)
-  if(all.days[d]<321 && all.days[d]>181){
+  if(all.days[d]<334 && all.days[d]>181){
     orbitVersion <- "OLD"
   }
   else{
