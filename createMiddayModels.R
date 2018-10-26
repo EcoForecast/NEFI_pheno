@@ -6,6 +6,13 @@ library(plyr)
 library("PhenologyBayesModeling")
 library("rjags")
 library("runjags")
+library(doParallel)
+
+#detect cores.
+n.cores <- 4
+
+#register the cores.
+registerDoParallel(cores=n.cores)
 
 ##' Create the credible interval envelope for plotting
 ##' 
@@ -20,16 +27,19 @@ ciEnvelope <- function(x,ylo,yhi,...){
 startDay <- 182
 endDay <- 181+365
 siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)
-iseq <- c(18)
-#i=8
-for(i in iseq){
+#iseq <- c(18)
+iseq <- c(seq(1,6),8,10,11,seq(15,20))
+foreach(i = iseq) %dopar% {
   siteName <- as.character(siteData[i,1])
   print(siteName)
   TZ <- as.numeric(siteData[i,6])
   lat <- as.numeric(siteData[i,2])
   long <- as.numeric(siteData[i,3])
-  j.model <- createBayesModel.DB_Avg(siteName=siteName,startDay = startDay,endDay=endDay,lat=lat,long=long,TZ=TZ)
-  var.Burn <- runMCMC_Model(j.model = j.model, variableNames = c("TranS","bS","TranF","bF","d","c","k","prec"),baseNum = 20000,iterSize = 5000)
-  outFileName <- paste(siteName,"_Midday_varBurn.RData",sep="")
-  save(var.Burn,file=outFileName)
+  outFileName <- paste(siteName,"_Midday2_varBurn.RData",sep="")
+  if(!file.exists(outFileName)){
+    j.model <- createBayesModel.DB_Avg(siteName=siteName,startDay = startDay,endDay=endDay,lat=lat,long=long,TZ=TZ)
+    var.Burn <- runMCMC_Model(j.model = j.model, variableNames = c("TranS","bS","TranF","bF","d","c","k","prec"),baseNum = 20000,iterSize = 5000)
+    outFileName <- paste(siteName,"_Midday2_varBurn.RData",sep="")
+    save(var.Burn,file=outFileName)
+  }
 }
