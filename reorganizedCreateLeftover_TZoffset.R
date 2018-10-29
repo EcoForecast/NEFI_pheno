@@ -187,7 +187,7 @@ createNDVI_GOES_LeftoverMAIN <- function(day,siteData,orbitVersion,year,TZ){
       print(dim(NDVI.vals))
       for(i in 1:nrow(siteData)){
         siteName <- as.character(siteData[i,1])
-        fileName <- paste("GOES_NDVI_Leftover",siteName,"_",baseDay,"_",baseDay,"_kappaDQF.csv",sep="")
+        fileName <- paste("GOES_NDVI_Leftover2",siteName,"_",baseDay,"_",baseDay,"_kappaDQF.csv",sep="")
         print("Printing NDVI.vals[,i]:")
         print(NDVI.vals[,i])
         print(dim(NDVI.vals[,i]))
@@ -219,8 +219,8 @@ for(s in 1:nrow(siteData)){
   createMissingFilesList(siteName)
 }
 print("Done creating missing day files")
-all.days <- c(seq(321,333,1),seq(348,365,1))
-#all.days <- c(seq(182,320,1),seq(348,365,1))
+#all.days <- c(seq(321,333,1),seq(348,365,1))
+all.days <- c(seq(182,333,1),seq(348,365,1))
 #year <- 2017
 foreach (d = 1:length(all.days)) %dopar% {
   #for(d in 1:length(all.days)){
