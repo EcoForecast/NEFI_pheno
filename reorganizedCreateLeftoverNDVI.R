@@ -215,8 +215,8 @@ for(s in 1:nrow(siteData)){
   createMissingFilesList(siteName)
 }
 print("Done creating missing day files")
-all.days <- c(seq(321,333,1),seq(348,365,1))
-#all.days <- c(seq(182,320,1),seq(348,365,1))
+#all.days <- c(seq(321,333,1),seq(348,365,1))
+all.days <- c(seq(182,320,1),seq(348,365,1))
 #year <- 2017
 foreach (d = 1:length(all.days)) %dopar% {
 #for(d in 1:length(all.days)){
