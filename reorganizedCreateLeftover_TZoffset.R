@@ -132,7 +132,7 @@ createMissingFilesList <- function(siteName){
   }
   #sort(days)
   #all.days <- c(seq(321,333,1),seq(348,365,1))
-  all.days <- c(seq(182,320,1),seq(348,365,1))
+  all.days <- c(seq(1,333,1),seq(348,365,1))
   #all.days <- seq(1,181,1)
   missingDays <- numeric()
   for(j in 1:length(all.days)){
@@ -152,7 +152,8 @@ createNDVI_GOES_LeftoverMAIN <- function(day,siteData,orbitVersion,year,TZ){
   baseDay <- day
   #print("Inside Main")
   ##hours for leftover calculations
-  hrs <- as.character(c(seq((1+TZ),(9+TZ),1),seq((15+TZ),(22+TZ),1))) 
+  #hrs <- as.character(c(seq((1+TZ),(9+TZ),1),seq((15+TZ),(22+TZ),1))) 
+  hrs <- as.character(seq((18+TZ),(23+TZ),1))) 
   
   ##
   filestrACM <- paste("OR_ABI-L2-ACMC-M3_G16_s")#,year,day,sep="")
@@ -208,12 +209,12 @@ createNDVI_GOES_LeftoverMAIN <- function(day,siteData,orbitVersion,year,TZ){
 #########
 
 ##For TZ == 5 
-#siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[c(2,3,4,5,8,16,17,19,20),] ##TZ 5 sites
+siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[c(2,3,4,5,8,16,17,19,20),] ##TZ 5 sites
 #siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[c(8,11,16,17,18,19,20),]#[c(2,3,4),]
 #siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[c(1,2,3,4,5),]
 #siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[c(6,9,10,15),] ##TZ 6 sites
 #siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[c(7,13,14),]##TZ 7 sites
-siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[c(12),]
+#siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[c(12),]
 for(s in 1:nrow(siteData)){
   siteName <- as.character(siteData[s,1])
   #print(siteName)
@@ -221,7 +222,7 @@ for(s in 1:nrow(siteData)){
 }
 print("Done creating missing day files")
 #all.days <- c(seq(321,333,1),seq(348,365,1))
-all.days <- c(seq(182,333,1),seq(348,365,1))
+all.days <- c(seq(1,333,1),seq(348,365,1))
 #year <- 2017
 output <-
 foreach (d = 1:length(all.days)) %dopar% {
@@ -249,7 +250,7 @@ foreach (d = 1:length(all.days)) %dopar% {
     orbitVersion <- "NEW"
   }
   if(length(iseq)>0){
-    createNDVI_GOES_LeftoverMAIN(day=all.days[d],siteData=siteData[iseq,],orbitVersion = orbitVersion,year = year,TZ = 8)
+    createNDVI_GOES_LeftoverMAIN(day=all.days[d],siteData=siteData[iseq,],orbitVersion = orbitVersion,year = year,TZ = 5)
   }
 }
 
