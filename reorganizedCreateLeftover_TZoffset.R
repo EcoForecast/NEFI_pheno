@@ -152,7 +152,7 @@ createNDVI_GOES_LeftoverMAIN <- function(day,siteData,orbitVersion,year,TZ){
   baseDay <- day
   #print("Inside Main")
   ##hours for leftover calculations
-  hrs <- as.character(c(seq((4+TZ),(9+TZ),1),seq((15+TZ),(17+TZ),1))) 
+  hrs <- as.character(c(seq((1+TZ),(9+TZ),1),seq((15+TZ),(22+TZ),1))) 
   
   ##
   filestrACM <- paste("OR_ABI-L2-ACMC-M3_G16_s")#,year,day,sep="")
@@ -223,9 +223,9 @@ print("Done creating missing day files")
 #all.days <- c(seq(321,333,1),seq(348,365,1))
 all.days <- c(seq(182,333,1),seq(348,365,1))
 #year <- 2017
-#output <-
-#foreach (d = 1:length(all.days)) %dopar% {
-for(d in 1:length(all.days)){
+output <-
+foreach (d = 1:length(all.days)) %dopar% {
+#for(d in 1:length(all.days)){
   print(paste("Starting Day:",all.days[d],sep=" "))
   iseq <- numeric()
   if(all.days[d]<182){
