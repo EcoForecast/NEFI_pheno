@@ -149,12 +149,20 @@ createMissingFilesList <- function(siteName){
 }
 
 createNDVI_GOES_LeftoverMAIN <- function(day,siteData,orbitVersion,year,TZ){
+  day <- as.character(day)
+  if(as.numeric(day)<10){
+    day <- paste("00",as.character(day),sep="")
+  }
+  else if(as.numeric(day)<100){
+    day <- paste("0",as.character(day),sep="")
+  }
   baseDay <- day
+
   #print("Inside Main")
   ##hours for leftover calculations
   #hrs <- as.character(c(seq((1+TZ),(9+TZ),1),seq((15+TZ),(22+TZ),1))) 
   hrs <- as.character(seq((18+TZ),(23+TZ),1)) 
-  
+  print(hrs)
   ##
   filestrACM <- paste("OR_ABI-L2-ACMC-M3_G16_s")#,year,day,sep="")
   ACM.files <- character()
@@ -162,24 +170,17 @@ createNDVI_GOES_LeftoverMAIN <- function(day,siteData,orbitVersion,year,TZ){
     if(as.numeric(hrs[q])>23){
       day <- as.character(as.numeric(baseDay) + 1)
       hrs[q] <- as.character(as.numeric(hrs[q]) - 24)
+      if(as.numeric(day)<10){
+        day <- paste("00",as.character(as.numeric(day)),sep="")
+      }
+      else if(as.numeric(day)<100){
+        day <- paste("0",as.character(as.numeric(day)),sep="")
+      }
     }
-    day <- as.character(day)
-    baseDay <- as.character(baseDay)
     if(as.numeric(hrs[q])<10){
       hrs[q] <- paste("0",as.character(hrs[q]),sep="")
     }
-    if(as.numeric(day)<10){
-      day <- paste("00",as.character(day),sep="")
-    }
-    else if(as.numeric(day)<100){
-      day <- paste("0",as.character(day),sep="")
-    }
-    if(as.numeric(baseDay)<10){
-      day <- paste("00",as.character(baseDay),sep="")
-    }
-    else if(as.numeric(baseDay)<100){
-      day <- paste("0",as.character(baseDay),sep="")
-    }
+
     print(paste("s",year,day,hrs[q],sep=""))
     #print(c("hrs[q]",hrs[q]))
     newFiles <- intersect(dir(path="GOES_Data2017",pattern=filestrACM),dir(path="GOES_Data2017",pattern=paste("s",year,day,hrs[q],sep="")))
