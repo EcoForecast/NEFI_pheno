@@ -131,8 +131,8 @@ createMissingFilesList <- function(siteName){
     }
   }
   #sort(days)
-  all.days <- c(seq(321,333,1),seq(348,365,1))
-  #all.days <- c(seq(182,320,1),seq(348,365,1))
+  #all.days <- c(seq(321,333,1),seq(348,365,1))
+  all.days <- c(seq(182,320,1),seq(348,365,1))
   #all.days <- seq(1,181,1)
   missingDays <- numeric()
   for(j in 1:length(all.days)){
@@ -158,11 +158,11 @@ createNDVI_GOES_LeftoverMAIN <- function(day,siteData,orbitVersion,year,TZ){
   filestrACM <- paste("OR_ABI-L2-ACMC-M3_G16_s",year,day,sep="")
   ACM.files <- character()
   for(q in 1:length(hrs)){
-    if(hrs[q]>23){
+    if(as.numeric(hrs[q])>23){
       day <- day + 1
-      hrs[q] <- hrs[q] - 24
+      hrs[q] <- as.character(as.numeric(hrs[q]) - 24)
     }
-    if(hrs[q]<10){
+    if(as.numeric(hrs[q])<10){
       hrs[q] <- paste("0",hrs[q],sep="")
     }
     print(paste("s",year,day,hrs[q],sep=""))
