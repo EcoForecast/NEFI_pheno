@@ -9,16 +9,16 @@ missingC02_2 <- character()
 missingC03_2 <- character()
 missingACM_2 <- character()
 for(i in 1:length(days)){
-  if(days[i] < 182){
+  if(as.numeric(days[i]) < 182){
     year <- 2018
   }
   else{
     year <- 2017
   }
-  if(days[i]<10){
+  if(as.numeric(days[i])<10){
     days[i] <- as.character(paste("00",as.character(days[i]),sep=""))
   }
-  else if(days[i]<100){
+  else if(as.numeric(days[i])<100){
     days[i] <- as.character(paste("0",as.character(days[i]),sep=""))
   }
   else{
