@@ -166,6 +166,18 @@ createNDVI_GOES_LeftoverMAIN <- function(day,siteData,orbitVersion,year,TZ){
     if(as.numeric(hrs[q])<10){
       hrs[q] <- paste("0",hrs[q],sep="")
     }
+    if(day<10){
+      day <- paste("00",as.character(day),sep="")
+    }
+    else if(day<100){
+      day <- paste("0",as.character(day),sep="")
+    }
+    if(baseDay<10){
+      day <- paste("00",as.character(day),sep="")
+    }
+    else if(baseDay<100){
+      day <- paste("0",as.character(day),sep="")
+    }
     print(paste("s",year,day,hrs[q],sep=""))
     #print(c("hrs[q]",hrs[q]))
     newFiles <- intersect(dir(path="GOES_Data2017",pattern=filestrACM),dir(path="GOES_Data2017",pattern=paste("s",year,day,hrs[q],sep="")))
@@ -229,7 +241,7 @@ all.days <- c(seq(1,333,1),seq(348,365,1))
 for(d in 1:length(all.days)){
   print(paste("Starting Day:",all.days[d],sep=" "))
   iseq <- numeric()
-  if(all.days[d]<182){
+  if(as.numeric(all.days[d])<182){
     year <- 2018
   }
   else{
