@@ -165,6 +165,7 @@ createNDVI_GOES_LeftoverMAIN <- function(day,siteData,orbitVersion,year,TZ){
     if(hrs[q]<10){
       hrs[q] <- paste("0",hrs[q],sep="")
     }
+    print(paste("s",year,day,hrs[q],sep=""))
     #print(c("hrs[q]",hrs[q]))
     newFiles <- intersect(dir(path="GOES_Data2017",pattern=filestrACM),dir(path="GOES_Data2017",pattern=paste("s",year,day,hrs[q],sep="")))
     ACM.files <- c(ACM.files,newFiles)
