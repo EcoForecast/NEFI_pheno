@@ -173,11 +173,13 @@ createNDVI_GOES_LeftoverMAIN <- function(day,siteData,orbitVersion,year,TZ){
       day <- paste("0",as.character(day),sep="")
     }
     if(baseDay<10){
-      day <- paste("00",as.character(day),sep="")
+      day <- paste("00",as.character(baseDay),sep="")
     }
     else if(baseDay<100){
-      day <- paste("0",as.character(day),sep="")
+      day <- paste("0",as.character(baseDay),sep="")
     }
+    day <- as.character(day)
+    baseDay <- as.character(day)
     print(paste("s",year,day,hrs[q],sep=""))
     #print(c("hrs[q]",hrs[q]))
     newFiles <- intersect(dir(path="GOES_Data2017",pattern=filestrACM),dir(path="GOES_Data2017",pattern=paste("s",year,day,hrs[q],sep="")))
