@@ -155,7 +155,7 @@ createNDVI_GOES_LeftoverMAIN <- function(day,siteData,orbitVersion,year,TZ){
   hrs <- as.character(c(seq((4+TZ),(9+TZ),1),seq((15+TZ),(17+TZ),1))) 
   
   ##
-  filestrACM <- paste("OR_ABI-L2-ACMC-M3_G16_s",year,day,sep="")
+  filestrACM <- paste("OR_ABI-L2-ACMC-M3_G16_s")#,year,day,sep="")
   ACM.files <- character()
   for(q in 1:length(hrs)){
     if(as.numeric(hrs[q])>23){
