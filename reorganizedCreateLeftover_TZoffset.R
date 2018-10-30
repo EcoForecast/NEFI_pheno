@@ -159,7 +159,7 @@ createNDVI_GOES_LeftoverMAIN <- function(day,siteData,orbitVersion,year,TZ){
   ACM.files <- character()
   for(q in 1:length(hrs)){
     if(as.numeric(hrs[q])>23){
-      day <- day + 1
+      day <- baseDay + 1
       hrs[q] <- as.character(as.numeric(hrs[q]) - 24)
     }
     if(as.numeric(hrs[q])<10){
@@ -176,7 +176,7 @@ createNDVI_GOES_LeftoverMAIN <- function(day,siteData,orbitVersion,year,TZ){
     if(length(ACM.files>1)){
       day.time.vals <- character()
       NDVI.vals <- matrix(ncol=nrow(siteData),nrow=0)
-      print(dim(NDVI.vals))
+      #print(dim(NDVI.vals))
       for(j in 1:length(ACM.files)){
         ##Open Files
         day.time <- substr(ACM.files[j],24,34)
@@ -185,13 +185,13 @@ createNDVI_GOES_LeftoverMAIN <- function(day,siteData,orbitVersion,year,TZ){
         NDVI.vals <- rbind(NDVI.vals,createNDVI_sub(siteData=siteData,orbitVersion=orbitVersion,day.time=day.time) )
         #print(NDVI.vals)
       }
-      print(dim(NDVI.vals))
+      #print(dim(NDVI.vals))
       for(i in 1:nrow(siteData)){
         siteName <- as.character(siteData[i,1])
         fileName <- paste("GOES_NDVI_Leftover2",siteName,"_",baseDay,"_",baseDay,"_kappaDQF.csv",sep="")
-        print("Printing NDVI.vals[,i]:")
-        print(NDVI.vals[,i])
-        print(dim(NDVI.vals[,i]))
+        #print("Printing NDVI.vals[,i]:")
+        #print(NDVI.vals[,i])
+        #print(dim(NDVI.vals[,i]))
         output <- rbind(day.time.vals,NDVI.vals[,i])
         write.table(output,file=fileName,sep=",",col.names=FALSE,row.names=FALSE)
       }
