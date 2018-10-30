@@ -153,7 +153,7 @@ createNDVI_GOES_LeftoverMAIN <- function(day,siteData,orbitVersion,year,TZ){
   #print("Inside Main")
   ##hours for leftover calculations
   #hrs <- as.character(c(seq((1+TZ),(9+TZ),1),seq((15+TZ),(22+TZ),1))) 
-  hrs <- as.character(seq((18+TZ),(23+TZ),1))) 
+  hrs <- as.character(seq((18+TZ),(23+TZ),1)) 
   
   ##
   filestrACM <- paste("OR_ABI-L2-ACMC-M3_G16_s")#,year,day,sep="")
