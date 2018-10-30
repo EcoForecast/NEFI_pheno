@@ -164,7 +164,7 @@ createNDVI_GOES_LeftoverMAIN <- function(day,siteData,orbitVersion,year,TZ){
       hrs[q] <- as.character(as.numeric(hrs[q]) - 24)
     }
     day <- as.character(day)
-    baseDay <- as.character(day)
+    baseDay <- as.character(baseDay)
     if(as.numeric(hrs[q])<10){
       hrs[q] <- paste("0",as.character(hrs[q]),sep="")
     }
