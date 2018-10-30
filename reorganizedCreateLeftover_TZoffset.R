@@ -160,26 +160,26 @@ createNDVI_GOES_LeftoverMAIN <- function(day,siteData,orbitVersion,year,TZ){
   ACM.files <- character()
   for(q in 1:length(hrs)){
     if(as.numeric(hrs[q])>23){
-      day <- baseDay + 1
+      day <- as.character(as.numeric(baseDay) + 1)
       hrs[q] <- as.character(as.numeric(hrs[q]) - 24)
-    }
-    if(as.numeric(hrs[q])<10){
-      hrs[q] <- paste("0",hrs[q],sep="")
-    }
-    if(day<10){
-      day <- paste("00",as.character(day),sep="")
-    }
-    else if(day<100){
-      day <- paste("0",as.character(day),sep="")
-    }
-    if(baseDay<10){
-      day <- paste("00",as.character(baseDay),sep="")
-    }
-    else if(baseDay<100){
-      day <- paste("0",as.character(baseDay),sep="")
     }
     day <- as.character(day)
     baseDay <- as.character(day)
+    if(as.numeric(hrs[q])<10){
+      hrs[q] <- paste("0",as.character(hrs[q]),sep="")
+    }
+    if(as.numeric(day)<10){
+      day <- paste("00",as.character(day),sep="")
+    }
+    else if(as.numeric(day)<100){
+      day <- paste("0",as.character(day),sep="")
+    }
+    if(as.numeric(baseDay)<10){
+      day <- paste("00",as.character(baseDay),sep="")
+    }
+    else if(as.numeric(baseDay)<100){
+      day <- paste("0",as.character(baseDay),sep="")
+    }
     print(paste("s",year,day,hrs[q],sep=""))
     #print(c("hrs[q]",hrs[q]))
     newFiles <- intersect(dir(path="GOES_Data2017",pattern=filestrACM),dir(path="GOES_Data2017",pattern=paste("s",year,day,hrs[q],sep="")))
