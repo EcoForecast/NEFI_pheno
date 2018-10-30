@@ -83,7 +83,7 @@ createNDVI_sub <- function(siteData,orbitVersion,day.time,year){
         else{
           output <- NA
         }
-        print(paste("NDVI:",output))
+        print(paste("NDVI:",day.time,output))
         NDVIs <- c(NDVIs,output)
       }
     }
