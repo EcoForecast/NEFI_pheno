@@ -25,7 +25,7 @@ for(i in 1:length(days)){
     days[i] <- as.character(days[i])
   }
 
-  print(fileStr)
+  print(paste("s",year,days[i],sep=""))
   ##0:
   fileStr <- paste("s",year,days[i],"0",sep="")
   C02.files <- intersect(dir(path="GOES_Data2017",pattern=fileStr),dir(path="GOES_Data2017",pattern="M3C02"))
@@ -41,7 +41,7 @@ for(i in 1:length(days)){
   if(length(ACM.files)==0){
     missingACM_0 <- c(missingACM_0,fileStr)
   }
-  
+
   ##1:
   fileStr <- paste("s",year,days[i],"1",sep="")
   C02.files <- intersect(dir(path="GOES_Data2017",pattern=fileStr),dir(path="GOES_Data2017",pattern="M3C02"))
