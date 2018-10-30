@@ -7,7 +7,7 @@ library("PhenologyBayesModeling")
 library(doParallel)
 
 #detect cores.
-n.cores <- 3
+n.cores <- 8
 
 #register the cores.
 registerDoParallel(cores=n.cores)
