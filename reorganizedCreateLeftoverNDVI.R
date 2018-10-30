@@ -131,8 +131,8 @@ createMissingFilesList <- function(siteName){
   }
   }
   #sort(days)
-  all.days <- c(seq(321,333,1),seq(348,365,1))
-  #all.days <- c(seq(182,320,1),seq(348,365,1))
+  #all.days <- c(seq(321,333,1),seq(348,365,1))
+  all.days <- c(seq(182,333,1),seq(348,365,1))
   #all.days <- seq(1,181,1)
   missingDays <- numeric()
   for(j in 1:length(all.days)){
@@ -158,7 +158,7 @@ createNDVI_GOES_LeftoverMAIN <- function(day,siteData,orbitVersion,year,TZ){
   filestrACM <- paste("OR_ABI-L2-ACMC-M3_G16_s",year,day,sep="")
   ACM.files <- character()
   for(q in 1:length(hrs)){
-    if(hrs[q]<10){
+    if(as.numeric(hrs[q])<10){
       hrs[q] <- paste("0",hrs[q],sep="")
     }
     #print(c("hrs[q]",hrs[q]))
@@ -218,6 +218,7 @@ print("Done creating missing day files")
 #all.days <- c(seq(321,333,1),seq(348,365,1))
 all.days <- c(seq(182,320,1),seq(348,365,1))
 #year <- 2017
+output<-
 foreach (d = 1:length(all.days)) %dopar% {
 #for(d in 1:length(all.days)){
   print(paste("Starting Day:",all.days[d],sep=" "))
