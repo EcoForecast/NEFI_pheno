@@ -229,8 +229,8 @@ createNDVI_GOES_LeftoverMAIN <- function(day,siteData,orbitVersion,year,TZ){
 #siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[c(8,11,16,17,18,19,20),]#[c(2,3,4),]
 #siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[c(1,2,3,4,5),]
 #siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[c(6,9,10,15),] ##TZ 6 sites
-siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[c(7,13,14),]##TZ 7 sites
-#siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[c(12),]
+#siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[c(7,13,14),]##TZ 7 sites
+siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[c(12),]
 for(s in 1:nrow(siteData)){
   siteName <- as.character(siteData[s,1])
   #print(siteName)
@@ -266,7 +266,7 @@ foreach (d = 1:length(all.days)) %dopar% {
     orbitVersion <- "NEW"
   }
   if(length(iseq)>0){
-    createNDVI_GOES_LeftoverMAIN(day=all.days[d],siteData=siteData[iseq,],orbitVersion = orbitVersion,year = year,TZ = 7)
+    createNDVI_GOES_LeftoverMAIN(day=all.days[d],siteData=siteData[iseq,],orbitVersion = orbitVersion,year = year,TZ = 8)
   }
 }
 
