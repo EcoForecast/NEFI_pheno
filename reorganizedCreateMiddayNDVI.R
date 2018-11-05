@@ -153,6 +153,7 @@ createMissingFilesList <- function(siteName){
 createNDVI_GOES_LeftoverMAIN <- function(day,siteData,orbitVersion,year,TZ){
   #print("Inside Main")
   ##hours for leftover calculations
+  print(TZ)
   hrs <- as.character(seq(10+TZ),seq(14+TZ),1)
   if(as.numeric(day)<10){
     day <- paste("00",as.character(day),sep="")
