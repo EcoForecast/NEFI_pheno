@@ -29,7 +29,7 @@ for(s in 1:nrow(siteData)){
   diurnalFiles <- intersect(dir(pattern="varBurn2.RData"),dir(pattern=siteName))
   
   for(i in 1:length(diurnalFiles)){
-    load(paste("dailyNDVI_GOES/",diurnalFiles[i],sep=""))
+    load(diurnalFiles[i])
     dy <- strsplit(diurnalFiles[i],"_")[[1]][2]
     print(diurnalFiles[i])
     print(dy)
