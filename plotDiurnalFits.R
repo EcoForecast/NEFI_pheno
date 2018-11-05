@@ -26,7 +26,7 @@ siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)
 for(s in 1:nrow(siteData)){
   
   siteName <- as.character(siteData[s,1])
-  diurnalFiles <- intersect(dir(path="dailyNDVI_GOES",pattern="varBurn2.RData"),dir(path="dailyNDVI_GOES",pattern=siteName))
+  diurnalFiles <- intersect(dir(pattern="varBurn2.RData"),dir(pattern=siteName))
   
   for(i in 1:length(diurnalFiles)){
     load(paste("dailyNDVI_GOES/",diurnalFiles[i],sep=""))
