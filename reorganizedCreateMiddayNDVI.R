@@ -165,12 +165,16 @@ createNDVI_GOES_LeftoverMAIN <- function(day,siteData,orbitVersion,year,TZ){
   }
   ##
   filestrACM <- paste("OR_ABI-L2-ACMC-M3_G16_s",year,day,sep="")
+  print(filestrACM)
   ACM.files <- character()
   for(q in 1:length(hrs)){
     if(hrs[q]<10){
       hrs[q] <- paste("0",hrs[q],sep="")
     }
-    #print(c("hrs[q]",hrs[q]))
+    else if(hrs[q]>23){
+      hrs[q] <- paste("0",as.character((hrs[q]-24)),sep="")
+    }
+    print(c("hrs[q]",hrs[q]))
     newFiles <- intersect(dir(path="GOES_Data2017",pattern=filestrACM),dir(path="GOES_Data2017",pattern=paste("s",year,day,hrs[q],sep="")))
     ACM.files <- c(ACM.files,newFiles)
   }
