@@ -23,7 +23,8 @@ pdf(file=outputFileName,width=45,height=40)
 par(mfrow=c(5,5))
 xseq <- seq(0,25,0.1)
 siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)
-for(s in 1:nrow(siteData)){
+iseq <- c(seq(1,6),seq(8,11),seq(15,20))
+for(s in iseq){
   
   siteName <- as.character(siteData[s,1])
   diurnalFiles <- intersect(dir(pattern="varBurn2.RData"),dir(pattern=siteName))
