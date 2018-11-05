@@ -119,16 +119,17 @@ checkFileExists <- function(siteName,day){
 createMissingFilesList <- function(siteName){
   diurnal.files <- dir(pattern=paste("GOES_NDVIMidday",siteName,sep=""))
   days <- numeric()
+  print(paste("Length of diurnal.files:"),length(diurnal.files))
   if(length(diurnal.files)!= 0){
-  for(i in 1:length(diurnal.files)){
-    #print(diurnal.files[i])
-    start <- as.numeric(strsplit(diurnal.files[i],"_")[[1]][4])
-    end <- as.numeric(strsplit(diurnal.files[i],"_")[[1]][5])
-    #print(start)
-    #print(end)
-    dys <- seq(start,end,1)
-    days <- c(days,dys)
-  }
+    for(i in 1:length(diurnal.files)){
+      #print(diurnal.files[i])
+      start <- as.numeric(strsplit(diurnal.files[i],"_")[[1]][4])
+      end <- as.numeric(strsplit(diurnal.files[i],"_")[[1]][5])
+      #print(start)
+      #print(end)
+      dys <- seq(start,end,1)
+      days <- c(days,dys)
+    }
   }
   #sort(days)
   #all.days <- c(seq(321,333,1),seq(348,365,1))
@@ -165,7 +166,7 @@ createNDVI_GOES_LeftoverMAIN <- function(day,siteData,orbitVersion,year,TZ){
     newFiles <- intersect(dir(path="GOES_Data2017",pattern=filestrACM),dir(path="GOES_Data2017",pattern=paste("s",year,day,hrs[q],sep="")))
     ACM.files <- c(ACM.files,newFiles)
   }
-  #print(ACM.files)
+  print(ACM.files)
   
   if(!dir.exists((paste("GOES_Data2017/",dir(path="GOES_Data2017",pattern=filestrACM),sep="")))){
     if(length(ACM.files>1)){
@@ -207,8 +208,8 @@ createNDVI_GOES_LeftoverMAIN <- function(day,siteData,orbitVersion,year,TZ){
 #siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[c(8,11,16,17,18,19,20),]#[c(2,3,4),]
 #siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[c(1,2,3,4,5),]
 #siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[c(6,9,10,15),] ##TZ 6 sites
-siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[c(7,13,14),]##TZ 7 sites
-#siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[c(12),] ##TZ 8
+#siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[c(7,13,14),]##TZ 7 sites
+siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[c(12),] ##TZ 8
 TZ <- as.numeric(siteData[1,6])
 for(s in 1:nrow(siteData)){
   siteName <- as.character(siteData[s,1])
@@ -219,9 +220,9 @@ print("Done creating missing day files")
 #all.days <- c(seq(321,333,1),seq(348,365,1))
 all.days <- c(seq(1,333,1),seq(348,365,1))
 #year <- 2017
-output <- 
-foreach (d = 1:length(all.days)) %dopar% {
-  #for(d in 1:length(all.days)){
+#output <- 
+#foreach (d = 1:length(all.days)) %dopar% {
+  for(d in 1:length(all.days)){
   print(paste("Starting Day:",all.days[d],sep=" "))
   iseq <- numeric()
   if(all.days[d]<182){
