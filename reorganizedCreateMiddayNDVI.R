@@ -168,10 +168,10 @@ createNDVI_GOES_LeftoverMAIN <- function(day,siteData,orbitVersion,year,TZ){
   print(filestrACM)
   ACM.files <- character()
   for(q in 1:length(hrs)){
-    if(hrs[q]<10){
+    if(as.numeric(hrs[q])<10){
       hrs[q] <- paste("0",hrs[q],sep="")
     }
-    else if(hrs[q]>23){
+    else if(as.numeric(hrs[q])>23){
       hrs[q] <- paste("0",as.character((hrs[q]-24)),sep="")
     }
     print(c("hrs[q]",hrs[q]))
