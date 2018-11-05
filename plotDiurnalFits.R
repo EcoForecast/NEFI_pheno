@@ -18,7 +18,7 @@ diurnalExp <- function(a,c,k,xseq){
   return(c(left,right))
 }
 
-outputFileName <- paste(siteName,"ALL_DiurnalFits.pdf",sep="")
+outputFileName <- "ALL_DiurnalFits.pdf"
 pdf(file=outputFileName,width=45,height=40)
 par(mfrow=c(5,5))
 xseq <- seq(0,25,0.1)
