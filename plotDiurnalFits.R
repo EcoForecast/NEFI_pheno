@@ -19,17 +19,22 @@ diurnalExp <- function(a,c,k,xseq){
   return(c(left,right))
 }
 
-siteName <- "russellSage"
-diurnalFiles <- dir(path="dailyNDVI_GOES",pattern="varBurn2.RData")
+siteName <- "Coweeta"
+#siteName <- "howland"
+#diurnalFiles <- intersect(dir(path="dailyNDVI_GOES",pattern="varBurn2.RData"),dir(path="dailyNDVI_GOES",pattern=siteName))
+diurnalFiles <- intersect(dir(pattern="varBurn2.RData"),dir(pattern=siteName))
 xseq <- seq(0,25,0.1)
 #i=1
 outputFileName <- paste(siteName,"_DiurnalFits_a.pdf",sep="")
 pdf(file=outputFileName,width=45,height=40)
 par(mfrow=c(5,5))
 for(i in 1:length(diurnalFiles)){
-  load(paste("dailyNDVI_GOES/",diurnalFiles[i],sep=""))
-  dy <- substr(diurnalFiles[i],13,15)
+  #load(paste("dailyNDVI_GOES/",diurnalFiles[i],sep=""))
+  load(diurnalFiles[i])
+  dy <- strsplit(diurnalFiles[i],"_")[[1]][2]
   print(diurnalFiles[i])
+  print(dy)
+  print(as.numeric(dy))
   if(as.numeric(dy)<182){
     yr <- "2018"
   }
@@ -38,7 +43,7 @@ for(i in 1:length(diurnalFiles)){
   }
   dat <- read.csv(paste("dailyNDVI_GOES/GOES_Diurnal_",siteName,"_",yr,dy,".csv",sep=""),header=FALSE)
   if(typeof(var.burn)==typeof(FALSE)){
-    print(Paste(diurnalFiles[i], " did not converge",sep=""))
+    print(paste(diurnalFiles[i], " did not converge",sep=""))
     plot(as.numeric(dat[3,]),as.numeric(dat[2,]),main=paste("Didn't",diurnalFiles[i],sep=" "),xlab="Time",ylab="NDVI",ylim=c(0,1),xlim=c(0,25))
   }
   else{
