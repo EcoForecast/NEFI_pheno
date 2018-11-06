@@ -23,7 +23,8 @@ outputFileName <- "ALL_DiurnalFits.pdf"
 xseq <- seq(0,25,0.1)
 siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)
 #iseq <- c(seq(1,6),seq(8,11),seq(15,20))
-iseq <- c(seq(4,6),seq(8,11),seq(15,20))
+#iseq <- c(seq(4,6),seq(8,11),seq(15,20))
+iseq <- seq(16,20)
 for(s in iseq){
   siteName <- as.character(siteData[s,1])
   outputFileName <- paste(siteName,"_ALL_DiurnalFits.pdf",sep="")
@@ -48,9 +49,10 @@ for(s in iseq){
       dat <- read.csv(paste("dailyNDVI_GOES/GOES_Diurnal_",siteName,"_",yr,dy,".csv",sep=""),header=FALSE)
     }
     else{
-      dat <- matrix(ncol=5,nrow=2)
+      dat <- matrix(ncol=5,nrow=3)
       dat[1,] <- c(5,6,7,8,9)
       dat[2,] <- c(NA,NA,NA,NA,NA)
+      dat[3,] <- c(5,6,7,8,9)
     }
     if(typeof(var.burn)==typeof(FALSE)){
       print(paste(diurnalFiles[i], " did not converge",sep=""))
