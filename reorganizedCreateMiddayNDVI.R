@@ -154,7 +154,7 @@ createNDVI_GOES_LeftoverMAIN <- function(day,siteData,orbitVersion,year,TZ){
   #print("Inside Main")
   ##hours for leftover calculations
   print(TZ)
-  hrs <- as.character(seq(10+as.numeric(TZ)),(14+as.numeric(TZ)),1)
+  hrs <- as.character(seq(10+as.numeric(TZ),(13+as.numeric(TZ)),1))
   print(hrs)
   if(as.numeric(day)<10){
     day <- paste("00",as.character(day),sep="")
