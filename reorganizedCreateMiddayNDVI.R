@@ -154,7 +154,7 @@ createNDVI_GOES_LeftoverMAIN <- function(day,siteData,orbitVersion,year,TZ){
   #print("Inside Main")
   ##hours for leftover calculations
   print(TZ)
-  hrs <- as.character(seq(10+as.numeric(TZ)),seq(14+as.numeric(TZ)),1)
+  hrs <- as.character(seq(10+as.numeric(TZ)),(14+as.numeric(TZ)),1)
   print(hrs)
   if(as.numeric(day)<10){
     day <- paste("00",as.character(day),sep="")
@@ -175,6 +175,16 @@ createNDVI_GOES_LeftoverMAIN <- function(day,siteData,orbitVersion,year,TZ){
     }
     else if(as.numeric(hrs[q])>23){
       hrs[q] <- paste("0",as.character((hrs[q]-24)),sep="")
+      day <- as.numeric(day)+1
+      if(as.numeric(day)<10){
+        day <- paste("00",as.character(day),sep="")
+      }
+      else if(as.numeric(day)<100){
+        day <- paste("0",as.character(day),sep="")
+      }
+      else{
+        day <- as.character(day)
+      }
     }
     print(c("hrs[q]",hrs[q]))
     newFiles <- intersect(dir(path="GOES_Data2017",pattern=filestrACM),dir(path="GOES_Data2017",pattern=paste("s",year,day,hrs[q],sep="")))
