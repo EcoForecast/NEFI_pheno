@@ -51,9 +51,11 @@ createBayesModel.DB_Avg <- function(dataSource="GOES.NDVI",siteName="",URL="",ni
   # }
   if(dataSource=="GOES.NDVI"){
     data = GOES_data(siteName,startDay = startDay,endDay = endDay,lat=lat,long=long,TZ=TZ,window=TRUE)
-    inits.mu <- createInits(data=data,PFT="DB")
+    #inits.mu <- createInits(data=data,PFT="DB")
     for(i in 1:(nchain)){
-      inits[[i]] <- list(TranS=rnorm(1,480,10),bS=rnorm(1,-0.09,0.05),TranF=rnorm(1,280,10),bF=rnorm(1,0.11,0.05),c=rnorm(1,inits.mu$c,0.02),d=rnorm(1,inits.mu$d,0.001),k=rnorm(1,365,10))
+      #inits[[i]] <- list(TranS=rnorm(1,480,10),bS=rnorm(1,-0.09,0.05),TranF=rnorm(1,280,10),bF=rnorm(1,0.11,0.05),c=rnorm(1,inits.mu$c,0.02),d=rnorm(1,inits.mu$d,0.001),k=rnorm(1,365,10))
+      inits[[i]] <- list(TranS=rnorm(1,480,10),bS=rnorm(1,-0.09,0.05),TranF=rnorm(1,280,10),bF=rnorm(1,0.11,0.05),c=rnorm(1,0.4,0.02),d=rnorm(1,0.3,0.02),k=rnorm(1,365,10))
+
     }
     data$mean.c <- 0.4
     data$p.c <- 1/(0.2**2)
