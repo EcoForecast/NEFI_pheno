@@ -18,7 +18,7 @@ registerDoParallel(cores=n.cores)
 siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)
 iseq <- c(seq(1,6),seq(8,11),15,seq(17,20))
 print(iseq)
-
+print(dim(siteData))
 foreach(s = iseq) %dopar% {
   #for(s in iseq){
   siteName <- as.numeric(siteData[s,1])
