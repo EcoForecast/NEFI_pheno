@@ -28,18 +28,17 @@ startDay <- 182
 endDay <- 181+365
 siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)
 #iseq <- c(18)
-iseq <- c(seq(1,6),8,10,11,seq(15,20))
+iseq <- c(seq(1,6),seq(8,11),seq(15,20))
 foreach(i = iseq) %dopar% {
   siteName <- as.character(siteData[i,1])
   print(siteName)
   TZ <- as.numeric(siteData[i,6])
   lat <- as.numeric(siteData[i,2])
   long <- as.numeric(siteData[i,3])
-  outFileName <- paste(siteName,"_Midday2_varBurn.RData",sep="")
+  outFileName <- paste(siteName,"_Midday_varBurn2.RData",sep="")
   if(!file.exists(outFileName)){
     j.model <- createBayesModel.DB_Avg(siteName=siteName,startDay = startDay,endDay=endDay,lat=lat,long=long,TZ=TZ)
     var.Burn <- runMCMC_Model(j.model = j.model, variableNames = c("TranS","bS","TranF","bF","d","c","k","prec"),baseNum = 20000,iterSize = 5000)
-    outFileName <- paste(siteName,"_Midday2_varBurn.RData",sep="")
     save(var.Burn,file=outFileName)
   }
 }
