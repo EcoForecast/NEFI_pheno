@@ -25,7 +25,8 @@ xseq <- seq(0,25,0.1)
 siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)
 iseq <- c(seq(1,6),seq(8,11),seq(15,20))
 for(s in iseq){
-  
+  outputFileName <- paste(siteName,"_ALL_DiurnalFits.pdf",sep="")
+  pdf(file=outputFileName,width=45,height=40)
   siteName <- as.character(siteData[s,1])
   diurnalFiles <- intersect(dir(pattern="varBurn2.RData"),dir(pattern=siteName))
   
@@ -41,7 +42,15 @@ for(s in iseq){
     else{
       yr <- "2017"
     }
-    dat <- read.csv(paste("dailyNDVI_GOES/GOES_Diurnal_",siteName,"_",yr,dy,".csv",sep=""),header=FALSE)
+    dayDataFile <- paste("dailyNDVI_GOES/GOES_Diurnal_",siteName,"_",yr,dy,".csv",sep="")
+    if(file.exists(dayDataFile)){
+      dat <- read.csv(paste("dailyNDVI_GOES/GOES_Diurnal_",siteName,"_",yr,dy,".csv",sep=""),header=FALSE)
+    }
+    else{
+      dat <- matrix(ncol=5,nrow=2)
+      dat[1,] <- c(5,6,7,8,9)
+      dat[2,] <- c(NA,NA,NA,NA,NA)
+    }
     if(typeof(var.burn)==typeof(FALSE)){
       print(paste(diurnalFiles[i], " did not converge",sep=""))
       plot(as.numeric(dat[3,]),as.numeric(dat[2,]),main=paste("Didn't",diurnalFiles[i],sep=" "),xlab="Time",ylab="NDVI",ylim=c(0,1),xlim=c(0,25))
@@ -67,5 +76,5 @@ for(s in iseq){
       abline(v=12,col="red")
     }
   }
+  dev.off()
 }
-dev.off()
