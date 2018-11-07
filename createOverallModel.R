@@ -44,10 +44,12 @@ for(s in iseq){
         print(dayDataFile)
         dayData <- read.csv(paste("dailyNDVI_GOES/",dayDataFile,sep=""),header=FALSE)
         ct <- length(dayData[2,][!is.na(dayData[2,])])
-        c.vals <- c(c.vals,c)
-        prec.vals <- c(prec.vals,prec)
-        counts <- c(counts,ct)
-        days <- c(days,dy)
+        if(ct>1){
+          c.vals <- c(c.vals,c)
+          prec.vals <- c(prec.vals,prec)
+          counts <- c(counts,ct)
+          days <- c(days,dy)
+        }
       }
     }
     data <- list()
