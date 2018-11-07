@@ -10,7 +10,7 @@ library("runjags")
 library(doParallel)
 
 #detect cores.
-n.cores <- 4
+n.cores <- 6
 
 #register the cores.
 registerDoParallel(cores=n.cores)
