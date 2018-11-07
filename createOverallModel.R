@@ -38,7 +38,8 @@ foreach(s = iseq) %dopar% {
         out.mat <- as.matrix(var.burn)
         print(colnames(out.mat))
         c <- mean(out.mat[,2])
-        prec <- as.numeric(quantile(out.mat[,2],0.975))-as.numeric(quantile(out.mat[,2],0.025))
+        sd <- (as.numeric(quantile(out.mat[,2],0.975))-as.numeric(quantile(out.mat[,2],0.025)))/(2*1.96)
+        prec <- 1/(sd**2)
         dy <- strsplit(diurnalFits[i],"_")[[1]][2]
         dayDataFile <- intersect(dir(path="dailyNDVI_GOES",pattern=paste(dy,".csv",sep="")),dir(path="dailyNDVI_GOES",pattern=siteName))
         print(dayDataFile)
