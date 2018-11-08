@@ -24,7 +24,7 @@ xseq <- seq(0,25,0.1)
 siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)
 #iseq <- c(seq(1,6),seq(8,11),seq(15,20))
 #iseq <- c(seq(4,6),seq(8,11),seq(15,20))
-iseq <- seq(16,20)
+iseq <- seq(15,20)
 for(s in iseq){
   siteName <- as.character(siteData[s,1])
   outputFileName <- paste(siteName,"_ALL_DiurnalFits2.pdf",sep="")
