@@ -35,11 +35,10 @@ createBayesModel.DB_Overall <- function(data,niter=100000) {
   data$mean.bS <- -0.10
   data$mean.k <- 365
   data$p.k <- 1/(30**2)
-  print(data$n)
-  print(data$x)
-  print(data$y)
-  print(data$obs.prec)
-  print(data$size)
+  #print(data$n)
+  #print(data$x)
+  #print(data$y)
+  #print(data$obs.prec)
 
   DB_model <- "
   model{
@@ -59,8 +58,7 @@ createBayesModel.DB_Overall <- function(data,niter=100000) {
   mu[i] <- ifelse(x[i]>k,muS[i],muF[i])   #change point process model
 
   y[i] ~ dnorm(mu[i],prec)
-  w[i] <- obs.prec[i] * size[i]
-  yobs[i] ~ dnorm(y[i],w[i])
+  yobs[i] ~ dnorm(y[i],obs.prec[i])
   }
   }
   "
