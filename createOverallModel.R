@@ -39,8 +39,7 @@ for(s in iseq){
         out.mat <- as.matrix(var.burn)
         print(colnames(out.mat))
         c <- mean(out.mat[,2])
-        sd <- (as.numeric(quantile(out.mat[,2],0.975))-as.numeric(quantile(out.mat[,2],0.025)))/(2*1.96)
-        prec <- 1/(sd**2)
+        prec <- 1/var(out.mat[,2])
         dy <- strsplit(diurnalFits[i],"_")[[1]][2]
         dayDataFile <- intersect(dir(path="dailyNDVI_GOES",pattern=paste(dy,".csv",sep="")),dir(path="dailyNDVI_GOES",pattern=siteName))
         print(dayDataFile)
@@ -64,7 +63,7 @@ for(s in iseq){
     data$y <- as.numeric(c.vals)
     data$obs.prec <- as.numeric(prec.vals)
     data$n <- length(data$x)
-    data$size <- as.numeric(counts)
+    #data$size <- as.numeric(counts)
     print(dim(data$x))
     print(dim(data$y))
     print(data$x)
