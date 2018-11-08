@@ -27,7 +27,7 @@ siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)
 iseq <- seq(16,20)
 for(s in iseq){
   siteName <- as.character(siteData[s,1])
-  outputFileName <- paste(siteName,"_ALL_DiurnalFits.pdf",sep="")
+  outputFileName <- paste(siteName,"_ALL_DiurnalFits2.pdf",sep="")
   pdf(file=outputFileName,width=45,height=40)
   par(mfrow=c(5,5))
   diurnalFiles <- intersect(dir(pattern="varBurn2.RData"),dir(pattern=siteName))
@@ -56,7 +56,7 @@ for(s in iseq){
     }
     if(typeof(var.burn)==typeof(FALSE)){
       print(paste(diurnalFiles[i], " did not converge",sep=""))
-      plot(as.numeric(dat[3,]),as.numeric(dat[2,]),main=paste("Didn't",diurnalFiles[i],sep=" "),xlab="Time",ylab="NDVI",ylim=c(0,1),xlim=c(0,25))
+      #plot(as.numeric(dat[3,]),as.numeric(dat[2,]),main=paste("Didn't",diurnalFiles[i],sep=" "),xlab="Time",ylab="NDVI",ylim=c(0,1),xlim=c(0,25))
     }
     else{
       out.mat <- as.matrix(var.burn)
@@ -72,10 +72,10 @@ for(s in iseq){
       }
       ci <- apply(ycred,2,quantile,c(0.025,0.5, 0.975), na.rm= TRUE)
       #plot(x=list(),y=list(),main=diurnalFiles[i],xlab="Time",ylab="NDVI",ylim=c(0,1),xlim=c(0,25))
-      plot(as.numeric(dat[3,]),as.numeric(dat[2,]),main=diurnalFiles[i],ylim=c(0,1),xlim=c(0,25))
+      plot(as.numeric(dat[3,]),as.numeric(dat[2,]),main=diurnalFiles[i],xlim=c(0,25),pch=20,cex=2)
       ciEnvelope(xseq,ci[1,],ci[3,],col="lightBlue")
       lines(xseq,ci[2,],col="black")
-      points(as.numeric(dat[3,]),as.numeric(dat[2,]))
+      points(as.numeric(dat[3,]),as.numeric(dat[2,]),pch=20,cex=2)
       abline(v=12,col="red")
     }
   }
