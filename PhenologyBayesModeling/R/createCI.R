@@ -27,7 +27,12 @@ createCI <- function(PFT,var.mat,xseq,doRescale=TRUE){
     r <- var.mat[,7]
 
     for(g in 1:10000){
+      if(doRescale){
       Ey <- rescale(c=c[g],d=d[g],yseq=shrublandYvals(Tran=Tran[g],b=b[g],c=c[g],d=d[g],k=k[g],r=r[g],xseq=xseq))
+      }
+      else{
+        Ey <- shrublandYvals(Tran=Tran[g],b=b[g],c=c[g],d=d[g],k=k[g],r=r[g],xseq=xseq)
+      }
       ycred[g,] <- Ey
     }
   }
