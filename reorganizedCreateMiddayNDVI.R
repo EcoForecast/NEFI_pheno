@@ -243,14 +243,14 @@ for(s in 1:nrow(siteData)){
 print("Done creating missing day files")
 #all.days <- c(seq(321,333,1),seq(348,365,1))
 #all.days <- c(seq(1,333,1),seq(348,365,1))
-all.days <- c(153,159,165,171,177,231,237,243,249)
+all.days <- seq(110,181)
 #year <- 2017
 #output <- 
 #foreach (d = 1:length(all.days)) %dopar% {
 for(d in 1:length(all.days)){
   print(paste("Starting Day:",all.days[d],sep=" "))
   iseq <- numeric()
-  if(all.days[d]<182){
+  if(all.days[d]<110){#######Need to change for DB
     year <- 2018
   }
   else{
@@ -264,7 +264,7 @@ for(d in 1:length(all.days)){
     }
   }
   print(iseq)
-  if(all.days[d]<334 && all.days[d]>181){
+  if(all.days[d]<334 && all.days[d]>109){##Need to change for DB
     orbitVersion <- "OLD"
   }
   else{
