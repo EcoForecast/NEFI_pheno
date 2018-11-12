@@ -9,7 +9,7 @@ library("runjags")
 library(doParallel)
 
 #detect cores.
-n.cores <- 4
+n.cores <- 3
 
 #register the cores.
 registerDoParallel(cores=n.cores)
@@ -24,12 +24,13 @@ ciEnvelope <- function(x,ylo,yhi,...){
                                       ylo[1])), border = NA,...) 
 }
 
-startDay <- 182
-endDay <- 181+365
+#startDay <- 182
+#endDay <- 181+365
 siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)
 #iseq <- c(18)
 i <- 12
-iseq <- c(seq(1,6),seq(8,11),seq(15,20))
+#iseq <- c(seq(1,6),seq(8,11),seq(15,20))
+iseq <- c(12,13,14)
 output <- 
 foreach(i = iseq) %dopar% {
   siteName <- as.character(siteData[i,1])
