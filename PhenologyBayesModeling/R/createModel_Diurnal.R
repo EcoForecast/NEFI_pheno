@@ -6,11 +6,11 @@ library("MODISTools")
 createBayesModel.Diurnal <- function(siteName,data){
   print("entered model")
   nchain <-  5
-  # inits <- list()
-  #
-  # for(i in 1:5){
-  #   inits[[i]] <- list(a=rnorm(1,0.0007,0.0001),c=rnorm(1,0.75,0.01),k=rnorm(1,12.1,0.2))
-  # }
+  inits <- list()
+
+  for(i in 1:5){
+    inits[[i]] <- list(a=rnorm(1,0.004,0.0001),c=rnorm(1,0.2,0.01),k=rnorm(1,12,0.2))
+  }
   #data$mean.c <- 0.75
   #data$p.c <- 1/(0.05**2)
   data$alpha.c <- 2
@@ -61,6 +61,7 @@ createBayesModel.Diurnal <- function(siteName,data){
 
   j.model   <- jags.model(file = textConnection(DB_model_MM),
                           data = data,
+                          inits = inits,
                           n.chains=nchain)
   return(j.model)
 
