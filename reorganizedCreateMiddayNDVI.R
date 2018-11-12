@@ -7,10 +7,10 @@ library("PhenologyBayesModeling")
 library(doParallel)
 
 #detect cores.
-n.cores <- 3
+n.cores <- 2
 
 #register the cores.
-registerDoParallel(cores=n.cores)
+#registerDoParallel(cores=n.cores)
 
 ##Can only do for same TZ
 
@@ -242,11 +242,12 @@ for(s in 1:nrow(siteData)){
 }
 print("Done creating missing day files")
 #all.days <- c(seq(321,333,1),seq(348,365,1))
-all.days <- c(seq(1,333,1),seq(348,365,1))
+#all.days <- c(seq(1,333,1),seq(348,365,1))
+all.days <- c(153,159,165,171,177,231,237,243,249)
 #year <- 2017
-output <- 
-foreach (d = 1:length(all.days)) %dopar% {
-  #for(d in 1:length(all.days)){
+#output <- 
+#foreach (d = 1:length(all.days)) %dopar% {
+for(d in 1:length(all.days)){
   print(paste("Starting Day:",all.days[d],sep=" "))
   iseq <- numeric()
   if(all.days[d]<182){
