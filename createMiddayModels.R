@@ -9,20 +9,10 @@ library("runjags")
 library(doParallel)
 
 #detect cores.
-n.cores <- 3
+n.cores <- 4
 
 #register the cores.
 registerDoParallel(cores=n.cores)
-
-##' Create the credible interval envelope for plotting
-##' 
-##' @param x time range
-##' @param ylo the bottom credible interval values
-##' @param yhi the top credible interval values
-ciEnvelope <- function(x,ylo,yhi,...){
-  polygon(cbind(c(x, rev(x), x[1]), c(ylo, rev(yhi),
-                                      ylo[1])), border = NA,...) 
-}
 
 #startDay <- 182
 #endDay <- 181+365
@@ -30,7 +20,7 @@ siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)
 #iseq <- c(18)
 i <- 12
 #iseq <- c(seq(1,6),seq(8,11),seq(15,20))
-iseq <- c(12,13,14)
+iseq <- c(7,12,13,14)
 output <- 
 foreach(i = iseq) %dopar% {
   siteName <- as.character(siteData[i,1])
