@@ -80,22 +80,22 @@ createBayesModel.SH_Avg <- function(dataSource,siteName="",URL="",startDay,endDa
   }
   else if(dataSource=="GOES.NDVI"){
     data = GOES_data(siteName,startDay = startDay,endDay = endDay,lat=lat,long=long,TZ=TZ,window=TRUE)
-    # inits.mu <- createInits(data=data,PFT="SH")
-    # if(siteName=="luckyHills"){
-    #   for(i in 1:nchain){
-    #     inits[[i]] <- list(Tran=rnorm(1,204,3),b=rnorm(1,-0.156,0.02),c=rnorm(1,inits.mu$c,0.02),d=rnorm(1,inits.mu$d,0.02),r=rnorm(1,-0.0156,0.002),k=rnorm(1,211,5))
-    #   }
-    # }
-    # else if(siteName=="burns"){
-    #   for(i in 1:nchain){
-    #     inits[[i]] <- list(Tran=rnorm(1,150,1),b=rnorm(1,-0.14,0.01),c=rnorm(1,inits.mu$c,0.02),d=rnorm(1,inits.mu$d,0.001),r=rnorm(1,-0.02,0.002),k=rnorm(1,inits.mu$k,5))
-    #   }
-    # }
-    # else{
-    #   for(i in 1:nchain){
-    #     inits[[i]] <- list(Tran=rnorm(1,220,3),b=rnorm(1,-0.13,0.02),c=rnorm(1,inits.mu$c,0.01),d=rnorm(1,inits.mu$d,0.02),r=rnorm(1,-0.03,0.002),k=rnorm(1,240,5))
-    #   }
-    # }
+    inits.mu <- createInits(data=data,PFT="SH")
+    if(siteName=="luckyHills"){
+      for(i in 1:nchain){
+        inits[[i]] <- list(Tran=rnorm(1,204,3),b=rnorm(1,-0.156,0.02),c=rnorm(1,inits.mu$c,0.02),d=rnorm(1,inits.mu$d,0.02),r=rnorm(1,-0.0156,0.002),k=rnorm(1,211,5))
+      }
+    }
+    else if(siteName=="burns"){
+      for(i in 1:nchain){
+        inits[[i]] <- list(Tran=rnorm(1,114,1),b=rnorm(1,-0.11,0.01),c=rnorm(1,0.12,0.02),d=rnorm(1,0.18,0.001),r=rnorm(1,-0.018,0.002),k=rnorm(1,150,5))
+      }
+    }
+    else{
+      for(i in 1:nchain){
+        inits[[i]] <- list(Tran=rnorm(1,220,3),b=rnorm(1,-0.13,0.02),c=rnorm(1,inits.mu$c,0.01),d=rnorm(1,inits.mu$d,0.02),r=rnorm(1,-0.03,0.002),k=rnorm(1,240,5))
+      }
+    }
     data$mean.c <- 0.25
     data$mean.d <- 0.15
   }
@@ -139,6 +139,7 @@ createBayesModel.SH_Avg <- function(dataSource,siteName="",URL="",startDay,endDa
 
   j.model   <- jags.model(file = textConnection(SH_model),
                           data = data,
+                          inits = inits,
                           n.chains = nchain)
   return(j.model)
 }
