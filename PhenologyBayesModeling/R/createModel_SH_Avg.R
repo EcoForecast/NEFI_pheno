@@ -67,7 +67,7 @@ createBayesModel.SH_Avg <- function(dataSource,siteName="",URL="",startDay,endDa
     }
     else if(siteName=="burns"){
       for(i in 1:nchain){
-        inits[[i]] <- list(Tran=rnorm(1,150,10),b=rnorm(1,-0.11,0.05),c=rnorm(1,inits.mu$c,0.02),d=rnorm(1,inits.mu$d,0.02),r=rnorm(1,-0.02,0.002),k=rnorm(1,inits.mu$k,5))
+        inits[[i]] <- list(Tran=rnorm(1,114,1),b=rnorm(1,-0.11,0.005),c=rnorm(1,0.2,0.002),d=rnorm(1,0.1,0.002),r=rnorm(1,-0.01,0.0002),k=rnorm(1,150,5))
       }
     }
     else{
