@@ -170,6 +170,10 @@ createNDVI_GOES_LeftoverMAIN <- function(day,siteData,orbitVersion,year,TZ){
   for(q in 1:length(hrs)){
     if(as.numeric(hrs[q])>23){
       day <- as.character(as.numeric(baseDay) + 1)
+      if(day <- 366){
+        day <- 1
+        year <- 2018
+      }
       hrs[q] <- as.character(as.numeric(hrs[q]) - 24)
       if(as.numeric(day)<10){
         day <- paste("00",as.character(as.numeric(day)),sep="")
@@ -225,13 +229,14 @@ createNDVI_GOES_LeftoverMAIN <- function(day,siteData,orbitVersion,year,TZ){
 #########
 
 ##For TZ == 5 
-#siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[c(1,2,3,4,5,8,11,16,17,18,19,20),] ##TZ 5 sites
+siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[c(1,2,3,4,5,8,11,16,17,18,19,20),] ##TZ 5 sites
 #siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[c(8,11,16,17,18,19,20),]#[c(2,3,4),]
 #siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[c(1,2,3,4,5),]
 #siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[c(6,9,10,15),] ##TZ 6 sites
-siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[c(7,13,14),]##TZ 7 sites
+#siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[c(7,13,14),]##TZ 7 sites
 #siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)[c(12),]
 TZ <- as.numeric(siteData[1,6])
+PFT <- as.character(siteData[1,5])
 for(s in 1:nrow(siteData)){
   siteName <- as.character(siteData[s,1])
   #print(siteName)
@@ -239,19 +244,30 @@ for(s in 1:nrow(siteData)){
 }
 print("Done creating missing day files")
 #all.days <- c(seq(321,333,1),seq(348,365,1))
-all.days <- c(seq(1,333,1),seq(348,365,1))
+#all.days <- c(seq(1,333,1),seq(348,365,1))
+all.days <- c(365)
 #all.days <- c(seq(98,120,1),seq(221,232),seq(360,365,1))
 #year <- 2017
-output <-
-foreach (d = 1:length(all.days)) %dopar% {
-#for(d in 1:length(all.days)){
+#output <-
+#foreach (d = 1:length(all.days)) %dopar% {
+for(d in 1:length(all.days)){
   print(paste("Starting Day:",all.days[d],sep=" "))
   iseq <- numeric()
-  if(as.numeric(all.days[d])<182){
-    year <- 2018
+  if(PFT=="DB"){
+    if(as.numeric(all.days[d])<182){
+      year <- 2018
+    }
+    else{
+      year <- 2017
+    }
   }
-  else{
-    year <- 2017
+  else if(PFT =="SH"){
+    if(as.numeric(all.days[d])<110){
+      year <- 2018
+    }
+    else{
+      year <- 2017
+    }
   }
   for(s in 1:nrow(siteData)){
     siteName <- as.character(siteData[s,1])
@@ -261,11 +277,21 @@ foreach (d = 1:length(all.days)) %dopar% {
     }
   }
   print(iseq)
-  if(all.days[d]<334 && all.days[d]>181){
-    orbitVersion <- "OLD"
+  if(PFT=="DB"){
+    if(all.days[d]<334 && all.days[d]>181){
+      orbitVersion <- "OLD"
+    }
+    else{
+      orbitVersion <- "NEW"
+    }
   }
-  else{
-    orbitVersion <- "NEW"
+  else if(PFT=="SH"){
+    if(all.days[d]<334 && all.days[d]>110){
+      orbitVersion <- "OLD"
+    }
+    else{
+      orbitVersion <- "NEW"
+    }
   }
   if(length(iseq)>0){
     createNDVI_GOES_LeftoverMAIN(day=all.days[d],siteData=siteData[iseq,],orbitVersion = orbitVersion,year = year,TZ = TZ)
