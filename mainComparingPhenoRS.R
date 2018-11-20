@@ -27,7 +27,7 @@ n.cores <- 6
 registerDoParallel(cores=n.cores)
 #i <- 14
 output <- 
-foreach(i=iseq) %dopar% {
+foreach(i=1:nrow(siteData)) %dopar% {
 # for(i in 1:1){
   siteName <- as.character(siteData$siteName[i])
   print(siteName)
