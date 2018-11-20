@@ -20,12 +20,13 @@ SH.vars <- c("Tran","b","c","d","k","r","prec")
 
 #detect cores.
 #n.cores <- detectCores()
-n.cores <- 4
+n.cores <- 3
 
 
 #register the cores.
 registerDoParallel(cores=n.cores)
 i <- 15
+iseq <- c(12,13,14)
 output <- 
 foreach(i=iseq) %dopar% {
 # for(i in 1:1){
