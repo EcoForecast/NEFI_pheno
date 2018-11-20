@@ -70,7 +70,7 @@ foreach(i=1:nrow(siteData)) %dopar% {
   }
   else if(PFT=="SH"){
     startDay <- 110
-    endDay <- 474
+    endDay <-90+365
     xseq <- seq(startDay,endDay,1)
     SH.vars <- c("Tran","b","c","d","k","r","prec")
     # fileName <- paste(siteName,"_PC_varBurn.RData",sep="")
