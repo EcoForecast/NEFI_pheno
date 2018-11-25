@@ -4,7 +4,6 @@ install.packages("/projectnb/dietzelab/kiwheel/NEFI_pheno/PhenologyBayesModeling
 library("PhenologyBayesModeling")
 library("rjags")
 library("runjags")
-library("MODISTools")
 library("ncdf4")
 library(plyr)
 library(doParallel)
