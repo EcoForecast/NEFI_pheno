@@ -24,7 +24,7 @@ print(dim(siteData))
 for(s in iseq){
   print("inside foreeach")
   siteName <- as.character(siteData[s,1])
-  diurnalFits <- intersect(dir(pattern="varBurn2.RData"),dir(pattern=siteName))
+  diurnalFits <- intersect(dir(pattern="varBurn4.RData"),dir(pattern=siteName))
   c.vals <- numeric()
   prec.vals <- numeric()
   days <- numeric()
@@ -42,7 +42,7 @@ for(s in iseq){
         prec <- 1/var(out.mat[,2])
         med <- median(out.mat[,2])
         dy <- strsplit(diurnalFits[i],"_")[[1]][2]
-        dayDataFile <- intersect(dir(path="dailyNDVI_GOES",pattern=paste(dy,".csv",sep="")),dir(path="dailyNDVI_GOES",pattern=siteName))
+        dayDataFile <- intersect(intersect(dir(path="dailyNDVI_GOES",pattern=paste(dy,".csv",sep="")),dir(path="dailyNDVI_GOES",pattern=siteName)),dir(path="dailyNDVI_GOES",pattern="GOES_diurnal"))
         print(dayDataFile)
         dayData <- read.csv(paste("dailyNDVI_GOES/",dayDataFile,sep=""),header=FALSE)
         ct <- length(dayData[2,][!is.na(dayData[2,])])
