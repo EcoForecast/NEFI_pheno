@@ -16,7 +16,8 @@ n.cores <- 6
 #registerDoParallel(cores=n.cores)
 
 siteData <- read.csv("GOES_Paper_Sites.csv",header=TRUE)
-iseq <- c(seq(1,6),seq(8,11),15,seq(17,20))
+#iseq <- c(seq(1,3),5,6,seq(8,11),15,seq(17,20))
+iseq <- c(15,seq(17,20))
 print(iseq)
 print(dim(siteData))
 #output <- 

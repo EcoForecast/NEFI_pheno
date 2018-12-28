@@ -29,6 +29,7 @@ registerDoParallel(cores=n.cores)
 i <- 18
 output <- 
 foreach(i=1:nrow(siteData)) %dopar% {
+# for(i in 1:1){
   siteName <- as.character(siteData$siteName[i])
   print(siteName)
   URL <- as.character(siteData$URL[i])
@@ -37,7 +38,7 @@ foreach(i=1:nrow(siteData)) %dopar% {
   lat <- as.character(siteData$Lat[i])
   long <- as.character(siteData$Long[i])
   TZ <- as.character(siteData$TZ[i])
-                      
+#  print(PFT)                    
   if(PFT=="DB"){
     startDay <- 182
     endDay <- 546
