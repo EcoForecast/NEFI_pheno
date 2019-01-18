@@ -6,18 +6,23 @@ library("MODISTools")
 createBayesModel.Diurnal <- function(siteName,data){
   print("entered model")
   nchain <-  5
-  #inits <- list()
-  #init.mus <- createInits(data,"SH")
-  #print(init.mus)
-  # for(i in 1:5){
-  #   inits[[i]] <- list(a=rnorm(1,0.0009,0.0003),c=rnorm(1,mean(sort(data$y,decreasing = TRUE)[1:2]),0.05),k=rnorm(1,12,0.3))
-  # }
+  inits <- list()
+
+  for(i in 1:5){
+    inits[[i]] <- list(a=rnorm(1,0.004,0.0001),c=rnorm(1,0.2,0.01),k=rnorm(1,12,0.2))
+  }
+  #data$y <- data$y+0.2
+  print("Updated")
   #data$mean.c <- 0.75
   #data$p.c <- 1/(0.05**2)
   data$alpha.c <- 2
   data$beta.c <- 1.5
-  data$s1 <- 0.001 #0.7
-  data$s2 <- 0.00001 #0.08
+  #data$min.c <- 0
+  #data$max.c <- 1
+  #data$s1 <- 0.001 #0.7
+  #data$s2 <- 0.00001 #0.08
+  data$s1 <- 14
+  data$s2 <- 0.13
   #data$p.Tran <- 1/(1**2)
   #data$p.b <- 1/(1**2)
   #data$mean.TranL <- 0# 7.5
@@ -39,6 +44,7 @@ createBayesModel.Diurnal <- function(siteName,data){
   #bR ~ dnorm(mean.bR,p.b)
   a ~ dnorm(mean.a,p.a) I(0,)
   c ~ dbeta(alpha.c,beta.c)
+  #c ~ dunif(min.c,max.c)
   k ~ dnorm(mean.k,p.k)
   prec ~ dgamma(s1,s2)
   alp ~ dunif(1,100)
@@ -62,6 +68,7 @@ createBayesModel.Diurnal <- function(siteName,data){
 
   j.model   <- jags.model(file = textConnection(DB_model_MM),
                           data = data,
+                          inits = inits,
                           n.chains=nchain)
   return(j.model)
 

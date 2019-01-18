@@ -1,7 +1,7 @@
 library("rjags")
 library("runjags")
 
-runMCMC_Model <- function(j.model,variableNames,maxIter=1000000000,baseNum=80000,iterSize =40000,maxGBR=10,ID=""){
+runMCMC_Model <- function(j.model,variableNames,maxIter=1000000000,baseNum=80000,iterSize =40000,maxGBR=10,ID="",sampleCutoff=5000){
   var.out   <- coda.samples (model = j.model,
                              variable.names = variableNames,
                              n.iter = baseNum)
@@ -11,7 +11,7 @@ runMCMC_Model <- function(j.model,variableNames,maxIter=1000000000,baseNum=80000
   burnin <- 0
   while(continue & numb<maxIter){
     print(numb)
-    new.out   <- coda.samples (model = j.model,
+    new.out   <- coda.samples(model = j.model,
                                variable.names = variableNames,
                                n.iter = iterSize)
     var.out <- combine.mcmc(mcmc.objects=list(var.out,new.out),collapse.chains = FALSE)
@@ -44,7 +44,7 @@ runMCMC_Model <- function(j.model,variableNames,maxIter=1000000000,baseNum=80000
       #var.burn <- var.out
       effsize <- effectiveSize(var.burn)
       for(i in 1:length(effsize)){
-        if(effsize[i]<5000){
+        if(effsize[i]<sampleCutoff){
           continue = TRUE
         }
       }
