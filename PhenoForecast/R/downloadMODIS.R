@@ -27,7 +27,7 @@ downloadMODIS <- function(startDate,endDate,metric,dataDirectory,lat,long,siteNa
     #print(directory)
     try(mt_subset(product = "MOD13Q1",lat=lat,lon=long,band=paste("250m_16_days_",metric,sep=""),start=(lastDate+1),end=endDate,site_name = paste(siteName,"_",metric,sep=""),out_dir = directory,internal=FALSE),silent=TRUE)
 
-    newFileName <- paste(dataDirectory,siteName,"_",metric,"_MOD13Q1_",lastDate,"_",endDate,".csv",sep="") #File name for new data downloaded
+    newFileName <- paste(dataDirectory,siteName,"_",metric,"_MOD13Q1_",(lastDate+1),"_",endDate,".csv",sep="") #File name for new data downloaded
 
     if(length(files>0)){
       dat <- read.csv(paste(dataDirectory,files[length(files)],sep=""),header=TRUE) ##Reads the old data file
