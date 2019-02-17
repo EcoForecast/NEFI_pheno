@@ -1,37 +1,12 @@
-#!/usr/bin/env Rscript
-
-library("ncdf4")
-library(plyr)
-
-calNDVI <- function(R2,R3){
-  return((R3-R2)/(R3+R2))
-}
-
-createNDVI <- function(day.time){
-  #Function to create a file with NDVI values for a specific day/time
-  #outputs a csv file
-  #day.time needs to be in the format "20171821658"
-  #will need to change this to account for the files being in a different folder
-  filestrC02 <- paste("OR_ABI-L1b-RadC-M3C02_G16_s",day.time,sep="")
-  filestrC03 <- paste("OR_ABI-L1b-RadC-M3C03_G16_s",day.time,sep="")
-  R3 <- ncvar_get(nc_open(dir(pattern=filestrC03)),"Rad")
-  R2 <- ncvar_get(nc_open(dir(pattern=filestrC02)),"Rad") #the full R2 dataset
-  NDVI.vals <- matrix(ncol=3000,nrow=5000)
-  for(i in seq(1,nrow(R2),2)){
-    for(j in seq(1,ncol(R2),2)){
-      R2.val <- mean(R2[i,j],R2[(i+1),j],R2[i,(j+1)],R2[(i+1),(j+1)])
-      R3.val <- R3[(i/2),(j/2)]
-      NDVI.vals[(i/2),(j/2)] <- calNDVI(R2.val,R3.val)
-    }
-    if(i%%500==1){
-      print(i) #done to keep track of progress
-    }
-  }
-  file.output.name <- paste("GOES16_NDVI_",day.time,".csv",sep="")
-  write.table(NDVI.vals,file.output.name,row.names=FALSE,sep=",")
-  return(NDVI.vals)
-}
-
+##' Function to calculate the NDVI when you have a known pixel
+##'
+##' @param day.time The day and time value in the format year,DOY,time (e.g. "20170151200" or "20171821658")
+##' @param ind2 The index for the site in the channel 2 grid
+##' @param ind5 The index for the site in the channel 5 grid
+##' @param dataFolder The data folder where the data is located (e.g. "GOES_Data2017/")
+##' @import ncdf4
+##' @import plyr
+##' @export
 getSpecificNDVI <- function(ind2,ind3,day.time){
   #Function to calculate the NDVI when you have a known pixel
   #print("Entered getSpecificNDVI")

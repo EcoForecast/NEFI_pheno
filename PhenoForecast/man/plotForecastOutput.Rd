@@ -4,7 +4,7 @@
 \alias{plotForecastOutput}
 \title{Function to plot phenology forecast output}
 \usage{
-plotForecastOutput(siteName, forecastType, URL, forecastLength, outBurn)
+plotForecastOutput(siteName, forecastType, URL, forecastLength, outBurn, days)
 }
 \arguments{
 \item{siteName}{The site name to be printed on the graph}

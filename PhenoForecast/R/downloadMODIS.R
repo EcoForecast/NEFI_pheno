@@ -17,17 +17,18 @@ downloadMODIS <- function(startDate,endDate,metric,dataDirectory,lat,long,siteNa
     if(length(files>0)){ #If there is a data file, identify what the last date you have downloaded
       firstDate <- strsplit(files[length(files)],split="_")[[1]][4]
       lastDate <- strsplit(strsplit(files[length(files)],split="_")[[1]][5],split=".c")[[1]][1]
+      #print(lastDate)
     }
     else{
-      lastDate <- (startDate - 1) #If no data files have been downloaded, the last date you have downloaded is your start date - 1
+      lastDate <- (as.Date(startDate) - 1) #If no data files have been downloaded, the last date you have downloaded is your start date - 1
     }
     #print(lastDate)
     print("Downloading MODIS File")
     directory=paste(getwd(),"/",dataDirectory,sep="")
     #print(directory)
     try(mt_subset(product = "MOD13Q1",lat=lat,lon=long,band=paste("250m_16_days_",metric,sep=""),start=(lastDate+1),end=endDate,site_name = paste(siteName,"_",metric,sep=""),out_dir = directory,internal=FALSE),silent=TRUE)
-
-    newFileName <- paste(dataDirectory,siteName,"_",metric,"_MOD13Q1_",(lastDate+1),"_",endDate,".csv",sep="") #File name for new data downloaded
+    #print(lastDate)
+    newFileName <- paste(dataDirectory,siteName,"_",metric,"_MOD13Q1_",(as.Date(lastDate)+1),"_",endDate,".csv",sep="") #File name for new data downloaded
 
     if(length(files>0)){
       dat <- read.csv(paste(dataDirectory,files[length(files)],sep=""),header=TRUE) ##Reads the old data file

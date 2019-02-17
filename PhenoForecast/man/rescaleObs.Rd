@@ -4,12 +4,18 @@
 \alias{rescaleObs}
 \title{Function to rescale phenology measurements to percent canopy cover for that calendar year}
 \usage{
-rescaleObs(time, vals)
+rescaleObs(times, vals, cVals, dVals, partialStart = FALSE)
 }
 \arguments{
-\item{time}{A vector of days (x-values)}
+\item{times}{A vector of days (x-values)}
 
 \item{vals}{A vector of the measurements corresponding for the days (y-values)}
+
+\item{cVals}{The c values for rescaling}
+
+\item{dVals}{The d values for rescaling}
+
+\item{partialStart}{Whether or not there is a partial year of data included (e.g. with random walk)}
 }
 \description{
 Function to rescale phenology measurements to percent canopy cover for that calendar year
