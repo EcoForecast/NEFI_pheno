@@ -1,4 +1,4 @@
-days <- c(seq(1,333),seq(348,365))
+#days <- c(seq(1,333),seq(348,365))
 days <- c(seq(183,365),seq(1,37))
 missingC02 <- character()
 missingC03 <- character()
@@ -27,7 +27,8 @@ for(i in 1:length(days)){
   fileStr <- paste("s",year,days[i],sep="")
   C02.files <- intersect(dir(path="GOES_Data2017",pattern=fileStr),dir(path="GOES_Data2017",pattern="M3C02"))
   C03.files <- intersect(dir(path="GOES_Data2017",pattern=fileStr),dir(path="GOES_Data2017",pattern="M3C03"))
-  ACM.files <- intersect(dir(path="GOES_Data2017",pattern=fileStr),dir(path="GOES_Data2017",pattern="M3C02"))
+  C05.files <- intersect(dir(path="GOES_Data2017",pattern=fileStr),dir(path="GOES_Data2017",pattern="M3C05"))
+  ACM.files <- intersect(dir(path="GOES_Data2017",pattern=fileStr),dir(path="GOES_Data2017",pattern="ACM"))
   
   if(length(C02.files)==0){
     missingC02 <- c(missingC02,fileStr)
