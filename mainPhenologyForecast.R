@@ -1,3 +1,5 @@
+install.packages("/projectnb/dietzelab/kiwheel/NEFI_pheno/PhenologyBayesModeling",repo=NULL)
+install.packages("/projectnb/dietzelab/kiwheel/NEFI_pheno/PhenoForecast",repo=NULL)
 library("PhenoForecast")
 library("PhenologyBayesModeling")
 library("coda")
