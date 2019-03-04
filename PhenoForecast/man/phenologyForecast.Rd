@@ -4,8 +4,9 @@
 \alias{phenologyForecast}
 \title{General phenology forecast function}
 \usage{
-phenologyForecast(forecastType, forecastLength, siteName, URL, lat, long,
-  dataDirectory, startDate, endDate)
+phenologyForecast(forecastType, forecastLength = 16, siteName, URL, lat, long,
+  dataDirectory, startDate, endDate, cValsPC, dValsPC, cValsMN, dValsMN,
+  cValsME, dValsME, GEFS_Files = "", GEFS_Directory)
 }
 \arguments{
 \item{forecastType}{The type of forecast (randomWalk or logistic)}
@@ -25,6 +26,22 @@ phenologyForecast(forecastType, forecastLength, siteName, URL, lat, long,
 \item{startDate}{The start date for the forecast in date form}
 
 \item{endDate}{The end date for the forecast in date form}
+
+\item{cValsPC}{The c values for rescaling for PhenoCam}
+
+\item{dValsPC}{The d values for rescaling for PhenoCam}
+
+\item{cValsMN}{The c values for rescaling for MODIS NDVI}
+
+\item{dValsMN}{The d values for rescaling for MODIS NDVI}
+
+\item{cValsME}{The c values for rescaling for MODIS EVI}
+
+\item{dValsME}{The d values for rescaling for MODIS EVI}
+
+\item{GEFS_Files}{The filenames for the GEFS files}
+
+\item{GEFS_Directory}{The directory where the GEFS files are located}
 }
 \description{
 General phenology forecast function

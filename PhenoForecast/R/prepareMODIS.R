@@ -17,8 +17,16 @@ prepareMODIS <- function(startDate,endDate,metric,timeForecast,dataDirectory,lat
   }
   ##Read in MODIS data and reformat
   dat <- read.csv(fileName,header=TRUE)
+  #print(colnames(dat))
   MODIS.x <- as.Date(dat$calendar_date)
   MODIS.y <- as.numeric(dat$data)/10000
+  MODIS.DQF <- as.numeric(dat$DQFdata)
+
+  for(i in 1:length(MODIS.x)){ ##Applying DQF
+    if(MODIS.DQF[i]!= 0 && MODIS.DQF[i] != 1){
+      MODIS.y[i] <- NA
+    }
+  }
 
   ##Prepare for phenology forecast
   m <- rep(NA,length(timeForecast))
@@ -26,7 +34,5 @@ prepareMODIS <- function(startDate,endDate,metric,timeForecast,dataDirectory,lat
     m[which(timeForecast==MODIS.x[i])] <- MODIS.y[i]
   }
 
-  ##Rescale data between (0,1)
-  m <- rescaleObs(time=timeForecast,vals=m)
   return(m)
 }

@@ -13,33 +13,42 @@ logisticPhenoModel <- function(data,nchain){
   ##JAGS code
   LogisticModel = "
   model{
-  #### Data Model: PhenoCam
-  for(i in 1:n){
-  p[i] ~ dnorm(x[i],p.PC)
+  #### Data Models for complete years
+  for(yr in 1:(N-1)){
+    for(i in 1:n){
+      p[i,yr] ~ dnorm(x[i,yr],p.PC)
+      mn[i,yr] ~ dnorm(x[i,yr],p.MN)
+      me[i,yr] ~ dnorm(x[i,yr],p.ME)
+    }
   }
-
-  #### Data Model: MODIS NDVI
-  for(i in 1:n){
-  mn[i] ~ dnorm(x[i],p.MN)
-  }
-
-  #### Data Model: MODIS EVI
-  for(i in 1:n){
-  me[i] ~ dnorm(x[i],p.ME)
+  ##Data Model for last year
+  for(i in 1:q){
+    p[i,N] ~ dnorm(x[i,N],p.PC)
+    mn[i,N] ~ dnorm(x[i,N],p.MN)
+    me[i,N] ~ dnorm(x[i,N],p.ME)
   }
 
   #### Process Model
   #### Color is the expected new phenology stage given the previous stage and logistic
   #### subtraction instead of addition in the discrete logistic eqn makes r negative (so logistic goes down).
-  for(i in 2:n){
-  color[i] <- x[i-1] - r * x[i-1] * (1-x[i-1])  ## latent process
-  xl[i] ~ dnorm(color[i],p.proc)  ## process error
-  x[i] <- max(0, min(1,xl[i]) ) ## trunate normal process error
+  for(yr in 1:(N-1)){
+    for(i in 2:n){
+      color[i,yr] <- x[(i-1),yr] + r * x[(i-1),yr] * (1-x[(i-1),yr])  ## latent process
+      xl[i,yr] ~ dnorm(color[i,yr],p.proc)  ## process error
+      x[i,yr] <- max(0, min(1,xl[i,yr]) ) ## trunate normal process error
+    }
+  }
+  for(i in 2:q){ ##Done for the current year forecast. Excluded from pervious because n != q
+    color[i,N] <- x[(i-1),N] + r * x[(i-1),N] * (1-x[(i-1),N])  ## latent process
+    xl[i,N] ~ dnorm(color[i,N],p.proc)  ## process error
+    x[i,N] <- max(0, min(1,xl[i,N]) ) ## trunate normal process error
   }
 
   #### Priors
-  color[1] ~ dnorm(x_ic,tau_ic)
-  x[1] ~ dnorm(x_ic,tau_ic)
+  for(yr in 1:N){ ##Initial Conditions
+    x[1,yr] ~ dnorm(x_ic,tau_ic)
+    color[1,yr] ~ dnorm(x_ic,tau_ic)
+  }
   p.PC ~ dgamma(s1,s2)
   p.ME ~ dgamma(s1,s2)
   p.MN ~ dgamma(s2,s2)
